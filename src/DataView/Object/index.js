@@ -1,13 +1,58 @@
 // @flow
 
 import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 export default class DataItemView extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
   static propTypes = {
-    // prop: PropTypes
+    data: PropTypes.object.isRequired,
+    // object: PropTypes.object.isRequired,
+    // saveObject: PropTypes.func,
+    // mutate: PropTypes.func.isRequired,
+    // refetch: PropTypes.func.isRequired,
   }
+
+
+  static contextTypes = {
+    user: PropTypes.object,
+  }
+
+
+  canEdit(){
+
+    const object = this.getObjectWithMutations();
+
+    if(!object){
+      return false;
+    }
+
+    
+    const currentUser = this.getCurrentUser();
+
+
+    const {
+      id,
+    } = object;
+
+
+    const canEdit = currentUser && currentUser.id === id ? true : false;
+
+    return canEdit;
+
+  }
+
+
+  getCurrentUser(){
+
+    const {
+      user: currentUser,
+    } = this.context;
+
+    return currentUser;
+
+  }
+
 
   render() {
     return null;

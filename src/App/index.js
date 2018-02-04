@@ -126,6 +126,7 @@ export default class ApolloCmsApp extends Component{ // eslint-disable-line reac
     logout: PropTypes.func,
     token: PropTypes.string,
     user: PropTypes.object,
+    errors: PropTypes.array,
   };
 
   getChildContext() {
@@ -137,6 +138,7 @@ export default class ApolloCmsApp extends Component{ // eslint-disable-line reac
     const {
       token,
       user,
+      errors,
     } = this.state;
     
     
@@ -145,6 +147,7 @@ export default class ApolloCmsApp extends Component{ // eslint-disable-line reac
       user,
       onAuthSuccess: this.onAuthSuccess,
       logout: this.logout,
+      errors,
     };
 
     return context;
@@ -245,14 +248,12 @@ export default class ApolloCmsApp extends Component{ // eslint-disable-line reac
 
     const {
       client,
-      errors,
     } = this.state;
     
 
     return (
       <ApolloProvider
         client={client}
-        errors={errors}
         {...this.props}
       />
     );

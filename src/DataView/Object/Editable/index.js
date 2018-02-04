@@ -12,19 +12,16 @@ import SaveIcon from 'material-ui-icons/Save';
 
 import View from '../';
 
+
+let {...propTypes} = View.propTypes;
+
+Object.assign(propTypes, {
+  mutate: PropTypes.func.isRequired,
+});
+
 export default class EditableView extends View {
 
-  static propTypes = {
-    object: PropTypes.object.isRequired,
-    saveObject: PropTypes.func,
-    mutate: PropTypes.func.isRequired,
-    refetch: PropTypes.func.isRequired,
-  }
-
-
-  static contextTypes = {
-    user: PropTypes.object,
-  }
+  static propTypes = propTypes;
 
 
   constructor(props){
@@ -92,28 +89,33 @@ export default class EditableView extends View {
 
   async saveObject(data){
 
-    const {
-      object,
-      saveObject,
-    } = this.props;
+    // const {
+    //   object,
+    //   saveObject,
+    // } = this.props;
 
-    if(saveObject){
-      return saveObject(data);
-    }
+    // if(saveObject){
+    //   return saveObject(data);
+    // }
 
-    console.log("saveObject data", data);
+    // console.log("saveObject data", data);
 
     const {
       mutate,
     } = this.props;
+
+
+    if(!mutate){
+      throw("Mutate not defined");
+    }
     
-    const {
-      id,
-    } = object;
+    // const {
+    //   id,
+    // } = object;
 
     return mutate({
       variables: {
-        id,
+        // id,
         data,
       },
     });
@@ -218,8 +220,11 @@ export default class EditableView extends View {
   getObjectWithMutations(){
 
     const {
-      object,
+      data: {
+        object,
+      },
     } = this.props;
+
 
     if(!object){
       return object;
@@ -303,11 +308,8 @@ export default class EditableView extends View {
   }
 
 
-  canEdit(){
+  
 
-    return false;
-
-  }
 
 
   getTitle(){
@@ -338,6 +340,11 @@ export default class EditableView extends View {
       {this.getButtons()}
 
     </Typography>
+  }
+
+
+  renderEmpty(){
+    return null;
   }
 
 
@@ -432,11 +439,15 @@ export default class EditableView extends View {
 
 
     const {
-      object,
+      data,
     } = this.props;
 
+    const {
+      object,
+    } = data;
+
     if(!object){
-      return null;
+      return this.renderEmpty();
     }
 
     const draftObject = this.getObjectWithMutations();
