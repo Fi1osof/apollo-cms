@@ -4,17 +4,55 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _jsx = function () { var REACT_ELEMENT_TYPE = typeof Symbol === "function" && Symbol.for && Symbol.for("react.element") || 0xeac7; return function createRawReactElement(type, props, key, children) { var defaultProps = type && type.defaultProps; var childrenLength = arguments.length - 3; if (!props && childrenLength !== 0) { props = {}; } if (props && defaultProps) { for (var propName in defaultProps) { if (props[propName] === void 0) { props[propName] = defaultProps[propName]; } } } else if (!props) { props = defaultProps || {}; } if (childrenLength === 1) { props.children = children; } else if (childrenLength > 1) { var childArray = Array(childrenLength); for (var i = 0; i < childrenLength; i++) { childArray[i] = arguments[i + 3]; } props.children = childArray; } return { $$typeof: REACT_ELEMENT_TYPE, type: type, key: key === undefined ? null : '' + key, ref: null, props: props, _owner: null }; }; }();
+var _jsx2 = require('babel-runtime/helpers/jsx');
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _jsx3 = _interopRequireDefault(_jsx2);
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+var _objectWithoutProperties2 = require('babel-runtime/helpers/objectWithoutProperties');
+
+var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
+
+var _regenerator = require('babel-runtime/regenerator');
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _taggedTemplateLiteral2 = require('babel-runtime/helpers/taggedTemplateLiteral');
+
+var _taggedTemplateLiteral3 = _interopRequireDefault(_taggedTemplateLiteral2);
+
+var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
+
+var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
+var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
+
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require('babel-runtime/helpers/createClass');
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
+var _extends2 = require('babel-runtime/helpers/extends');
+
+var _extends3 = _interopRequireDefault(_extends2);
+
+var _templateObject = (0, _taggedTemplateLiteral3.default)(['', ''], ['', '']);
 
 // import { createUploadLink } from 'apollo-upload-client'
 
 // import { createHttpLink } from "apollo-link-http";
-
-var _templateObject = _taggedTemplateLiteral(['', ''], ['', '']);
 
 var _react = require('react');
 
@@ -52,18 +90,6 @@ var _Renderer2 = _interopRequireDefault(_Renderer);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
-
-function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
-
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
 var authMiddleware = new _apolloLink.ApolloLink(function (operation, forward) {
   // eslint-disable-line react/prefer-stateless-function
   // add the authorization to the headers
@@ -71,7 +97,7 @@ var authMiddleware = new _apolloLink.ApolloLink(function (operation, forward) {
     var _ref$headers = _ref.headers,
         headers = _ref$headers === undefined ? {} : _ref$headers;
     return {
-      headers: _extends({}, headers, {
+      headers: (0, _extends3.default)({}, headers, {
         Authorization: localStorage.getItem('token') || null
       })
     };
@@ -81,12 +107,12 @@ var authMiddleware = new _apolloLink.ApolloLink(function (operation, forward) {
 });
 
 var ApolloCmsApp = function (_React$Component) {
-  _inherits(ApolloCmsApp, _React$Component);
+  (0, _inherits3.default)(ApolloCmsApp, _React$Component);
 
   function ApolloCmsApp(props) {
-    _classCallCheck(this, ApolloCmsApp);
+    (0, _classCallCheck3.default)(this, ApolloCmsApp);
 
-    var _this = _possibleConstructorReturn(this, (ApolloCmsApp.__proto__ || Object.getPrototypeOf(ApolloCmsApp)).call(this, props));
+    var _this = (0, _possibleConstructorReturn3.default)(this, (ApolloCmsApp.__proto__ || (0, _getPrototypeOf2.default)(ApolloCmsApp)).call(this, props));
 
     _this.onAuthSuccess = function (data) {
       var token = data.token,
@@ -238,7 +264,7 @@ var ApolloCmsApp = function (_React$Component) {
   } // eslint-disable-line react/prefer-stateless-function
 
 
-  _createClass(ApolloCmsApp, [{
+  (0, _createClass3.default)(ApolloCmsApp, [{
     key: 'getChildContext',
     value: function getChildContext() {
       var _state = this.state,
@@ -266,9 +292,9 @@ var ApolloCmsApp = function (_React$Component) {
   }, {
     key: 'loadApiData',
     value: function () {
-      var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+      var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee() {
         var apiQuery, client, result, data;
-        return regeneratorRuntime.wrap(function _callee$(_context) {
+        return _regenerator2.default.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
@@ -299,7 +325,7 @@ var ApolloCmsApp = function (_React$Component) {
 
 
                 if (data) {
-                  this.setState(_extends({}, data));
+                  this.setState((0, _extends3.default)({}, data));
                 }
 
                 return _context.abrupt('return', result);
@@ -322,17 +348,16 @@ var ApolloCmsApp = function (_React$Component) {
     key: 'render',
     value: function render() {
       var client = this.state.client;
-
       var _props = this.props,
           Renderer = _props.Renderer,
-          other = _objectWithoutProperties(_props, ['Renderer']);
+          other = (0, _objectWithoutProperties3.default)(_props, ['Renderer']);
 
-      return _jsx(_reactApollo.ApolloProvider, {
+
+      return (0, _jsx3.default)(_reactApollo.ApolloProvider, {
         client: client
       }, void 0, _react2.default.createElement(Renderer, other));
     }
   }]);
-
   return ApolloCmsApp;
 }(_react2.default.Component);
 

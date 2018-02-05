@@ -4,11 +4,53 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _jsx = function () { var REACT_ELEMENT_TYPE = typeof Symbol === "function" && Symbol.for && Symbol.for("react.element") || 0xeac7; return function createRawReactElement(type, props, key, children) { var defaultProps = type && type.defaultProps; var childrenLength = arguments.length - 3; if (!props && childrenLength !== 0) { props = {}; } if (props && defaultProps) { for (var propName in defaultProps) { if (props[propName] === void 0) { props[propName] = defaultProps[propName]; } } } else if (!props) { props = defaultProps || {}; } if (childrenLength === 1) { props.children = children; } else if (childrenLength > 1) { var childArray = Array(childrenLength); for (var i = 0; i < childrenLength; i++) { childArray[i] = arguments[i + 3]; } props.children = childArray; } return { $$typeof: REACT_ELEMENT_TYPE, type: type, key: key === undefined ? null : '' + key, ref: null, props: props, _owner: null }; }; }();
+var _jsx2 = require('babel-runtime/helpers/jsx');
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+var _jsx3 = _interopRequireDefault(_jsx2);
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _extends2 = require('babel-runtime/helpers/extends');
+
+var _extends3 = _interopRequireDefault(_extends2);
+
+var _defineProperty2 = require('babel-runtime/helpers/defineProperty');
+
+var _defineProperty3 = _interopRequireDefault(_defineProperty2);
+
+var _regenerator = require('babel-runtime/regenerator');
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
+
+var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
+var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
+
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require('babel-runtime/helpers/createClass');
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
+var _assign = require('babel-runtime/core-js/object/assign');
+
+var _assign2 = _interopRequireDefault(_assign);
+
+var _objectWithoutProperties2 = require('babel-runtime/helpers/objectWithoutProperties');
+
+var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
 
 var _react = require('react');
 
@@ -48,37 +90,25 @@ var _2 = _interopRequireDefault(_);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 // import Grid from 'material-ui/Grid';
+var propTypes = (0, _objectWithoutProperties3.default)(_2.default.propTypes, []);
 
 
-var propTypes = _objectWithoutProperties(_2.default.propTypes, []);
-
-Object.assign(propTypes, {
+(0, _assign2.default)(propTypes, {
   mutate: _propTypes2.default.func.isRequired
 });
 
-var _ref3 = _jsx(_Restore2.default, {});
+var _ref3 = (0, _jsx3.default)(_Restore2.default, {});
 
-var _ref4 = _jsx(_ModeEdit2.default, {});
+var _ref4 = (0, _jsx3.default)(_ModeEdit2.default, {});
 
 var EditableView = function (_View) {
-  _inherits(EditableView, _View);
+  (0, _inherits3.default)(EditableView, _View);
 
   function EditableView(props) {
-    _classCallCheck(this, EditableView);
+    (0, _classCallCheck3.default)(this, EditableView);
 
-    var _this = _possibleConstructorReturn(this, (EditableView.__proto__ || Object.getPrototypeOf(EditableView)).call(this, props));
+    var _this = (0, _possibleConstructorReturn3.default)(this, (EditableView.__proto__ || (0, _getPrototypeOf2.default)(EditableView)).call(this, props));
 
     _this.state = {
       inEditMode: false,
@@ -89,7 +119,7 @@ var EditableView = function (_View) {
     return _this;
   }
 
-  _createClass(EditableView, [{
+  (0, _createClass3.default)(EditableView, [{
     key: 'startEdit',
     value: function startEdit() {
 
@@ -109,12 +139,12 @@ var EditableView = function (_View) {
   }, {
     key: 'save',
     value: function () {
-      var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+      var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee() {
         var _this2 = this;
 
         var _dirty, result;
 
-        return regeneratorRuntime.wrap(function _callee$(_context) {
+        return _regenerator2.default.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
@@ -160,9 +190,9 @@ var EditableView = function (_View) {
   }, {
     key: 'saveObject',
     value: function () {
-      var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(data) {
+      var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2(data) {
         var mutate, mutation;
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+        return _regenerator2.default.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
@@ -253,7 +283,7 @@ var EditableView = function (_View) {
           value = _event$target.value;
 
 
-      this.updateObject(_defineProperty({}, name, value));
+      this.updateObject((0, _defineProperty3.default)({}, name, value));
     }
   }, {
     key: 'updateObject',
@@ -262,7 +292,7 @@ var EditableView = function (_View) {
           _dirty = _state$_dirty === undefined ? {} : _state$_dirty;
 
       this.setState({
-        _dirty: Object.assign(_extends({}, _dirty), data)
+        _dirty: (0, _assign2.default)((0, _extends3.default)({}, _dirty), data)
       });
     }
   }, {
@@ -272,7 +302,8 @@ var EditableView = function (_View) {
 
       var Editor = props.Editor,
           name = props.name,
-          other = _objectWithoutProperties(props, ['Editor', 'name']);
+          other = (0, _objectWithoutProperties3.default)(props, ['Editor', 'name']);
+
 
       var object = this.getObjectWithMutations();
 
@@ -286,7 +317,7 @@ var EditableView = function (_View) {
 
       // return null;
 
-      return Editor ? _react2.default.createElement(Editor, _extends({
+      return Editor ? _react2.default.createElement(Editor, (0, _extends3.default)({
         onChange: function onChange(event) {
           _this3.onChange(event);
         },
@@ -303,7 +334,7 @@ var EditableView = function (_View) {
       var props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
 
-      props = Object.assign({
+      props = (0, _assign2.default)({
         Editor: _TextField2.default
       }, props);
 
@@ -324,9 +355,9 @@ var EditableView = function (_View) {
 
       if (_dirty) {
 
-        var draftObject = _extends({}, object);
+        var draftObject = (0, _extends3.default)({}, object);
 
-        return Object.assign(draftObject, _dirty);
+        return (0, _assign2.default)(draftObject, _dirty);
       } else {
         return object;
       }
@@ -346,7 +377,7 @@ var EditableView = function (_View) {
 
         if (inEditMode) {
 
-          buttons.push(_jsx(_IconButton2.default, {
+          buttons.push((0, _jsx3.default)(_IconButton2.default, {
             onClick: function onClick(event) {
               _this4.resetEdit();
             }
@@ -354,18 +385,18 @@ var EditableView = function (_View) {
 
           if (isDirty) {
 
-            buttons.push(_jsx(_IconButton2.default, {
+            buttons.push((0, _jsx3.default)(_IconButton2.default, {
               onClick: function onClick(event) {
                 _this4.save();
               }
-            }, 'save', _jsx(_Save2.default, {
+            }, 'save', (0, _jsx3.default)(_Save2.default, {
               style: {
                 color: "red"
               }
             })));
           }
         } else {
-          buttons.push(_jsx(_IconButton2.default, {
+          buttons.push((0, _jsx3.default)(_IconButton2.default, {
             onClick: function onClick(event) {
               _this4.startEdit();
             }
@@ -394,7 +425,7 @@ var EditableView = function (_View) {
     key: 'renderHeader',
     value: function renderHeader() {
 
-      return _jsx(_Typography2.default, {
+      return (0, _jsx3.default)(_Typography2.default, {
         type: 'title'
       }, void 0, this.getTitle(), this.getButtons());
     }
@@ -457,9 +488,9 @@ var EditableView = function (_View) {
 
       if (notifications && notifications.length) {
 
-        return _jsx('div', {}, void 0, notifications.map(function (error, index) {
+        return (0, _jsx3.default)('div', {}, void 0, notifications.map(function (error, index) {
 
-          return _jsx('p', {
+          return (0, _jsx3.default)('p', {
             style: {
               color: 'red'
             }
@@ -501,10 +532,9 @@ var EditableView = function (_View) {
         content = this.renderDefaultView();
       }
 
-      return _jsx('div', {}, void 0, this.renderHeader(), this.renderErrors(), content);
+      return (0, _jsx3.default)('div', {}, void 0, this.renderHeader(), this.renderErrors(), content);
     }
   }]);
-
   return EditableView;
 }(_2.default);
 

@@ -5,9 +5,29 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.TableView = exports.styles = undefined;
 
-var _jsx = function () { var REACT_ELEMENT_TYPE = typeof Symbol === "function" && Symbol.for && Symbol.for("react.element") || 0xeac7; return function createRawReactElement(type, props, key, children) { var defaultProps = type && type.defaultProps; var childrenLength = arguments.length - 3; if (!props && childrenLength !== 0) { props = {}; } if (props && defaultProps) { for (var propName in defaultProps) { if (props[propName] === void 0) { props[propName] = defaultProps[propName]; } } } else if (!props) { props = defaultProps || {}; } if (childrenLength === 1) { props.children = children; } else if (childrenLength > 1) { var childArray = Array(childrenLength); for (var i = 0; i < childrenLength; i++) { childArray[i] = arguments[i + 3]; } props.children = childArray; } return { $$typeof: REACT_ELEMENT_TYPE, type: type, key: key === undefined ? null : '' + key, ref: null, props: props, _owner: null }; }; }();
+var _jsx2 = require('babel-runtime/helpers/jsx');
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _jsx3 = _interopRequireDefault(_jsx2);
+
+var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
+
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require('babel-runtime/helpers/createClass');
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
 
 var _react = require('react');
 
@@ -41,22 +61,6 @@ var _Body2 = _interopRequireDefault(_Body);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-// import Typography from 'material-ui/Typography';
-
-// import Checkbox from 'material-ui/Checkbox';
-// import IconButton from 'material-ui/IconButton';
-// import Tooltip from 'material-ui/Tooltip';
-// import DeleteIcon from 'material-ui-icons/Delete';
-// import FilterListIcon from 'material-ui-icons/FilterList';
-// import { lighten } from 'material-ui/styles/colorManipulator';
-
-
 // let counter = 0;
 
 // function createData(name, calories, fat, carbs, protein) {
@@ -65,6 +69,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 // }
 
 
+// import Typography from 'material-ui/Typography';
 var styles = exports.styles = function styles(theme) {
   return {
     root: {
@@ -79,14 +84,21 @@ var styles = exports.styles = function styles(theme) {
     }
   };
 };
+// import Checkbox from 'material-ui/Checkbox';
+// import IconButton from 'material-ui/IconButton';
+// import Tooltip from 'material-ui/Tooltip';
+// import DeleteIcon from 'material-ui-icons/Delete';
+// import FilterListIcon from 'material-ui-icons/FilterList';
+// import { lighten } from 'material-ui/styles/colorManipulator';
+
 
 var TableView = exports.TableView = function (_Component) {
-  _inherits(TableView, _Component);
+  (0, _inherits3.default)(TableView, _Component);
 
   function TableView(props, context) {
-    _classCallCheck(this, TableView);
+    (0, _classCallCheck3.default)(this, TableView);
 
-    var _this = _possibleConstructorReturn(this, (TableView.__proto__ || Object.getPrototypeOf(TableView)).call(this, props, context));
+    var _this = (0, _possibleConstructorReturn3.default)(this, (TableView.__proto__ || (0, _getPrototypeOf2.default)(TableView)).call(this, props, context));
 
     _this.handleRequestSort = function (event, property) {
       var orderBy = property;
@@ -180,7 +192,7 @@ var TableView = exports.TableView = function (_Component) {
     return _this;
   }
 
-  _createClass(TableView, [{
+  (0, _createClass3.default)(TableView, [{
     key: 'getColumns',
     value: function getColumns() {
       var columnData = this.props.columnData;
@@ -224,16 +236,16 @@ var TableView = exports.TableView = function (_Component) {
 
       var rowCount = rows.length;
 
-      return _jsx(_Paper2.default, {
+      return (0, _jsx3.default)(_Paper2.default, {
         className: classes.root
-      }, void 0, _jsx(Toolbar, {
+      }, void 0, (0, _jsx3.default)(Toolbar, {
         numSelected: selected.length,
         title: title
-      }), _jsx('div', {
+      }), (0, _jsx3.default)('div', {
         className: classes.tableWrapper
-      }, void 0, _jsx(_Table2.default, {
+      }, void 0, (0, _jsx3.default)(_Table2.default, {
         className: classes.table
-      }, void 0, _jsx(Header, {
+      }, void 0, (0, _jsx3.default)(Header, {
         numSelected: selected.length,
         order: order,
         orderBy: orderBy,
@@ -241,13 +253,13 @@ var TableView = exports.TableView = function (_Component) {
         onRequestSort: this.handleRequestSort,
         rowCount: rowCount,
         columnData: columnData
-      }), _jsx(Body, {
+      }), (0, _jsx3.default)(Body, {
         data: rows,
         isSelected: this.isSelected,
         handleClick: this.handleClick,
         onRowSelect: this.onRowSelect,
         columnData: columnData
-      }), limit ? _jsx(_Table.TableFooter, {}, void 0, _jsx(_Table.TableRow, {}, void 0, _jsx(_Table.TablePagination, {
+      }), limit ? (0, _jsx3.default)(_Table.TableFooter, {}, void 0, (0, _jsx3.default)(_Table.TableRow, {}, void 0, (0, _jsx3.default)(_Table.TablePagination, {
         colSpan: columnData.length + 1,
         count: count,
         rowsPerPage: limit,
@@ -263,7 +275,6 @@ var TableView = exports.TableView = function (_Component) {
       }))) : null)));
     }
   }]);
-
   return TableView;
 }(_react.Component);
 

@@ -5,7 +5,17 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.createUploadLink = exports.ReactNativeFile = undefined;
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+var _stringify = require('babel-runtime/core-js/json/stringify');
+
+var _stringify2 = _interopRequireDefault(_stringify);
+
+var _extends2 = require('babel-runtime/helpers/extends');
+
+var _extends3 = _interopRequireDefault(_extends2);
+
+var _keys = require('babel-runtime/core-js/object/keys');
+
+var _keys2 = _interopRequireDefault(_keys);
 
 var _extractFiles = require('extract-files');
 
@@ -47,7 +57,7 @@ var createUploadLink = exports.createUploadLink = function createUploadLink() {
       var requestOperation = { query: (0, _printer.print)(query) };
 
       if (operationName) requestOperation.operationName = operationName;
-      if (Object.keys(variables).length) requestOperation.variables = variables;
+      if ((0, _keys2.default)(variables).length) requestOperation.variables = variables;
       if (extensions && includeExtensions) requestOperation.extensions = extensions;
 
       var files = (0, _extractFiles2.default)(requestOperation);
@@ -61,8 +71,8 @@ var createUploadLink = exports.createUploadLink = function createUploadLink() {
           _getContext$fetchOpti = _getContext.fetchOptions,
           contextFetchOptions = _getContext$fetchOpti === undefined ? {} : _getContext$fetchOpti;
 
-      var fetchOptions = _extends({}, linkFetchOptions, contextFetchOptions, {
-        headers: _extends({}, linkFetchOptions.headers, contextFetchOptions.headers, linkHeaders, contextHeaders),
+      var fetchOptions = (0, _extends3.default)({}, linkFetchOptions, contextFetchOptions, {
+        headers: (0, _extends3.default)({}, linkFetchOptions.headers, contextFetchOptions.headers, linkHeaders, contextHeaders),
         method: 'POST'
       });
 
@@ -74,9 +84,9 @@ var createUploadLink = exports.createUploadLink = function createUploadLink() {
 
         fetchOptions.body = new FormData();
 
-        fetchOptions.body.append('operations', JSON.stringify(requestOperation));
+        fetchOptions.body.append('operations', (0, _stringify2.default)(requestOperation));
 
-        fetchOptions.body.append('map', JSON.stringify(files.reduce(function (map, _ref3, index) {
+        fetchOptions.body.append('map', (0, _stringify2.default)(files.reduce(function (map, _ref3, index) {
           var path = _ref3.path;
 
           map['' + index] = [path];
@@ -89,7 +99,7 @@ var createUploadLink = exports.createUploadLink = function createUploadLink() {
         });
       } else {
         fetchOptions.headers['content-type'] = 'application/json';
-        fetchOptions.body = JSON.stringify(requestOperation);
+        fetchOptions.body = (0, _stringify2.default)(requestOperation);
       }
 
       linkFetch(uri, fetchOptions).then(function (response) {

@@ -5,9 +5,29 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.EnhancedTableToolbar = undefined;
 
-var _jsx = function () { var REACT_ELEMENT_TYPE = typeof Symbol === "function" && Symbol.for && Symbol.for("react.element") || 0xeac7; return function createRawReactElement(type, props, key, children) { var defaultProps = type && type.defaultProps; var childrenLength = arguments.length - 3; if (!props && childrenLength !== 0) { props = {}; } if (props && defaultProps) { for (var propName in defaultProps) { if (props[propName] === void 0) { props[propName] = defaultProps[propName]; } } } else if (!props) { props = defaultProps || {}; } if (childrenLength === 1) { props.children = children; } else if (childrenLength > 1) { var childArray = Array(childrenLength); for (var i = 0; i < childrenLength; i++) { childArray[i] = arguments[i + 3]; } props.children = childArray; } return { $$typeof: REACT_ELEMENT_TYPE, type: type, key: key === undefined ? null : '' + key, ref: null, props: props, _owner: null }; }; }();
+var _jsx2 = require('babel-runtime/helpers/jsx');
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _jsx3 = _interopRequireDefault(_jsx2);
+
+var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
+
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require('babel-runtime/helpers/createClass');
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
 
 var _react = require('react');
 
@@ -47,12 +67,6 @@ var _colorManipulator = require('material-ui/styles/colorManipulator');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
 var toolbarStyles = function toolbarStyles(theme) {
   return {
     root: {
@@ -77,28 +91,27 @@ var toolbarStyles = function toolbarStyles(theme) {
   };
 };
 
-var _ref = _jsx(_Tooltip2.default, {
+var _ref = (0, _jsx3.default)(_Tooltip2.default, {
   title: 'Delete'
-}, void 0, _jsx(_IconButton2.default, {
+}, void 0, (0, _jsx3.default)(_IconButton2.default, {
   'aria-label': 'Delete'
-}, void 0, _jsx(_Delete2.default, {})));
+}, void 0, (0, _jsx3.default)(_Delete2.default, {})));
 
-var _ref2 = _jsx(_Tooltip2.default, {
+var _ref2 = (0, _jsx3.default)(_Tooltip2.default, {
   title: 'Filter list'
-}, void 0, _jsx(_IconButton2.default, {
+}, void 0, (0, _jsx3.default)(_IconButton2.default, {
   'aria-label': 'Filter list'
-}, void 0, _jsx(_FilterList2.default, {})));
+}, void 0, (0, _jsx3.default)(_FilterList2.default, {})));
 
 var EnhancedTableToolbar = exports.EnhancedTableToolbar = function (_Component) {
-  _inherits(EnhancedTableToolbar, _Component);
+  (0, _inherits3.default)(EnhancedTableToolbar, _Component);
 
   function EnhancedTableToolbar() {
-    _classCallCheck(this, EnhancedTableToolbar);
-
-    return _possibleConstructorReturn(this, (EnhancedTableToolbar.__proto__ || Object.getPrototypeOf(EnhancedTableToolbar)).apply(this, arguments));
+    (0, _classCallCheck3.default)(this, EnhancedTableToolbar);
+    return (0, _possibleConstructorReturn3.default)(this, (EnhancedTableToolbar.__proto__ || (0, _getPrototypeOf2.default)(EnhancedTableToolbar)).apply(this, arguments));
   }
 
-  _createClass(EnhancedTableToolbar, [{
+  (0, _createClass3.default)(EnhancedTableToolbar, [{
     key: 'render',
     value: function render() {
       var _props = this.props,
@@ -107,22 +120,21 @@ var EnhancedTableToolbar = exports.EnhancedTableToolbar = function (_Component) 
           title = _props.title;
 
 
-      return _jsx(_Toolbar2.default, {
+      return (0, _jsx3.default)(_Toolbar2.default, {
         className: [classes.root, numSelected > 0 ? classes.highlight : null].join(" ")
-      }, void 0, _jsx('div', {
+      }, void 0, (0, _jsx3.default)('div', {
         className: classes.title
-      }, void 0, numSelected > 0 ? _jsx(_Typography2.default, {
+      }, void 0, numSelected > 0 ? (0, _jsx3.default)(_Typography2.default, {
         type: 'subheading'
-      }, void 0, numSelected, ' selected') : _jsx(_Typography2.default, {
+      }, void 0, numSelected, ' selected') : (0, _jsx3.default)(_Typography2.default, {
         type: 'title'
-      }, void 0, title)), _jsx('div', {
+      }, void 0, title)), (0, _jsx3.default)('div', {
         className: classes.spacer
-      }), _jsx('div', {
+      }), (0, _jsx3.default)('div', {
         className: classes.actions
       }, void 0, numSelected > 0 ? _ref : _ref2));
     }
   }]);
-
   return EnhancedTableToolbar;
 }(_react.Component);
 
