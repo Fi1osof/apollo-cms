@@ -1,20 +1,11 @@
 // @flow
 
-import React, {Component} from 'react'
-import ReactDOM from 'react-dom'
+import React from 'react'
 
 import PropTypes from 'prop-types';
 
 import gql from 'graphql-tag';
-import { graphql, compose } from 'react-apollo';
 
-import {
-  NavLink,
-  Link,
-  BrowserRouter as Router,
-  Route,
-  Switch,
-} from 'react-router-dom'
 import { ApolloProvider } from 'react-apollo'
 import { ApolloClient } from 'apollo-client'
 
@@ -50,7 +41,7 @@ const authMiddleware = new ApolloLink((operation, forward) => { // eslint-disabl
 
 
 
-export default class ApolloCmsApp extends Component{ // eslint-disable-line react/prefer-stateless-function
+export default class ApolloCmsApp extends React.Component{ // eslint-disable-line react/prefer-stateless-function
 
 
   static propTypes = {
@@ -90,8 +81,6 @@ export default class ApolloCmsApp extends Component{ // eslint-disable-line reac
 
 
     let wsLink;
-
-    let hostname;
 
     let protocol = 'http';
     let ws_protocol = 'ws';
@@ -165,10 +154,6 @@ export default class ApolloCmsApp extends Component{ // eslint-disable-line reac
 
   
   getChildContext() {
-
-    let {
-    } = this.props;
-
 
     const {
       token,
@@ -277,6 +262,8 @@ export default class ApolloCmsApp extends Component{ // eslint-disable-line reac
         });
 
       }
+
+      return n;
 
     });
     
