@@ -2,12 +2,12 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
-import Table, {
-  TableBody,
+import {
+  // TableBody,
   TableCell,
-  TableFooter,
+  // TableFooter,
   TableHead,
-  TablePagination,
+  // TablePagination,
   TableRow,
   TableSortLabel,
 } from 'material-ui/Table';

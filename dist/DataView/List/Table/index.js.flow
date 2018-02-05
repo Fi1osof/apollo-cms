@@ -3,24 +3,24 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 
 import Table, {
-  TableBody,
-  TableCell,
+  // TableBody,
+  // TableCell,
   TableFooter,
-  TableHead,
+  // TableHead,
   TablePagination,
   TableRow,
-  TableSortLabel,
+  // TableSortLabel,
 } from 'material-ui/Table';
 
 
-import Typography from 'material-ui/Typography';
+// import Typography from 'material-ui/Typography';
 import Paper from 'material-ui/Paper';
-import Checkbox from 'material-ui/Checkbox';
-import IconButton from 'material-ui/IconButton';
-import Tooltip from 'material-ui/Tooltip';
-import DeleteIcon from 'material-ui-icons/Delete';
-import FilterListIcon from 'material-ui-icons/FilterList';
-import { lighten } from 'material-ui/styles/colorManipulator';
+// import Checkbox from 'material-ui/Checkbox';
+// import IconButton from 'material-ui/IconButton';
+// import Tooltip from 'material-ui/Tooltip';
+// import DeleteIcon from 'material-ui-icons/Delete';
+// import FilterListIcon from 'material-ui-icons/FilterList';
+// import { lighten } from 'material-ui/styles/colorManipulator';
 
 
 import Header from './Header';
@@ -204,7 +204,7 @@ export class TableView extends Component {
 
     const { 
       selected, 
-      rowsPerPage, 
+      // rowsPerPage, 
       page,
     } = this.state;
 
@@ -218,7 +218,7 @@ export class TableView extends Component {
     
     const {
       aggregate,
-      pageInfo,
+      // pageInfo,
       edges,
     } = objectsConnection || {}
 
@@ -259,7 +259,7 @@ export class TableView extends Component {
               columnData={columnData}
             />
 
-            {limit && <TableFooter>
+            {limit ? <TableFooter>
               <TableRow>
                 <TablePagination
                   colSpan={columnData.length + 1}
@@ -276,7 +276,7 @@ export class TableView extends Component {
                   onChangeRowsPerPage={this.handleChangeRowsPerPage}
                 />
               </TableRow>
-            </TableFooter> || null}
+            </TableFooter> : null}
             
           </Table>
         </div>

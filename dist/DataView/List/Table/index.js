@@ -23,35 +23,9 @@ var _Table = require('material-ui/Table');
 
 var _Table2 = _interopRequireDefault(_Table);
 
-var _Typography = require('material-ui/Typography');
-
-var _Typography2 = _interopRequireDefault(_Typography);
-
 var _Paper = require('material-ui/Paper');
 
 var _Paper2 = _interopRequireDefault(_Paper);
-
-var _Checkbox = require('material-ui/Checkbox');
-
-var _Checkbox2 = _interopRequireDefault(_Checkbox);
-
-var _IconButton = require('material-ui/IconButton');
-
-var _IconButton2 = _interopRequireDefault(_IconButton);
-
-var _Tooltip = require('material-ui/Tooltip');
-
-var _Tooltip2 = _interopRequireDefault(_Tooltip);
-
-var _Delete = require('material-ui-icons/Delete');
-
-var _Delete2 = _interopRequireDefault(_Delete);
-
-var _FilterList = require('material-ui-icons/FilterList');
-
-var _FilterList2 = _interopRequireDefault(_FilterList);
-
-var _colorManipulator = require('material-ui/styles/colorManipulator');
 
 var _Header = require('./Header');
 
@@ -72,6 +46,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+// import Typography from 'material-ui/Typography';
+
+// import Checkbox from 'material-ui/Checkbox';
+// import IconButton from 'material-ui/IconButton';
+// import Tooltip from 'material-ui/Tooltip';
+// import DeleteIcon from 'material-ui-icons/Delete';
+// import FilterListIcon from 'material-ui-icons/FilterList';
+// import { lighten } from 'material-ui/styles/colorManipulator';
+
 
 // let counter = 0;
 
@@ -219,7 +203,6 @@ var TableView = exports.TableView = function (_Component) {
           limit = _props.limit;
       var _state = this.state,
           selected = _state.selected,
-          rowsPerPage = _state.rowsPerPage,
           page = _state.page;
 
 
@@ -229,7 +212,6 @@ var TableView = exports.TableView = function (_Component) {
 
       var _ref = objectsConnection || {},
           aggregate = _ref.aggregate,
-          pageInfo = _ref.pageInfo,
           edges = _ref.edges;
 
       var _ref2 = aggregate || {},
@@ -265,7 +247,7 @@ var TableView = exports.TableView = function (_Component) {
         handleClick: this.handleClick,
         onRowSelect: this.onRowSelect,
         columnData: columnData
-      }), limit && _jsx(_Table.TableFooter, {}, void 0, _jsx(_Table.TableRow, {}, void 0, _jsx(_Table.TablePagination, {
+      }), limit ? _jsx(_Table.TableFooter, {}, void 0, _jsx(_Table.TableRow, {}, void 0, _jsx(_Table.TablePagination, {
         colSpan: columnData.length + 1,
         count: count,
         rowsPerPage: limit,
@@ -278,7 +260,7 @@ var TableView = exports.TableView = function (_Component) {
         },
         onChangePage: this.handleChangePage,
         onChangeRowsPerPage: this.handleChangeRowsPerPage
-      }))) || null)));
+      }))) : null)));
     }
   }]);
 

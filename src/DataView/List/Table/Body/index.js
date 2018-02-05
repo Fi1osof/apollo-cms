@@ -1,15 +1,15 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
+// import { withStyles } from 'material-ui/styles';
 
-import Table, {
+import {
   TableBody,
   TableCell,
-  TableFooter,
-  TableHead,
-  TablePagination,
+  // TableFooter,
+  // TableHead,
+  // TablePagination,
   TableRow,
-  TableSortLabel,
+  // TableSortLabel,
 } from 'material-ui/Table';
 
 import Checkbox from 'material-ui/Checkbox';
@@ -51,10 +51,10 @@ export default class TBody extends Component {
 
     const {
       data,
-      isSelected,
+      // isSelected,
       onRowSelect,
       columnData,
-      ...other
+      // ...other
     } = this.props;
 
     // const emptyRows = 7;
@@ -89,7 +89,7 @@ export default class TBody extends Component {
               padding={disablePadding === true ? "none" : padding}
               {...other}
             >
-              {renderer ? renderer(value, record) : value || ""}
+              {renderer ? renderer(value, n) : value || ""}
             </TableCell>
 
           });

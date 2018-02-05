@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 
 import TextField from 'material-ui/TextField';
-import Grid from 'material-ui/Grid';
+// import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 import IconButton from 'material-ui/IconButton';
 
@@ -12,19 +12,16 @@ import SaveIcon from 'material-ui-icons/Save';
 
 import View from '../';
 
+
+let {...propTypes} = View.propTypes;
+
+Object.assign(propTypes, {
+  mutate: PropTypes.func.isRequired,
+});
+
 export default class EditableView extends View {
 
-  static propTypes = {
-    object: PropTypes.object.isRequired,
-    saveObject: PropTypes.func,
-    mutate: PropTypes.func.isRequired,
-    refetch: PropTypes.func.isRequired,
-  }
-
-
-  static contextTypes = {
-    user: PropTypes.object,
-  }
+  static propTypes = propTypes;
 
 
   constructor(props){
@@ -92,32 +89,55 @@ export default class EditableView extends View {
 
   async saveObject(data){
 
-    const {
-      object,
-      saveObject,
-    } = this.props;
+    // const {
+    //   object,
+    //   saveObject,
+    // } = this.props;
 
-    if(saveObject){
-      return saveObject(data);
-    }
+    // if(saveObject){
+    //   return saveObject(data);
+    // }
 
-    console.log("saveObject data", data);
+    // console.log("saveObject data", data);
 
     const {
       mutate,
     } = this.props;
+        
+    if(!mutate){
+      throw(new Error("Mutate not defined"));
+    }
+
+    const mutation = this.getMutation(data);
+
+    return mutate(mutation);
+
+  }
+
+
+  getMutation(data){
+
+    const variables = this.getMutationVariables(data);
+
+    return {
+      variables,
+    }
+
+  }
+
+
+  getMutationVariables(data){
+
+    const object = this.getObjectWithMutations();
     
     const {
       id,
     } = object;
 
-    return mutate({
-      variables: {
-        id,
-        data,
-      },
-    });
-
+    return {
+      id,
+      data,
+    };
   }
 
 
@@ -189,7 +209,7 @@ export default class EditableView extends View {
 
     // return null;
 
-    return Editor && <Editor
+    return Editor ? <Editor
       onChange={event => {
         this.onChange(event);
       }}
@@ -199,7 +219,7 @@ export default class EditableView extends View {
         width: "100%",
       }}
       {...other}
-    /> || null;
+    /> : null;
 
   }
 
@@ -218,8 +238,11 @@ export default class EditableView extends View {
   getObjectWithMutations(){
 
     const {
-      object,
+      data: {
+        object,
+      },
     } = this.props;
+
 
     if(!object){
       return object;
@@ -303,11 +326,8 @@ export default class EditableView extends View {
   }
 
 
-  canEdit(){
+  
 
-    return false;
-
-  }
 
 
   getTitle(){
@@ -338,6 +358,11 @@ export default class EditableView extends View {
       {this.getButtons()}
 
     </Typography>
+  }
+
+
+  renderEmpty(){
+    return null;
   }
 
 
@@ -432,14 +457,18 @@ export default class EditableView extends View {
 
 
     const {
-      object,
+      data,
     } = this.props;
 
+    const {
+      object,
+    } = data;
+
     if(!object){
-      return null;
+      return this.renderEmpty();
     }
 
-    const draftObject = this.getObjectWithMutations();
+    // const draftObject = this.getObjectWithMutations();
 
     
     const inEditMode = this.isInEditMode();
@@ -447,10 +476,10 @@ export default class EditableView extends View {
 
 
 
-    let defaultView;
-    let editView;
+    // let defaultView;
+    // let editView;
 
-    const isDirty = this.isDirty();
+    // const isDirty = this.isDirty();
 
     
 

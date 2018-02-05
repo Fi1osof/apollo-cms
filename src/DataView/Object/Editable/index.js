@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 
 import TextField from 'material-ui/TextField';
-import Grid from 'material-ui/Grid';
+// import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 import IconButton from 'material-ui/IconButton';
 
@@ -103,23 +103,41 @@ export default class EditableView extends View {
     const {
       mutate,
     } = this.props;
-
-
+        
     if(!mutate){
-      throw("Mutate not defined");
+      throw(new Error("Mutate not defined"));
     }
+
+    const mutation = this.getMutation(data);
+
+    return mutate(mutation);
+
+  }
+
+
+  getMutation(data){
+
+    const variables = this.getMutationVariables(data);
+
+    return {
+      variables,
+    }
+
+  }
+
+
+  getMutationVariables(data){
+
+    const object = this.getObjectWithMutations();
     
-    // const {
-    //   id,
-    // } = object;
+    const {
+      id,
+    } = object;
 
-    return mutate({
-      variables: {
-        // id,
-        data,
-      },
-    });
-
+    return {
+      id,
+      data,
+    };
   }
 
 
@@ -191,7 +209,7 @@ export default class EditableView extends View {
 
     // return null;
 
-    return Editor && <Editor
+    return Editor ? <Editor
       onChange={event => {
         this.onChange(event);
       }}
@@ -201,7 +219,7 @@ export default class EditableView extends View {
         width: "100%",
       }}
       {...other}
-    /> || null;
+    /> : null;
 
   }
 
@@ -450,7 +468,7 @@ export default class EditableView extends View {
       return this.renderEmpty();
     }
 
-    const draftObject = this.getObjectWithMutations();
+    // const draftObject = this.getObjectWithMutations();
 
     
     const inEditMode = this.isInEditMode();
@@ -458,10 +476,10 @@ export default class EditableView extends View {
 
 
 
-    let defaultView;
-    let editView;
+    // let defaultView;
+    // let editView;
 
-    const isDirty = this.isDirty();
+    // const isDirty = this.isDirty();
 
     
 

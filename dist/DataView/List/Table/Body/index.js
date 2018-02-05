@@ -18,11 +18,7 @@ var _propTypes = require('prop-types');
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _styles = require('material-ui/styles');
-
 var _Table = require('material-ui/Table');
-
-var _Table2 = _interopRequireDefault(_Table);
 
 var _Checkbox = require('material-ui/Checkbox');
 
@@ -37,6 +33,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+// import { withStyles } from 'material-ui/styles';
 
 var TBody = function (_Component) {
   _inherits(TBody, _Component);
@@ -72,10 +69,8 @@ var TBody = function (_Component) {
 
       var _props = this.props,
           data = _props.data,
-          isSelected = _props.isSelected,
           onRowSelect = _props.onRowSelect,
-          columnData = _props.columnData,
-          other = _objectWithoutProperties(_props, ['data', 'isSelected', 'onRowSelect', 'columnData']);
+          columnData = _props.columnData;
 
       // const emptyRows = 7;
 
@@ -103,7 +98,7 @@ var TBody = function (_Component) {
               key: index,
               padding: disablePadding === true ? "none" : padding
             }, other),
-            renderer ? renderer(value, record) : value || ""
+            renderer ? renderer(value, n) : value || ""
           );
         });
 

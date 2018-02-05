@@ -22,10 +22,6 @@ var _TextField = require('material-ui/TextField');
 
 var _TextField2 = _interopRequireDefault(_TextField);
 
-var _Grid = require('material-ui/Grid');
-
-var _Grid2 = _interopRequireDefault(_Grid);
-
 var _Typography = require('material-ui/Typography');
 
 var _Typography2 = _interopRequireDefault(_Typography);
@@ -52,8 +48,6 @@ var _2 = _interopRequireDefault(_);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
-
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
@@ -63,6 +57,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+// import Grid from 'material-ui/Grid';
+
+
+var propTypes = _objectWithoutProperties(_2.default.propTypes, []);
+
+Object.assign(propTypes, {
+  mutate: _propTypes2.default.func.isRequired
+});
 
 var _ref3 = _jsx(_Restore2.default, {});
 
@@ -105,7 +109,7 @@ var EditableView = function (_View) {
   }, {
     key: 'save',
     value: function () {
-      var _ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee() {
+      var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
         var _this2 = this;
 
         var _dirty, result;
@@ -156,36 +160,38 @@ var EditableView = function (_View) {
   }, {
     key: 'saveObject',
     value: function () {
-      var _ref2 = _asyncToGenerator(regeneratorRuntime.mark(function _callee2(data) {
-        var _props, object, saveObject, mutate, id;
-
+      var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(data) {
+        var mutate, mutation;
         return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _props = this.props, object = _props.object, saveObject = _props.saveObject;
 
-                if (!saveObject) {
+                // const {
+                //   object,
+                //   saveObject,
+                // } = this.props;
+
+                // if(saveObject){
+                //   return saveObject(data);
+                // }
+
+                // console.log("saveObject data", data);
+
+                mutate = this.props.mutate;
+
+                if (mutate) {
                   _context2.next = 3;
                   break;
                 }
 
-                return _context2.abrupt('return', saveObject(data));
+                throw new Error("Mutate not defined");
 
               case 3:
+                mutation = this.getMutation(data);
+                return _context2.abrupt('return', mutate(mutation));
 
-                console.log("saveObject data", data);
-
-                mutate = this.props.mutate;
-                id = object.id;
-                return _context2.abrupt('return', mutate({
-                  variables: {
-                    id: id,
-                    data: data
-                  }
-                }));
-
-              case 7:
+              case 5:
               case 'end':
                 return _context2.stop();
             }
@@ -199,6 +205,30 @@ var EditableView = function (_View) {
 
       return saveObject;
     }()
+  }, {
+    key: 'getMutation',
+    value: function getMutation(data) {
+
+      var variables = this.getMutationVariables(data);
+
+      return {
+        variables: variables
+      };
+    }
+  }, {
+    key: 'getMutationVariables',
+    value: function getMutationVariables(data) {
+
+      var object = this.getObjectWithMutations();
+
+      var id = object.id;
+
+
+      return {
+        id: id,
+        data: data
+      };
+    }
   }, {
     key: 'isInEditMode',
     value: function isInEditMode() {
@@ -256,7 +286,7 @@ var EditableView = function (_View) {
 
       // return null;
 
-      return Editor && _react2.default.createElement(Editor, _extends({
+      return Editor ? _react2.default.createElement(Editor, _extends({
         onChange: function onChange(event) {
           _this3.onChange(event);
         },
@@ -265,7 +295,7 @@ var EditableView = function (_View) {
         style: {
           width: "100%"
         }
-      }, other)) || null;
+      }, other)) : null;
     }
   }, {
     key: 'getTextField',
@@ -282,7 +312,7 @@ var EditableView = function (_View) {
   }, {
     key: 'getObjectWithMutations',
     value: function getObjectWithMutations() {
-      var object = this.props.object;
+      var object = this.props.data.object;
 
 
       if (!object) {
@@ -346,12 +376,6 @@ var EditableView = function (_View) {
       return buttons && buttons.length ? buttons : null;
     }
   }, {
-    key: 'canEdit',
-    value: function canEdit() {
-
-      return false;
-    }
-  }, {
     key: 'getTitle',
     value: function getTitle() {
 
@@ -373,6 +397,11 @@ var EditableView = function (_View) {
       return _jsx(_Typography2.default, {
         type: 'title'
       }, void 0, this.getTitle(), this.getButtons());
+    }
+  }, {
+    key: 'renderEmpty',
+    value: function renderEmpty() {
+      return null;
     }
   }, {
     key: 'renderDefaultView',
@@ -443,21 +472,24 @@ var EditableView = function (_View) {
   }, {
     key: 'render',
     value: function render() {
-      var object = this.props.object;
+      var data = this.props.data;
+      var object = data.object;
 
 
       if (!object) {
-        return null;
+        return this.renderEmpty();
       }
 
-      var draftObject = this.getObjectWithMutations();
+      // const draftObject = this.getObjectWithMutations();
+
 
       var inEditMode = this.isInEditMode();
 
-      var defaultView = void 0;
-      var editView = void 0;
+      // let defaultView;
+      // let editView;
 
-      var isDirty = this.isDirty();
+      // const isDirty = this.isDirty();
+
 
       var content = void 0;
 
@@ -476,13 +508,5 @@ var EditableView = function (_View) {
   return EditableView;
 }(_2.default);
 
-EditableView.propTypes = {
-  object: _propTypes2.default.object.isRequired,
-  saveObject: _propTypes2.default.func,
-  mutate: _propTypes2.default.func.isRequired,
-  refetch: _propTypes2.default.func.isRequired
-};
-EditableView.contextTypes = {
-  user: _propTypes2.default.object
-};
+EditableView.propTypes = propTypes;
 exports.default = EditableView;

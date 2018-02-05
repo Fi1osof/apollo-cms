@@ -11,3 +11,7 @@
 - Code refactoring
 - Added Renderer class
 - Errors handler
+
+1.1.1
+===========================================
+- Eslint cleanup

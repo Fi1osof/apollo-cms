@@ -5,6 +5,9 @@ import ReactDOM from 'react-dom'
 
 import PropTypes from 'prop-types';
 
+import gql from 'graphql-tag';
+import { graphql, compose } from 'react-apollo';
+
 import {
   NavLink,
   Link,
@@ -15,11 +18,13 @@ import {
 import { ApolloProvider } from 'react-apollo'
 import { ApolloClient } from 'apollo-client'
 
-import { createUploadLink } from 'apollo-upload-client'
+// import { createUploadLink } from 'apollo-upload-client'
+import { createUploadLink } from '../external/apollo-upload-client'
 
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { ApolloLink, from } from 'apollo-link';
 import { onError } from 'apollo-link-error';
+// import { createHttpLink } from "apollo-link-http";
 
 import { WebSocketLink } from 'apollo-link-ws';
 import { split } from 'apollo-link';
@@ -27,6 +32,8 @@ import { getMainDefinition } from 'apollo-utilities';
 
 
 import { setTimeout } from 'timers';
+
+import Renderer from './Renderer';
 
 const authMiddleware = new ApolloLink((operation, forward) => { // eslint-disable-line react/prefer-stateless-function
   // add the authorization to the headers
@@ -44,6 +51,32 @@ const authMiddleware = new ApolloLink((operation, forward) => { // eslint-disabl
 
 
 export default class ApolloCmsApp extends Component{ // eslint-disable-line react/prefer-stateless-function
+
+
+  static propTypes = {
+    endpoint: PropTypes.string.isRequired,
+    Renderer: PropTypes.func.isRequired,
+    apiQuery: PropTypes.string,
+  };
+
+  static defaultProps = {
+    Renderer,
+    apiQuery: `{
+      user:me{
+        id
+        username
+      }
+    }`,
+  };
+
+  static childContextTypes = {
+    onAuthSuccess: PropTypes.func,
+    logout: PropTypes.func,
+    token: PropTypes.string,
+    user: PropTypes.object,
+    errors: PropTypes.array,
+  };
+
 
   constructor(props){
 
@@ -79,6 +112,10 @@ export default class ApolloCmsApp extends Component{ // eslint-disable-line reac
     const httpLink = createUploadLink({ 
       uri: `${protocol}://${endpoint}/`,
     });
+    
+    // const httpLink = createHttpLink({ 
+    //   uri: `${protocol}://${endpoint}/`,
+    // });
 
     wsLink = new WebSocketLink({
       uri: `${ws_protocol}://${endpoint}/`,
@@ -90,7 +127,12 @@ export default class ApolloCmsApp extends Component{ // eslint-disable-line reac
 
     const wsHttpLink = split(
       // split based on operation type
-      ({ query }) => {
+      (request) => {
+
+        // console.log("request", request);
+
+        const { query } = request;
+
         const { kind, operation } = getMainDefinition(query);
         return kind === 'OperationDefinition' && operation === 'subscription';
       },
@@ -102,6 +144,7 @@ export default class ApolloCmsApp extends Component{ // eslint-disable-line reac
     const errorLink = onError(this.onError);
     
     const link = errorLink.concat(wsHttpLink);
+    // const link = errorLink.concat(httpLink);
     
     const client = new ApolloClient({
       link: from([
@@ -121,13 +164,6 @@ export default class ApolloCmsApp extends Component{ // eslint-disable-line reac
   }
 
   
-  static childContextTypes = {
-    onAuthSuccess: PropTypes.func,
-    logout: PropTypes.func,
-    token: PropTypes.string,
-    user: PropTypes.object,
-  };
-
   getChildContext() {
 
     let {
@@ -137,6 +173,7 @@ export default class ApolloCmsApp extends Component{ // eslint-disable-line reac
     const {
       token,
       user,
+      errors,
     } = this.state;
     
     
@@ -145,6 +182,7 @@ export default class ApolloCmsApp extends Component{ // eslint-disable-line reac
       user,
       onAuthSuccess: this.onAuthSuccess,
       logout: this.logout,
+      errors,
     };
 
     return context;
@@ -179,12 +217,18 @@ export default class ApolloCmsApp extends Component{ // eslint-disable-line reac
 
 
 
-  onError = ({ networkError, graphQLErrors }) => {
+  onError = (response) => {
+
+    // console.log("onError response", response);
+
+    const { networkError, graphQLErrors } = response;
   
     if (networkError && networkError.statusCode === 401) {
       ;
     }
 
+    // console.log("onError networkError", networkError);
+    // console.log("onError graphQLErrors", graphQLErrors);
     
     graphQLErrors && graphQLErrors.map(n => {
 
@@ -241,20 +285,76 @@ export default class ApolloCmsApp extends Component{ // eslint-disable-line reac
   }
 
 
-  render(){
+  componentDidMount(){
+
+    this.loadApiData();
+
+  }
+
+
+  async loadApiData(){
+
+    const {
+      apiQuery,
+    } = this.props;
+
+    if(!apiQuery){
+      return false;
+    }
 
     const {
       client,
-      errors,
     } = this.state;
+
+
+    const result = await client.query({
+      query: gql`${apiQuery}`,
+      fetchPolicy: "network-only",
+    },{
+    }).then(r => {
+      return r;
+    })
+    .catch(e => {
+      console.error(e);
+    });
+    
+    const {
+      data,
+    } = result;
+
+    if(data){
+      this.setState({
+        ...data
+      });
+    }
+
+    return result;
+  }
+
+  
+  render(){
+    
+    const {
+      client,
+    } = this.state;
+
+    const {
+      // children,
+      Renderer,
+      ...other
+    } = this.props;
     
 
     return (
       <ApolloProvider
         client={client}
-        errors={errors}
-        {...this.props}
-      />
+      >
+        
+        <Renderer
+          {...other}
+        />
+
+      </ApolloProvider>
     );
 
 

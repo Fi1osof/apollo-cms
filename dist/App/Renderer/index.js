@@ -22,55 +22,29 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var ObjectView = function (_React$Component) {
-  _inherits(ObjectView, _React$Component);
+var ApolloCmsRenderer = function (_React$Component) {
+  _inherits(ApolloCmsRenderer, _React$Component);
 
-  function ObjectView() {
-    _classCallCheck(this, ObjectView);
+  function ApolloCmsRenderer() {
+    _classCallCheck(this, ApolloCmsRenderer);
 
-    return _possibleConstructorReturn(this, (ObjectView.__proto__ || Object.getPrototypeOf(ObjectView)).apply(this, arguments));
+    return _possibleConstructorReturn(this, (ApolloCmsRenderer.__proto__ || Object.getPrototypeOf(ApolloCmsRenderer)).apply(this, arguments));
   }
 
-  _createClass(ObjectView, [{
-    key: 'canEdit',
-    // eslint-disable-line react/prefer-stateless-function
-
-    value: function canEdit() {
-
-      var object = this.getObjectWithMutations();
-
-      if (!object) {
-        return false;
-      }
-
-      var currentUser = this.getCurrentUser();
-
-      var id = object.id;
-
-
-      var canEdit = currentUser && currentUser.id === id ? true : false;
-
-      return canEdit;
-    }
-  }, {
-    key: 'getCurrentUser',
-    value: function getCurrentUser() {
-      var currentUser = this.context.user;
-
-
-      return currentUser;
-    }
-  }, {
+  _createClass(ApolloCmsRenderer, [{
     key: 'render',
     value: function render() {
-      return null;
+      var children = this.props.children;
+
+
+      return children || null;
     }
   }]);
 
-  return ObjectView;
+  return ApolloCmsRenderer;
 }(_react2.default.Component);
 
-ObjectView.contextTypes = {
+ApolloCmsRenderer.contextTypes = {
   user: _propTypes2.default.object
 };
-exports.default = ObjectView;
+exports.default = ApolloCmsRenderer;

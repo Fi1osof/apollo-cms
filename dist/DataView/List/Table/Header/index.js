@@ -18,8 +18,6 @@ var _propTypes2 = _interopRequireDefault(_propTypes);
 
 var _Table = require('material-ui/Table');
 
-var _Table2 = _interopRequireDefault(_Table);
-
 var _Checkbox = require('material-ui/Checkbox');
 
 var _Checkbox2 = _interopRequireDefault(_Checkbox);
