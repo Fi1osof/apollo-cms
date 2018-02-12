@@ -32,7 +32,10 @@
     "react": "^16.2.0",
     "react-apollo": "^2.0.4",
     "react-dom": "^16.2.0",
-    "subscriptions-transport-ws": "^0.9.5"
+    "subscriptions-transport-ws": "^0.9.5",
+    "babel-runtime": "^6.26.0",
+    "prop-types": "^15.6.0",
+    "timers": "^0.1.1"
   },
   "peerDependencies": {
     "react": "16.x"
