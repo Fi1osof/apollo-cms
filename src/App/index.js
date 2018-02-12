@@ -19,7 +19,6 @@ import { WebSocketLink } from 'apollo-link-ws';
 import { split } from 'apollo-link';
 import { getMainDefinition } from 'apollo-utilities';
 
-
 import { setTimeout } from 'timers';
 
 import Renderer from './Renderer';
@@ -77,27 +76,31 @@ export default class ApolloCmsApp extends React.Component{ // eslint-disable-lin
     } = this.props;
 
 
+    if(!endpoint){
+      throw(new Error("Endpoind required"))
+    }
+
 
     let wsLink;
 
-    let protocol = 'http';
-    let ws_protocol = 'ws';
+    // let protocol = 'http';
+    // let ws_protocol = 'ws';
 
-    if(typeof window !== "undefined"){
+    // if(typeof window !== "undefined"){
 
-      const {
-        protocol: host_protocol,
-      } = window.location;
+    //   const {
+    //     protocol: host_protocol,
+    //   } = window.location;
 
-      if(host_protocol === 'https:'){
-        ws_protocol = 'wss';
-        protocol = 'https';
-      }
+    //   if(host_protocol === 'https:'){
+    //     ws_protocol = 'wss';
+    //     protocol = 'https';
+    //   }
 
-    }
+    // }
 
     const httpLink = createUploadLink({ 
-      uri: `${protocol}://${endpoint}/`,
+      uri: endpoint,
     });
     
     // const httpLink = createHttpLink({ 
@@ -105,7 +108,8 @@ export default class ApolloCmsApp extends React.Component{ // eslint-disable-lin
     // });
 
     wsLink = new WebSocketLink({
-      uri: `${ws_protocol}://${endpoint}/`,
+      // uri: `${ws_protocol}://${endpoint}/`,
+      uri: endpoint.replace(/^http/, 'ws'),
       options: {
         reconnect: true
       }

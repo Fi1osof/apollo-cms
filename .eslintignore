@@ -1,7 +1,0 @@
-.gitignore
-
-dist/**/*
-example/**/*
-node_modules/*
-
-gulpfile.js

@@ -2,6 +2,8 @@ import { ApolloLink, Observable } from 'apollo-link'
 import { print } from 'graphql/language/printer'
 import extractFiles from 'extract-files'
 
+const fetch = window.fetch;
+
 export { ReactNativeFile } from 'extract-files'
 
 export const createUploadLink = ({
