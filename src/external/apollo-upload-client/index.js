@@ -4,7 +4,7 @@ import extractFiles from 'extract-files'
 
 export { ReactNativeFile } from 'extract-files'
 
-const linkFetch = typeof fetch !== "undefined" ? fetch : undefined;
+const fetch = global.fetch;
 
 export const createUploadLink = ({
   includeExtensions,
