@@ -1,6 +1,6 @@
 {
   "name": "apollo-cms",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Not production. For personal use yet. Production will coming soon.",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -26,6 +26,7 @@
     "apollo-link-ws": "^1.0.5",
     "apollo-utilities": "^1.0.6",
     "babel-runtime": "^6.26.0",
+    "core-js": "^2.5.3",
     "extract-files": "^3.1.0",
     "graphql": "^0.12.3",
     "graphql-tag": "^2.7.3",

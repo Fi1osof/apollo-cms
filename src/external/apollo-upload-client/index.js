@@ -2,9 +2,9 @@ import { ApolloLink, Observable } from 'apollo-link'
 import { print } from 'graphql/language/printer'
 import extractFiles from 'extract-files'
 
-const fetch = window.fetch;
-
 export { ReactNativeFile } from 'extract-files'
+
+const linkFetch = typeof fetch !== "undefined" ? fetch : undefined;
 
 export const createUploadLink = ({
   includeExtensions,
@@ -12,7 +12,7 @@ export const createUploadLink = ({
   credentials: linkCredentials,
   headers: linkHeaders,
   fetchOptions: linkFetchOptions = {},
-  fetch: linkFetch = fetch
+  fetch: linkFetch,
 } = {}) =>
   new ApolloLink(
     ({ operationName, variables, query, extensions, getContext, setContext }) =>
