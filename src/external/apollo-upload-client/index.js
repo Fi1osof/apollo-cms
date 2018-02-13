@@ -12,7 +12,7 @@ export const createUploadLink = ({
   credentials: linkCredentials,
   headers: linkHeaders,
   fetchOptions: linkFetchOptions = {},
-  fetch: linkFetch,
+  fetch: linkFetch = fetch,
 } = {}) =>
   new ApolloLink(
     ({ operationName, variables, query, extensions, getContext, setContext }) =>

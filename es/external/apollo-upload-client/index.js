@@ -17,7 +17,8 @@ export var createUploadLink = function createUploadLink() {
       linkHeaders = _ref.headers,
       _ref$fetchOptions = _ref.fetchOptions,
       linkFetchOptions = _ref$fetchOptions === undefined ? {} : _ref$fetchOptions,
-      linkFetch = _ref.fetch;
+      _ref$fetch = _ref.fetch,
+      linkFetch = _ref$fetch === undefined ? fetch : _ref$fetch;
 
   return new ApolloLink(function (_ref2) {
     var operationName = _ref2.operationName,
