@@ -19,8 +19,6 @@ import { WebSocketLink } from 'apollo-link-ws';
 import { split } from 'apollo-link';
 import { getMainDefinition } from 'apollo-utilities';
 
-import { setTimeout } from 'timers';
-
 import Renderer from './Renderer';
 
 const authMiddleware = new ApolloLink((operation, forward) => { // eslint-disable-line react/prefer-stateless-function
@@ -309,7 +307,7 @@ export default class ApolloCmsApp extends React.Component{ // eslint-disable-lin
     
     const {
       data,
-    } = result;
+    } = result || {};
 
     if(data){
       this.setState({

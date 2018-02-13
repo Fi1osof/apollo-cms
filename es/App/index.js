@@ -39,8 +39,6 @@ import { WebSocketLink } from 'apollo-link-ws';
 import { split } from 'apollo-link';
 import { getMainDefinition } from 'apollo-utilities';
 
-import { setTimeout } from 'timers';
-
 import Renderer from './Renderer';
 
 var authMiddleware = new ApolloLink(function (operation, forward) {
@@ -250,7 +248,8 @@ var ApolloCmsApp = (_temp = _class = function (_React$Component) {
 
   ApolloCmsApp.prototype.loadApiData = function () {
     var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee() {
-      var apiQuery, client, result, data;
+      var apiQuery, client, result, _ref4, data;
+
       return _regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -278,7 +277,7 @@ var ApolloCmsApp = (_temp = _class = function (_React$Component) {
 
             case 6:
               result = _context.sent;
-              data = result.data;
+              _ref4 = result || {}, data = _ref4.data;
 
 
               if (data) {

@@ -1,6 +1,6 @@
 {
   "name": "apollo-cms",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "description": "Not production. For personal use yet. Production will coming soon.",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -36,8 +36,7 @@
     "react": "^16.2.0",
     "react-apollo": "^2.0.4",
     "react-dom": "^16.2.0",
-    "subscriptions-transport-ws": "^0.9.5",
-    "timers": "^0.1.1"
+    "subscriptions-transport-ws": "^0.9.5"
   },
   "peerDependencies": {
     "react": "16.x"
