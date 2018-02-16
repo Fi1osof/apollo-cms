@@ -57,6 +57,7 @@ export default class ApolloCmsApp extends React.Component{ // eslint-disable-lin
 
   static childContextTypes = {
     onAuthSuccess: PropTypes.func,
+    loadApiData: PropTypes.func,
     logout: PropTypes.func,
     token: PropTypes.string,
     user: PropTypes.object,
@@ -166,6 +167,7 @@ export default class ApolloCmsApp extends React.Component{ // eslint-disable-lin
       token,
       user,
       onAuthSuccess: this.onAuthSuccess,
+      loadApiData: () => this.loadApiData(),
       logout: this.logout,
       errors,
     };
