@@ -72,7 +72,8 @@ export default class ApolloCmsApp extends React.Component{ // eslint-disable-lin
 
     let {
       endpoint,
-    } = this.props;
+      webSocketImpl,
+    } = props;
 
 
     if(!endpoint){
@@ -111,7 +112,8 @@ export default class ApolloCmsApp extends React.Component{ // eslint-disable-lin
       uri: endpoint.replace(/^http/, 'ws'),
       options: {
         reconnect: true
-      }
+      },
+      webSocketImpl,
     });
 
 
