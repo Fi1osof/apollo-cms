@@ -1,6 +1,6 @@
 {
   "name": "apollo-cms",
-  "version": "1.2.8",
+  "version": "1.2.10",
   "description": "Apollo-client for prisma-cms",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -34,6 +34,8 @@
     "extract-files": "^4.0.0",
     "graphql": "^0.12.3",
     "graphql-tag": "^2.7.3",
+    "material-ui": "1.0.0-beta.43",
+    "material-ui-icons": "^1.0.0-beta.17",
     "object-assign": "^4.1.1",
     "prop-types": "^15.6.0",
     "query-string": "^5.1.0",
@@ -46,6 +48,7 @@
     "react": "16.x"
   },
   "devDependencies": {
+    "chalk": "^2.4.1",
     "nwb": "0.23.x",
     "pre-commit": "^1.2.2",
     "react": "^16.2.0",

@@ -763,31 +763,7 @@ export default class EditableView extends View {
 
     if (notifications && notifications.length) {
 
-      // return <div>
-      //   {notifications.map(({
-      //     message,
-      //   }, index) => {
-
-      //     return <p
-      //       key={index}
-      //       style={{
-      //         color: 'red',
-      //       }}
-      //     >
-
-      //       {message}
-
-      //     </p>
-
-      //   })}
-      // </div>
-
       return ReactDOM.createPortal(<Fragment
-      // style={{
-      //   minHeight: 200,
-      //   overflow: "hidden",
-      //   position: "relative",
-      // }}
       >
         {notifications.map((error, index) => {
 
@@ -801,10 +777,7 @@ export default class EditableView extends View {
             key={_id}
             open={open}
             autoHideDuration={errorDelay}
-            // onClose={event => this.onCloseError(error)}
             SnackbarContentProps={{
-              // 'aria-describedby': 'snackbar-fab-message-id',
-              // className: classes.snackbarContent,
             }}
             anchorOrigin={{
               vertical: "top",
@@ -833,27 +806,7 @@ export default class EditableView extends View {
 
               </Fragment>
             }
-          // style={{
-          //   position: "absolute",
-          //   width: "100%",
-          //   height: "100%",
-          //   margin: 0,
-          //   padding: 0,
-          //   // bottom: 0,
-          // }}
-          // className={classes.snackbar}
           />
-
-          // return <p
-          //   key={index}
-          //   style={{
-          //     color: 'red',
-          //   }}
-          // >
-
-          //   {message}
-
-          // </p>
 
         })}
       </Fragment>, window.document.body);
@@ -874,32 +827,33 @@ export default class EditableView extends View {
       data,
     } = this.props;
 
+
+    if(!data){
+      return null;
+    }
+
     const {
       object,
+      loading,
     } = data;
 
 
     let output;
 
     if (!object) {
-      output = this.renderEmpty();
+
+      if(loading){
+        return null;
+      }
+      else {
+        output = this.renderEmpty();
+      }
+
     }
 
     else {
 
-      // const draftObject = this.getObjectWithMutations();
-
-
       const inEditMode = this.isInEditMode();
-
-
-
-
-      // let defaultView;
-      // let editView;
-
-      // const isDirty = this.isDirty();
-
 
 
       let content;

@@ -1,3 +1,8 @@
+1.2.10
+===========================================
+- More tests
+- Check if object does not been passed
+
 1.2.8
 ===========================================
 - Upgrade dependencies

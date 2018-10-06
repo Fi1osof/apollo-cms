@@ -730,33 +730,8 @@ var EditableView = (_temp = _class = function (_View) {
 
     if (notifications && notifications.length) {
 
-      // return <div>
-      //   {notifications.map(({
-      //     message,
-      //   }, index) => {
-
-      //     return <p
-      //       key={index}
-      //       style={{
-      //         color: 'red',
-      //       }}
-      //     >
-
-      //       {message}
-
-      //     </p>
-
-      //   })}
-      // </div>
-
       return ReactDOM.createPortal(React.createElement(
-        Fragment
-        // style={{
-        //   minHeight: 200,
-        //   overflow: "hidden",
-        //   position: "relative",
-        // }}
-        ,
+        Fragment,
         null,
         notifications.map(function (error, index) {
           var _id = error._id,
@@ -768,12 +743,8 @@ var EditableView = (_temp = _class = function (_View) {
           return React.createElement(Snackbar, {
             key: _id,
             open: open,
-            autoHideDuration: errorDelay
-            // onClose={event => this.onCloseError(error)}
-            , SnackbarContentProps: {
-              // 'aria-describedby': 'snackbar-fab-message-id',
-              // className: classes.snackbarContent,
-            },
+            autoHideDuration: errorDelay,
+            SnackbarContentProps: {},
             anchorOrigin: {
               vertical: "top",
               horizontal: "center"
@@ -801,27 +772,7 @@ var EditableView = (_temp = _class = function (_View) {
                 '\u041E\u0442\u043C\u0435\u043D\u0430'
               )
             )
-            // style={{
-            //   position: "absolute",
-            //   width: "100%",
-            //   height: "100%",
-            //   margin: 0,
-            //   padding: 0,
-            //   // bottom: 0,
-            // }}
-            // className={classes.snackbar}
           });
-
-          // return <p
-          //   key={index}
-          //   style={{
-          //     color: 'red',
-          //   }}
-          // >
-
-          //   {message}
-
-          // </p>
         })
       ), window.document.body);
     } else {
@@ -831,25 +782,28 @@ var EditableView = (_temp = _class = function (_View) {
 
   EditableView.prototype.render = function render() {
     var data = this.props.data;
-    var object = data.object;
+
+
+    if (!data) {
+      return null;
+    }
+
+    var object = data.object,
+        loading = data.loading;
 
 
     var output = void 0;
 
     if (!object) {
-      output = this.renderEmpty();
+
+      if (loading) {
+        return null;
+      } else {
+        output = this.renderEmpty();
+      }
     } else {
 
-      // const draftObject = this.getObjectWithMutations();
-
-
       var inEditMode = this.isInEditMode();
-
-      // let defaultView;
-      // let editView;
-
-      // const isDirty = this.isDirty();
-
 
       var content = void 0;
 
