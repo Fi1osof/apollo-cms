@@ -7,15 +7,15 @@ export default class ObjectView extends React.Component { // eslint-disable-line
 
   static propTypes = {
     data: PropTypes.object.isRequired,
-    // object: PropTypes.object.isRequired,
     // saveObject: PropTypes.func,
     // mutate: PropTypes.func.isRequired,
     // refetch: PropTypes.func.isRequired,
   }
-
-
+  
+  
   static contextTypes = {
     user: PropTypes.object,
+    client: PropTypes.object.isRequired,
   }
 
 

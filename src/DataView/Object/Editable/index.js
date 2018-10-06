@@ -1,22 +1,33 @@
-import React from 'react'
+import React, { Fragment } from 'react'
+import ReactDOM from 'react-dom';
+
 import PropTypes from 'prop-types'
 
 import TextField from 'material-ui/TextField';
 // import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 import IconButton from 'material-ui/IconButton';
+import Button from 'material-ui/Button';
 
 import EditIcon from 'material-ui-icons/ModeEdit';
 import ResetIcon from 'material-ui-icons/Restore';
 import SaveIcon from 'material-ui-icons/Save';
 
+import Snackbar from 'material-ui/Snackbar';
+
 import View from '../';
 
 
-let {...propTypes} = View.propTypes;
+let { ...propTypes } = View.propTypes;
 
 Object.assign(propTypes, {
   mutate: PropTypes.func.isRequired,
+  _dirty: PropTypes.object,
+  errorDelay: PropTypes.number.isRequired,
+});
+
+const defaultProps = Object.assign({ ...View.defaultProps }, {
+  errorDelay: 10000,
 });
 
 export default class EditableView extends View {
@@ -24,20 +35,126 @@ export default class EditableView extends View {
   static propTypes = propTypes;
 
 
-  constructor(props){
+  static defaultProps = defaultProps;
+
+
+  constructor(props) {
 
     super(props);
 
+    const {
+    } = props;
+
+
+
     this.state = {
       inEditMode: false,
-      _dirty: null,
       notifications: [],
     }
 
   }
 
 
-  startEdit(){
+  componentWillMount(){
+
+    const {
+      _dirty = null,
+    } = this.props;
+
+    // this.state = {
+    //   ...this.state,
+    //   _dirty: _dirty || this.getCache(),
+    // };
+    
+    Object.assign(this.state, {
+      _dirty: _dirty || this.getCache(),
+    });
+
+    return super.componentWillMount ? super.componentWillMount() : true;
+  }
+
+  getCacheKey() {
+
+    const {
+      id,
+    } = this.props;
+
+    return id ? `item_${id}` : null;
+  }
+
+  setCache(data) {
+
+    if(typeof window === "undefined"){
+      return false;
+    }
+
+    let cacheData;
+
+    const key = this.getCacheKey();
+
+    if (key) {
+      try {
+
+        
+        if (cacheData) {
+          cacheData = JSON.stringify(cacheData);
+          window.localStorage.setItem(key, cacheData);
+        }
+
+      }
+      catch (error) {
+
+      }
+    }
+
+  }
+
+  getCache() {
+
+    if(typeof window === "undefined"){
+      return false;
+    }
+
+    let cacheData;
+
+    const key = this.getCacheKey();
+
+    if (key) {
+      try {
+
+        cacheData = window.localStorage.getItem(key);
+
+        if (cacheData) {
+          cacheData = JSON.parse(cacheData);
+        }
+
+      }
+      catch (error) {
+
+      }
+    }
+
+    // console.log("getCacheKey", cacheData);
+
+    return cacheData;
+  }
+
+  clearCache() {
+
+    if(typeof window === "undefined"){
+      return false;
+    }
+
+    const key = this.getCacheKey();
+
+    if (key) {
+      window.localStorage.removeItem(key);
+    }
+
+  }
+
+
+  startEdit() {
 
     this.setState({
       inEditMode: true,
@@ -45,7 +162,9 @@ export default class EditableView extends View {
 
   }
 
-  resetEdit(){
+  resetEdit() {
+
+    this.clearCache();
 
     this.setState({
       inEditMode: false,
@@ -55,11 +174,17 @@ export default class EditableView extends View {
   }
 
 
-  async save(){
+
+
+  async save() {
 
     const {
       _dirty,
     } = this.state;
+
+    const {
+      client,
+    } = this.context;
 
 
     // const result = await saveObject(_dirty);
@@ -68,26 +193,98 @@ export default class EditableView extends View {
 
 
     const result = await this.saveObject(_dirty)
-    .then(r => {
+      .then(async result => {
 
-      this.setState({
-        _dirty: null,
-        inEditMode: false,
-        errors: null,
+
+
+        // console.log("await this.saveObject 2", typeof result, result instanceof Error, result);
+
+        if (result instanceof Error) {
+
+          // console.log("await this.saveObject result", result);
+
+        }
+        else {
+
+          const {
+            data: resultData,
+          } = result || {};
+
+          const {
+            response,
+          } = resultData || {};
+
+          // console.log("result", result);
+          // console.log("resultData", resultData);
+
+          let {
+            success,
+            message,
+            errors = null,
+            ...other
+          } = response || {};
+
+
+          let newState = {
+            errors,
+          };
+
+          if (success === undefined) {
+
+            success = true;
+
+          }
+
+          if (!success) {
+
+            this.addError(message || "Request error");
+
+            // errors && errors.map(error => {
+            //   this.addError(error);
+            // });
+
+          }
+          else {
+
+            Object.assign(newState, {
+              _dirty: null,
+              inEditMode: false,
+            });
+
+            const {
+              onSave,
+            } = this.props;
+
+            if (onSave) {
+              onSave(result);
+            }
+
+            this.clearCache();
+
+            await client.resetStore();
+
+          }
+
+          this.setState(newState);
+
+        }
+
+
+        return result;
+      })
+      .catch(e => {
+        console.error(e);
+        return e;
       });
 
-      return r;
-    })
-    .catch(e => {
-      console.error(e);
-    });
+    // console.log("await this.saveObject", result);
 
     return result;
 
   }
 
 
-  async saveObject(data){
+  async saveObject(data) {
 
     // const {
     //   object,
@@ -103,19 +300,27 @@ export default class EditableView extends View {
     const {
       mutate,
     } = this.props;
-        
-    if(!mutate){
-      throw(new Error("Mutate not defined"));
+
+    if (!mutate) {
+      throw (new Error("Mutate not defined"));
     }
 
     const mutation = this.getMutation(data);
 
-    return mutate(mutation);
+    const result = await mutate(mutation).then(r => r).catch(e => {
+
+      // throw (e);
+      return e;
+    });
+
+    // console.log("result 333", result);
+
+    return result;
 
   }
 
 
-  getMutation(data){
+  getMutation(data) {
 
     const variables = this.getMutationVariables(data);
 
@@ -126,22 +331,24 @@ export default class EditableView extends View {
   }
 
 
-  getMutationVariables(data){
+  getMutationVariables(data) {
 
     const object = this.getObjectWithMutations();
-    
+
     const {
       id,
     } = object;
 
+    let where = id ? {id} : undefined;
+
     return {
-      id,
+      where,
       data,
     };
   }
 
 
-  isInEditMode(){
+  isInEditMode() {
 
     const {
       inEditMode,
@@ -153,19 +360,21 @@ export default class EditableView extends View {
   }
 
 
-  isDirty(){
+  isDirty() {
 
     return this.state._dirty ? true : false;
 
   }
 
 
-  onChange(event){
+  onChange(event) {
 
     const {
       name,
       value,
     } = event.target;
+
+    console.log("onChange", name, value);
 
     this.updateObject({
       [name]: value,
@@ -174,40 +383,90 @@ export default class EditableView extends View {
   }
 
 
-  updateObject(data){
+  updateObject(data) {
 
     const {
       _dirty = {},
     } = this.state;
 
+    const newData = Object.assign({ ..._dirty }, data);
+
+    const key = this.getCacheKey();
+
+    if (key && newData) {
+
+      window.localStorage.setItem(this.getCacheKey(), JSON.stringify(newData));
+    }
+
+
     this.setState({
-      _dirty: Object.assign({..._dirty}, data),
+      _dirty: newData,
     });
 
   }
 
 
-  getEditor(props){
+  // getEditor(props) {
+
+  //   const {
+  //     Editor,
+  //     name,
+  //     ...other
+  //   } = props;
+
+
+  //   const object = this.getObjectWithMutations();
+
+
+  //   if (!object) {
+  //     return null;
+  //   }
+
+  //   const value = object[name] || "";
+
+  //   // console.log("Editor", Editor, props);
+
+  //   // return null;
+
+  //   return Editor ? <Editor
+  //     onChange={event => {
+  //       this.onChange(event);
+  //     }}
+  //     name={name}
+  //     value={value}
+  //     style={{
+  //       width: "100%",
+  //     }}
+  //     {...other}
+  //   /> : null;
+
+  // }
+
+  getEditor(props) {
 
     const {
       Editor,
       name,
+      helperText,
+      onFocus,
       ...other
     } = props;
 
 
     const object = this.getObjectWithMutations();
 
-    
-    if(!object){
+
+    if (!object) {
       return null;
     }
 
     const value = object[name] || "";
 
-    // console.log("Editor", Editor, props);
+    const {
+      errors,
+    } = this.state;
 
-    // return null;
+    const error = errors ? errors.find(n => n.key === name) : "";
 
     return Editor ? <Editor
       onChange={event => {
@@ -218,24 +477,42 @@ export default class EditableView extends View {
       style={{
         width: "100%",
       }}
+      error={error ? true : false}
+      helperText={error && error.message || helperText}
+      onFocus={event => {
+
+        if (error) {
+          const index = errors.indexOf(error);
+          if (index !== -1) {
+            errors.splice(index, 1);
+            this.setState({
+              errors,
+            });
+          }
+        }
+
+        return onFocus ? onFocus(event) : null;
+      }}
       {...other}
     /> : null;
 
   }
 
 
-  getTextField(props = {}){
+  getTextField(props = {}) {
 
-    props = Object.assign({
+    props = {
       Editor: TextField,
-    }, props);
+      autoComplete: "off",
+      ...props,
+    };
 
     return this.getEditor(props);
 
   }
 
 
-  getObjectWithMutations(){
+  getObjectWithMutations() {
 
     const {
       data: {
@@ -244,7 +521,7 @@ export default class EditableView extends View {
     } = this.props;
 
 
-    if(!object){
+    if (!object) {
       return object;
     }
 
@@ -252,21 +529,21 @@ export default class EditableView extends View {
       _dirty,
     } = this.state;
 
-    if(_dirty){
+    if (_dirty) {
 
-      const draftObject = {...object}
+      const draftObject = { ...object }
 
       return Object.assign(draftObject, _dirty);
 
     }
-    else{
+    else {
       return object;
     }
 
   }
 
-  
-  getButtons(){
+
+  getButtons() {
 
 
     const inEditMode = this.isInEditMode();
@@ -275,9 +552,9 @@ export default class EditableView extends View {
 
     let buttons = [];
 
-    if(this.canEdit()){
+    if (this.canEdit()) {
 
-      if(inEditMode){
+      if (inEditMode) {
 
         buttons.push(<IconButton
           key="reset"
@@ -285,12 +562,12 @@ export default class EditableView extends View {
             this.resetEdit();
           }}
         >
-          <ResetIcon 
+          <ResetIcon
           />
         </IconButton>);
 
 
-        if(isDirty){
+        if (isDirty) {
 
           buttons.push(<IconButton
             key="save"
@@ -308,14 +585,14 @@ export default class EditableView extends View {
         }
 
       }
-      else{
+      else {
         buttons.push(<IconButton
           key="edit"
           onClick={event => {
             this.startEdit()
           }}
         >
-          <EditIcon 
+          <EditIcon
           />
         </IconButton>);
       }
@@ -326,18 +603,18 @@ export default class EditableView extends View {
   }
 
 
-  
 
 
 
-  getTitle(){
-    
+
+  getTitle() {
+
     // const {
     //   object,
     // } = this.props;
 
     const object = this.getObjectWithMutations();
-  
+
     const {
       name,
     } = object;
@@ -347,11 +624,11 @@ export default class EditableView extends View {
   }
 
 
-  renderHeader(){
-    
+  renderHeader() {
+
 
     return <Typography
-      type="title"
+      variant="title"
     >
       {this.getTitle()}
 
@@ -361,26 +638,40 @@ export default class EditableView extends View {
   }
 
 
-  renderEmpty(){
+  renderEmpty() {
     return null;
   }
 
 
-  renderDefaultView(){
+  renderDefaultView() {
 
     return null;
 
   }
 
 
-  renderEditableView(){
+  renderEditableView() {
 
     return null;
-    
+
   }
 
 
-  addError(error){
+  addError(error) {
+
+    const {
+      errorDelay,
+    } = this.props;
+
+    if (typeof error !== "object") {
+      error = {
+        message: error,
+      };
+    }
+
+    Object.assign(error, {
+      _id: new Date().getTime(),
+    });
 
     const {
       notifications = [],
@@ -394,11 +685,11 @@ export default class EditableView extends View {
         notifications,
       } = this.state;
 
-      if(notifications){
+      if (notifications) {
 
         const index = notifications.indexOf(error);
 
-        if(index !== -1){
+        if (index !== -1) {
 
           notifications.splice(index, 1);
 
@@ -410,7 +701,7 @@ export default class EditableView extends View {
 
       }
 
-    }, 5000);
+    }, errorDelay);
 
 
     this.setState({
@@ -420,37 +711,160 @@ export default class EditableView extends View {
   }
 
 
-  renderErrors(){
+  closeError(error) {
+
+    // let {
+    //   errors,
+    // } = this.state;
+
+    Object.assign(error, {
+      open: false,
+    });
+
+
+    console.log("click event 2", error, this.state.notifications);
+
+    this.forceUpdate();
+
+  }
+
+  onCloseError(error) {
+
+    let {
+      notifications,
+    } = this.state;
+
+    if (!notifications) {
+      return;
+    }
+
+    const index = notifications.indexOf(error);
+
+    if (index !== -1) {
+      notifications.splice(index, 1);
+
+      this.setState({
+        notifications,
+      });
+    }
+
+  }
+
+
+  renderErrors() {
+
+    const {
+      errorDelay,
+    } = this.props;
 
     const {
       notifications,
     } = this.state;
 
-    if(notifications && notifications.length){
+    if (notifications && notifications.length) {
 
-      return <div>
+      // return <div>
+      //   {notifications.map(({
+      //     message,
+      //   }, index) => {
+
+      //     return <p
+      //       key={index}
+      //       style={{
+      //         color: 'red',
+      //       }}
+      //     >
+
+      //       {message}
+
+      //     </p>
+
+      //   })}
+      // </div>
+
+      return ReactDOM.createPortal(<Fragment
+      // style={{
+      //   minHeight: 200,
+      //   overflow: "hidden",
+      //   position: "relative",
+      // }}
+      >
         {notifications.map((error, index) => {
-          
-          return <p
-            key={index}
-            style={{
-              color: 'red',
+
+          let {
+            _id,
+            message,
+            open = true,
+          } = error;
+
+          return <Snackbar
+            key={_id}
+            open={open}
+            autoHideDuration={errorDelay}
+            // onClose={event => this.onCloseError(error)}
+            SnackbarContentProps={{
+              // 'aria-describedby': 'snackbar-fab-message-id',
+              // className: classes.snackbarContent,
             }}
-          >
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "center",
+            }}
+            message={<span
+            // id="snackbar-fab-message-id"
+            >
+              {message}
+            </span>}
+            action={
+              <Fragment>
 
-            {error}
+                <Button
+                  color="primary"
+                  variant="raised"
+                  size="small"
+                  onClick={event => {
+                    // console.log("click event", event.target);
+                    event.stopPropagation();
+                    this.closeError(error)
+                  }}
+                >
+                  Отмена
+              </Button>
 
-          </p>
+              </Fragment>
+            }
+          // style={{
+          //   position: "absolute",
+          //   width: "100%",
+          //   height: "100%",
+          //   margin: 0,
+          //   padding: 0,
+          //   // bottom: 0,
+          // }}
+          // className={classes.snackbar}
+          />
+
+          // return <p
+          //   key={index}
+          //   style={{
+          //     color: 'red',
+          //   }}
+          // >
+
+          //   {message}
+
+          // </p>
 
         })}
-      </div>
+      </Fragment>, window.document.body);
 
     }
-    else{
+    else {
       return null;
     }
 
   }
+
 
 
   render() {
@@ -464,51 +878,65 @@ export default class EditableView extends View {
       object,
     } = data;
 
-    if(!object){
-      return this.renderEmpty();
+
+    let output;
+
+    if (!object) {
+      output = this.renderEmpty();
     }
 
-    // const draftObject = this.getObjectWithMutations();
+    else {
 
-    
-    const inEditMode = this.isInEditMode();
-
+      // const draftObject = this.getObjectWithMutations();
 
 
-
-    // let defaultView;
-    // let editView;
-
-    // const isDirty = this.isDirty();
-
-    
-
-    let content;
+      const inEditMode = this.isInEditMode();
 
 
-    if(inEditMode){
 
-      content = this.renderEditableView();
+
+      // let defaultView;
+      // let editView;
+
+      // const isDirty = this.isDirty();
+
+
+
+      let content;
+
+
+      if (inEditMode) {
+
+        content = this.renderEditableView();
+
+      }
+      else {
+
+        content = this.renderDefaultView();
+
+      }
+
+
+      output = (
+        <Fragment>
+
+          {this.renderHeader()}
+
+          {content}
+
+        </Fragment>
+      )
 
     }
-    else{
 
-      content = this.renderDefaultView();
+    return <Fragment>
 
-    }
+      {output}
 
+      {this.renderErrors()}
 
-    return (
-      <div>
-        
-        {this.renderHeader()}
+    </Fragment>
 
-        {this.renderErrors()}
-
-        {content}
-
-      </div>
-    )
   }
 
 }

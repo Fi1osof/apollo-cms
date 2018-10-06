@@ -15,16 +15,8 @@ export default class ApolloCmsRenderer extends React.Component {
 
     const {
       children,
-      ...other
     } = this.props;
 
-    return children 
-      ? 
-        <children.type
-          {...children.props}
-          {...other}
-        /> 
-      : 
-    null;
+    return children || null;
   }
 }

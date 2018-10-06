@@ -13,27 +13,30 @@ import { createUploadLink } from '../external/apollo-upload-client'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { ApolloLink, from } from 'apollo-link';
 import { onError } from 'apollo-link-error';
-// import { createHttpLink } from "apollo-link-http";
+import { createHttpLink } from "apollo-link-http";
 
 import { WebSocketLink } from 'apollo-link-ws';
 import { split } from 'apollo-link';
 import { getMainDefinition } from 'apollo-utilities';
 
 import Renderer from './Renderer';
+import { HttpLink } from 'apollo-boost/lib/bundle.umd';
+
+
+const localStorage = global.localStorage;
+
 
 const authMiddleware = new ApolloLink((operation, forward) => { // eslint-disable-line react/prefer-stateless-function
   // add the authorization to the headers
   operation.setContext(({ headers = {} }) => ({
     headers: {
       ...headers,
-      Authorization: localStorage.getItem('token') || null,
+      Authorization: localStorage && localStorage.getItem('token') || null,
     }
   }));
 
   return forward(operation);
 })
-
-
 
 
 export default class ApolloCmsApp extends React.Component{ // eslint-disable-line react/prefer-stateless-function
@@ -62,6 +65,7 @@ export default class ApolloCmsApp extends React.Component{ // eslint-disable-lin
     token: PropTypes.string,
     user: PropTypes.object,
     errors: PropTypes.array,
+    localStorage: PropTypes.object,
   };
 
 
@@ -72,8 +76,7 @@ export default class ApolloCmsApp extends React.Component{ // eslint-disable-lin
 
     let {
       endpoint,
-      webSocketImpl,
-    } = props;
+    } = this.props;
 
 
     if(!endpoint){
@@ -104,7 +107,7 @@ export default class ApolloCmsApp extends React.Component{ // eslint-disable-lin
     });
     
     // const httpLink = createHttpLink({ 
-    //   uri: `${protocol}://${endpoint}/`,
+    //   uri: endpoint,
     // });
 
     wsLink = new WebSocketLink({
@@ -112,8 +115,7 @@ export default class ApolloCmsApp extends React.Component{ // eslint-disable-lin
       uri: endpoint.replace(/^http/, 'ws'),
       options: {
         reconnect: true
-      },
-      webSocketImpl,
+      }
     });
 
 
@@ -143,7 +145,7 @@ export default class ApolloCmsApp extends React.Component{ // eslint-disable-lin
         authMiddleware,
         link,
       ]),
-      cache: new InMemoryCache(),
+      cache: new InMemoryCache().restore(global.__APOLLO_STATE__),
       connectToDevTools: true,
     });
     
@@ -172,6 +174,7 @@ export default class ApolloCmsApp extends React.Component{ // eslint-disable-lin
       loadApiData: () => this.loadApiData(),
       logout: this.logout,
       errors,
+      localStorage,
     };
 
     return context;
@@ -189,6 +192,16 @@ export default class ApolloCmsApp extends React.Component{ // eslint-disable-lin
 
     this.setState({
       user,
+    }, async () => {
+
+      const {
+        client,
+      } = this.state;
+
+      await client.resetStore();
+
+      this.forceUpdate();
+
     });
 
   }

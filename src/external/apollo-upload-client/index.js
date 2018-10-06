@@ -1,97 +1,190 @@
-import { ApolloLink, Observable } from 'apollo-link'
-import { print } from 'graphql/language/printer'
-import {extractFiles} from 'extract-files'
 
-export { ReactNativeFile } from 'extract-files'
+const {
+  fetch,
+} = global;
 
-// console.log("extractFiles", extractFiles);
+const { ApolloLink, Observable } = require('apollo-link')
+const {
+  selectURI,
+  selectHttpOptionsAndBody,
+  fallbackHttpConfig,
+  serializeFetchParameter,
+  createSignalIfSupported,
+  parseAndCheckHttpResponse
+} = require('apollo-link-http-common')
+const { extractFiles, ReactNativeFile } = require('extract-files/lib/index')
+ 
 
-const fetch = global.fetch;
+/**
+ * A React Native [`File`](https://developer.mozilla.org/docs/web/api/file)
+ * substitute.
+ * @kind typedef
+ * @name ReactNativeFileSubstitute
+ * @type {Object}
+ * @see [`extract-files` docs](https://github.com/jaydenseric/extract-files#type-reactnativefilesubstitute).
+ * @see [React Native `FormData` polyfill source](https://github.com/facebook/react-native/blob/v0.45.1/Libraries/Network/FormData.js#L34).
+ * @prop {String} uri Filesystem path.
+ * @prop {String} [name] File name.
+ * @prop {String} [type] File content type.
+ * @example <caption>A camera roll file.</caption>
+ * ```js
+ * {
+ *   uri: uriFromCameraRoll,
+ *   name: 'a.jpg',
+ *   type: 'image/jpeg'
+ * }
+ * ```
+ */
 
-export const createUploadLink = ({
-  includeExtensions,
-  uri: linkUri = '/graphql',
-  credentials: linkCredentials,
-  headers: linkHeaders,
-  fetchOptions: linkFetchOptions = {},
+/**
+ * Used to mark a
+ * [React Native `File` substitute]{@link ReactNativeFileSubstitute}.
+ * It’s too risky to assume all objects with `uri`, `type` and `name` properties
+ * are files to extract. Re-exported from [`extract-files`](https://npm.im/extract-files)
+ * for convenience.
+ * @kind class
+ * @name ReactNativeFile
+ * @param {ReactNativeFileSubstitute} file A React Native [`File`](https://developer.mozilla.org/docs/web/api/file) substitute.
+ * @example <caption>A React Native file that can be used in query or mutation variables.</caption>
+ * ```js
+ * const { ReactNativeFile } = require('apollo-upload-client')
+ *
+ * const file = new ReactNativeFile({
+ *   uri: uriFromCameraRoll,
+ *   name: 'a.jpg',
+ *   type: 'image/jpeg'
+ * })
+ * ```
+ */
+exports.ReactNativeFile = ReactNativeFile
+
+/**
+ * GraphQL request `fetch` options.
+ * @kind typedef
+ * @name FetchOptions
+ * @type {Object}
+ * @see [Polyfillable fetch options](https://github.github.io/fetch#options).
+ * @prop {Object} headers HTTP request headers.
+ * @prop {string} [credentials] Authentication credentials mode.
+ */
+
+/**
+ * Creates a terminating [Apollo Link](https://apollographql.com/docs/link)
+ * capable of file uploads. Options match [`createHttpLink`](https://apollographql.com/docs/link/links/http#options).
+ * @see [GraphQL multipart request spec](https://github.com/jaydenseric/graphql-multipart-request-spec).
+ * @see [apollo-link on GitHub](https://github.com/apollographql/apollo-link).
+ * @kind function
+ * @name createUploadLink
+ * @param {Object} options Options.
+ * @param {string} [options.uri=/graphql] GraphQL endpoint URI.
+ * @param {function} [options.fetch] [`fetch`](https://fetch.spec.whatwg.org) implementation to use, defaulting to the `fetch` global.
+ * @param {FetchOptions} [options.fetchOptions] `fetch` options; overridden by upload requirements.
+ * @param {string} [options.credentials] Overrides `options.fetchOptions.credentials`.
+ * @param {Object} [options.headers] Merges with and overrides `options.fetchOptions.headers`.
+ * @param {boolean} [options.includeExtensions=false] Toggles sending `extensions` fields to the GraphQL server.
+ * @returns {ApolloLink} A terminating [Apollo Link](https://apollographql.com/docs/link) capable of file uploads.
+ * @example <caption>A basic Apollo Client setup.</caption>
+ * ```js
+ * const { ApolloClient } = require('apollo-client')
+ * const { InMemoryCache } = require('apollo-cache-inmemory')
+ * const { createUploadLink } = require('apollo-upload-client')
+ *
+ * const client = new ApolloClient({
+ *   cache: new InMemoryCache(),
+ *   link: createUploadLink()
+ * })
+ * ```
+ */
+exports.createUploadLink = ({
+  uri: fetchUri = '/graphql',
   fetch: linkFetch = fetch,
-} = {}) =>
-  new ApolloLink(
-    ({ operationName, variables, query, extensions, getContext, setContext }) =>
-      new Observable(observer => {
-        const requestOperation = { query: print(query) }
+  fetchOptions,
+  credentials,
+  headers,
+  includeExtensions
+} = {}) => {
+  const linkConfig = {
+    http: { includeExtensions },
+    options: fetchOptions,
+    credentials,
+    headers
+  }
 
-        if (operationName) requestOperation.operationName = operationName
-        if (Object.keys(variables).length)
-          requestOperation.variables = variables
-        if (extensions && includeExtensions)
-          requestOperation.extensions = extensions
+  return new ApolloLink(operation => {
+    const uri = selectURI(operation, fetchUri)
+    const context = operation.getContext()
+    const contextConfig = {
+      http: context.http,
+      options: context.fetchOptions,
+      credentials: context.credentials,
+      headers: context.headers
+    }
 
-        const files = extractFiles(requestOperation)
+    const { options, body } = selectHttpOptionsAndBody(
+      operation,
+      fallbackHttpConfig,
+      linkConfig,
+      contextConfig
+    )
 
-        const {
-          uri = linkUri,
-          credentials = linkCredentials,
-          headers: contextHeaders,
-          fetchOptions: contextFetchOptions = {}
-        } = getContext()
+    const files = extractFiles(body)
+    const payload = serializeFetchParameter(body, 'Payload')
 
-        const fetchOptions = {
-          ...linkFetchOptions,
-          ...contextFetchOptions,
-          headers: {
-            ...linkFetchOptions.headers,
-            ...contextFetchOptions.headers,
-            ...linkHeaders,
-            ...contextHeaders
-          },
-          method: 'POST'
-        }
+    if (files.length) {
+      // Automatically set by fetch when the body is a FormData instance.
+      delete options.headers['content-type']
 
-        if (credentials) fetchOptions.credentials = credentials
+      // GraphQL multipart request spec:
+      // https://github.com/jaydenseric/graphql-multipart-request-spec
+      options.body = new FormData()
+      options.body.append('operations', payload)
+      options.body.append(
+        'map',
+        JSON.stringify(
+          files.reduce((map, { path }, index) => {
+            map[`${index}`] = [path]
+            return map
+          }, {})
+        )
+      )
+      files.forEach(({ file }, index) =>
+        options.body.append(index, file, file.name)
+      )
+    } else options.body = payload
 
-        if (files.length) {
-          // GraphQL multipart request spec:
-          // https://github.com/jaydenseric/graphql-multipart-request-spec
+    return new Observable(observer => {
+      // Allow aborting fetch, if supported.
+      const { controller, signal } = createSignalIfSupported()
+      if (controller) options.signal = signal
 
-          fetchOptions.body = new FormData()
+      linkFetch(uri, options)
+        .then(response => {
+          // Forward the response on the context.
+          operation.setContext({ response })
+          return response
+        })
+        .then(parseAndCheckHttpResponse(operation))
+        .then(result => {
+          observer.next(result)
+          observer.complete()
+        })
+        .catch(error => {
+          if (error.name === 'AbortError')
+            // Fetch was aborted.
+            return
 
-          fetchOptions.body.append(
-            'operations',
-            JSON.stringify(requestOperation)
-          )
+          if (error.result && error.result.errors && error.result.data)
+            // There is a GraphQL result to forward.
+            observer.next(error.result)
 
-          fetchOptions.body.append(
-            'map',
-            JSON.stringify(
-              files.reduce((map, { path }, index) => {
-                map[`${index}`] = [path]
-                return map
-              }, {})
-            )
-          )
+          observer.error(error)
+        })
 
-          files.forEach(({ file }, index) =>
-            fetchOptions.body.append(index, file, file.name)
-          )
-        } else {
-          fetchOptions.headers['content-type'] = 'application/json'
-          fetchOptions.body = JSON.stringify(requestOperation)
-        }
-
-        linkFetch(uri, fetchOptions)
-          .then(response => {
-            setContext({ response })
-
-            return response.json()
-          })
-          .then(result => {
-            
-            observer.next(result)
-            observer.complete()
-          })
-          .catch(error => {
-            return observer.error(error);
-          })
-      })
-  )
+      // Cleanup function.
+      return () => {
+        // Abort fetch.
+        if (controller) controller.abort()
+      }
+    })
+  })
+}
