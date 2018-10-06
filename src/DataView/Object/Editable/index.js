@@ -337,7 +337,7 @@ export default class EditableView extends View {
 
     const {
       id,
-    } = object;
+    } = object || {};
 
     let where = id ? {id} : undefined;
 
@@ -405,42 +405,6 @@ export default class EditableView extends View {
 
   }
 
-
-  // getEditor(props) {
-
-  //   const {
-  //     Editor,
-  //     name,
-  //     ...other
-  //   } = props;
-
-
-  //   const object = this.getObjectWithMutations();
-
-
-  //   if (!object) {
-  //     return null;
-  //   }
-
-  //   const value = object[name] || "";
-
-  //   // console.log("Editor", Editor, props);
-
-  //   // return null;
-
-  //   return Editor ? <Editor
-  //     onChange={event => {
-  //       this.onChange(event);
-  //     }}
-  //     name={name}
-  //     value={value}
-  //     style={{
-  //       width: "100%",
-  //     }}
-  //     {...other}
-  //   /> : null;
-
-  // }
 
   getEditor(props) {
 
@@ -617,7 +581,7 @@ export default class EditableView extends View {
 
     const {
       name,
-    } = object;
+    } = object || {};
 
     return name;
 

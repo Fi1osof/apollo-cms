@@ -366,8 +366,8 @@ var EditableView = (_temp = _class = function (_View) {
 
     var object = this.getObjectWithMutations();
 
-    var id = object.id;
-
+    var _ref7 = object || {},
+        id = _ref7.id;
 
     var where = id ? { id: id } : undefined;
 
@@ -421,42 +421,6 @@ var EditableView = (_temp = _class = function (_View) {
       _dirty: newData
     });
   };
-
-  // getEditor(props) {
-
-  //   const {
-  //     Editor,
-  //     name,
-  //     ...other
-  //   } = props;
-
-
-  //   const object = this.getObjectWithMutations();
-
-
-  //   if (!object) {
-  //     return null;
-  //   }
-
-  //   const value = object[name] || "";
-
-  //   // console.log("Editor", Editor, props);
-
-  //   // return null;
-
-  //   return Editor ? <Editor
-  //     onChange={event => {
-  //       this.onChange(event);
-  //     }}
-  //     name={name}
-  //     value={value}
-  //     style={{
-  //       width: "100%",
-  //     }}
-  //     {...other}
-  //   /> : null;
-
-  // }
 
   EditableView.prototype.getEditor = function getEditor(props) {
     var _this3 = this;
@@ -609,8 +573,8 @@ var EditableView = (_temp = _class = function (_View) {
 
     var object = this.getObjectWithMutations();
 
-    var name = object.name;
-
+    var _ref8 = object || {},
+        name = _ref8.name;
 
     return name;
   };
