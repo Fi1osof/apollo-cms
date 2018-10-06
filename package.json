@@ -1,6 +1,6 @@
 {
   "name": "apollo-cms",
-  "version": "1.2.7",
+  "version": "1.2.8",
   "description": "Apollo-client for prisma-cms",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -20,15 +20,18 @@
     "test:watch": "nwb test-react --server"
   },
   "dependencies": {
+    "apollo-boost": "^0.1.16",
     "apollo-cache-inmemory": "^1.1.7",
     "apollo-client": "^2.2.3",
     "apollo-link": "^1.1.0",
     "apollo-link-error": "^1.0.5",
+    "apollo-link-http": "^1.5.5",
+    "apollo-link-http-common": "^0.2.5",
     "apollo-link-ws": "^1.0.5",
     "apollo-utilities": "^1.0.6",
     "babel-runtime": "^6.26.0",
     "core-js": "^2.5.3",
-    "extract-files": "^3.1.0",
+    "extract-files": "^4.0.0",
     "graphql": "^0.12.3",
     "graphql-tag": "^2.7.3",
     "object-assign": "^4.1.1",
