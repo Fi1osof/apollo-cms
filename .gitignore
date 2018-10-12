@@ -2,5 +2,7 @@
 /demo/dist
 /node_modules
 /umd
+/lib
+/es
 npm-debug.log*
 /yarn.lock
