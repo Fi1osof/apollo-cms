@@ -567,24 +567,19 @@ describe('DataView Object/Editable Empty', () => {
 
   node = document.createElement('div')
 
-
-
-  it("Render empty object with error", () => {
-
-    render(<App
-      Renderer={EditableEmpty} 
-    />, node, () => { 
-
-    })
-
-  })
+  
 
 
   it("Render empty object", () => {
 
     render(<App
       Renderer={EditableEmpty}
-      data={{}}
+      data={{
+        loading: false,
+      }}
+      mutate={() => {
+        
+      }}
     />, node, () => {
 
 
@@ -598,6 +593,9 @@ describe('DataView Object/Editable Empty', () => {
       Renderer={EditableEmpty}
       data={{
         loading: true,
+      }}
+      mutate={() => {
+        
       }}
     />, node, () => {
 

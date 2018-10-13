@@ -18,15 +18,43 @@ export const queryFragments = {
 }
 
 
+let options;
+
+let testURL;
+
+try {
+  options = JSON.parse(process.env.npm_config_argv);
+
+  const {
+    original,
+  } = options;
+
+  testURL = original && original.find(n => /--testURL=/.test(n));
+
+  testURL = testURL && testURL.replace(/--testURL=/, '') || "";
+
+}
+catch (error) {
+  console.error(error);
+}
+
+
+let endpoint = testURL || "http://localhost";
+
+
+
+
 export default class TestApp extends Component {
 
   static propTypes = {
     // Renderer: PropTypes.func.isRequired,
+    endpoint: PropTypes.string.isRequired,
     queryFragments: PropTypes.object.isRequired,
   }
-
+  
   static defaultProps = {
     // Renderer,
+    endpoint,
     queryFragments,
   }
 

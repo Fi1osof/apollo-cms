@@ -13,14 +13,14 @@ import { createUploadLink } from '../external/apollo-upload-client'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { ApolloLink, from } from 'apollo-link';
 import { onError } from 'apollo-link-error';
-import { createHttpLink } from "apollo-link-http";
+// import { createHttpLink } from "apollo-link-http";
 
 import { WebSocketLink } from 'apollo-link-ws';
 import { split } from 'apollo-link';
 import { getMainDefinition } from 'apollo-utilities';
 
 import Renderer from './Renderer';
-import { HttpLink } from 'apollo-boost/lib/bundle.umd';
+// import { HttpLink } from 'apollo-boost/lib/bundle.umd';
 
 
 const localStorage = global.localStorage;
