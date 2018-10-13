@@ -55,7 +55,7 @@ export default class EditableView extends View {
   }
 
 
-  componentWillMount(){
+  componentWillMount() {
 
     const {
       _dirty = null,
@@ -65,7 +65,7 @@ export default class EditableView extends View {
     //   ...this.state,
     //   _dirty: _dirty || this.getCache(),
     // };
-    
+
     Object.assign(this.state, {
       _dirty: _dirty || this.getCache(),
     });
@@ -77,14 +77,18 @@ export default class EditableView extends View {
 
     const {
       id,
-    } = this.props;
+    } = this.getObject() || {};
 
     return id ? `item_${id}` : null;
   }
 
   setCache(data) {
 
-    if(typeof window === "undefined"){
+    const {
+      localStorage,
+    } = global;
+
+    if (!localStorage) {
       return false;
     }
 
@@ -95,10 +99,13 @@ export default class EditableView extends View {
     if (key) {
       try {
 
-        
-        if (cacheData) {
-          cacheData = JSON.stringify(cacheData);
-          window.localStorage.setItem(key, cacheData);
+
+        if (data) {
+          cacheData = JSON.stringify(data);
+          localStorage.setItem(key, cacheData);
+        }
+        else {
+          localStorage.removeItem(key);
         }
 
       }
@@ -111,7 +118,7 @@ export default class EditableView extends View {
 
   getCache() {
 
-    if(typeof window === "undefined"){
+    if (typeof window === "undefined") {
       return false;
     }
 
@@ -141,7 +148,7 @@ export default class EditableView extends View {
 
   clearCache() {
 
-    if(typeof window === "undefined"){
+    if (typeof window === "undefined") {
       return false;
     }
 
@@ -150,26 +157,6 @@ export default class EditableView extends View {
     if (key) {
       window.localStorage.removeItem(key);
     }
-
-  }
-
-
-  startEdit() {
-
-    this.setState({
-      inEditMode: true,
-    });
-
-  }
-
-  resetEdit() {
-
-    this.clearCache();
-
-    this.setState({
-      inEditMode: false,
-      _dirty: null,
-    });
 
   }
 
@@ -197,7 +184,7 @@ export default class EditableView extends View {
 
 
 
-        // console.log("await this.saveObject 2", typeof result, result instanceof Error, result);
+        console.log("await this.saveObject 2", typeof result, result instanceof Error, result);
 
         if (result instanceof Error) {
 
@@ -339,12 +326,32 @@ export default class EditableView extends View {
       id,
     } = object || {};
 
-    let where = id ? {id} : undefined;
+    let where = id ? { id } : undefined;
 
     return {
       where,
       data,
     };
+  }
+
+
+  startEdit() {
+
+    this.setState({
+      inEditMode: true,
+    });
+
+  }
+
+  resetEdit() {
+
+    this.clearCache();
+
+    this.setState({
+      inEditMode: false,
+      _dirty: null,
+    });
+
   }
 
 
@@ -478,12 +485,7 @@ export default class EditableView extends View {
 
   getObjectWithMutations() {
 
-    const {
-      data: {
-        object,
-      },
-    } = this.props;
-
+    const object = this.getObject();
 
     if (!object) {
       return object;
@@ -504,6 +506,20 @@ export default class EditableView extends View {
       return object;
     }
 
+  }
+
+
+  getObject() {
+
+    const {
+      data,
+    } = this.props;
+
+    const {
+      object,
+    } = data || {};
+
+    return object;
   }
 
 
@@ -643,34 +659,39 @@ export default class EditableView extends View {
 
     notifications.push(error);
 
-    setTimeout(() => {
-
-      const {
-        notifications,
-      } = this.state;
-
-      if (notifications) {
-
-        const index = notifications.indexOf(error);
-
-        if (index !== -1) {
-
-          notifications.splice(index, 1);
-
-          this.setState({
-            notifications,
-          });
-
-        }
-
-      }
-
-    }, errorDelay);
+    setTimeout(() => this.removeError(error), errorDelay);
 
 
     this.setState({
       notifications,
     });
+
+    return error;
+
+  }
+
+
+  removeError(error) {
+
+    const {
+      notifications,
+    } = this.state;
+
+    if (notifications) {
+
+      const index = notifications.indexOf(error);
+
+      if (index !== -1) {
+
+        notifications.splice(index, 1);
+
+        this.setState({
+          notifications,
+        });
+
+      }
+
+    }
 
   }
 
@@ -692,27 +713,27 @@ export default class EditableView extends View {
 
   }
 
-  onCloseError(error) {
+  // onCloseError(error) {
 
-    let {
-      notifications,
-    } = this.state;
+  //   let {
+  //     notifications,
+  //   } = this.state;
 
-    if (!notifications) {
-      return;
-    }
+  //   if (!notifications) {
+  //     return;
+  //   }
 
-    const index = notifications.indexOf(error);
+  //   const index = notifications.indexOf(error);
 
-    if (index !== -1) {
-      notifications.splice(index, 1);
+  //   if (index !== -1) {
+  //     notifications.splice(index, 1);
 
-      this.setState({
-        notifications,
-      });
-    }
+  //     this.setState({
+  //       notifications,
+  //     });
+  //   }
 
-  }
+  // }
 
 
   renderErrors() {
@@ -727,53 +748,68 @@ export default class EditableView extends View {
 
     if (notifications && notifications.length) {
 
-      return ReactDOM.createPortal(<Fragment
-      >
-        {notifications.map((error, index) => {
+      let output = null;
 
-          let {
-            _id,
-            message,
-            open = true,
-          } = error;
+      let errors = notifications.map((error, index) => {
 
-          return <Snackbar
-            key={_id}
-            open={open}
-            autoHideDuration={errorDelay}
-            SnackbarContentProps={{
-            }}
-            anchorOrigin={{
-              vertical: "top",
-              horizontal: "center",
-            }}
-            message={<span
-            // id="snackbar-fab-message-id"
-            >
-              {message}
-            </span>}
-            action={
-              <Fragment>
+        let {
+          _id,
+          message,
+          open = true,
+        } = error;
 
-                <Button
-                  color="primary"
-                  variant="raised"
-                  size="small"
-                  onClick={event => {
-                    // console.log("click event", event.target);
-                    event.stopPropagation();
-                    this.closeError(error)
-                  }}
-                >
-                  Отмена
-              </Button>
+        return <Snackbar
+          key={_id}
+          open={open}
+          autoHideDuration={errorDelay}
+          SnackbarContentProps={{
+          }}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "center",
+          }}
+          message={<span
+          // id="snackbar-fab-message-id"
+          >
+            {message}
+          </span>}
+          action={
+            <Fragment>
 
-              </Fragment>
-            }
-          />
+              <Button
+                color="primary"
+                variant="raised"
+                size="small"
+                onClick={event => {
+                  // console.log("click event", event.target);
+                  event.stopPropagation();
+                  this.closeError(error)
+                }}
+              >
+                Отмена
+            </Button>
 
-        })}
-      </Fragment>, window.document.body);
+            </Fragment>
+          }
+        />
+
+      });
+
+      const {
+        document,
+      } = global;
+
+      if (document.createRange) {
+        output = ReactDOM.createPortal(<Fragment
+        >
+          {errors}
+        </Fragment>, window.document.body);
+      }
+      else {
+        output = errors;
+      }
+
+      return output;
 
     }
     else {
@@ -792,7 +828,7 @@ export default class EditableView extends View {
     } = this.props;
 
 
-    if(!data){
+    if (!data) {
       return null;
     }
 
@@ -806,7 +842,7 @@ export default class EditableView extends View {
 
     if (!object) {
 
-      if(loading){
+      if (loading) {
         return null;
       }
       else {

@@ -4,6 +4,8 @@ import expect from 'expect'
 import React from 'react'
 import { render, unmountComponentAtNode } from 'react-dom'
 
+import PropTypes from "prop-types";
+
 import {
   styles,
   TableView,
@@ -11,18 +13,48 @@ import {
 
 import withStyles from 'material-ui/styles/withStyles'
 
+import "material-ui";
+
+import createDOM from "../../../utils/createDOM";
+
+createDOM();
+
 class Component extends TableView {
 
 
+  static propTypes = {
+    ...TableView.propTypes,
+    resolve: PropTypes.func.isRequired,
+  }
+
   componentDidMount() {
 
-    console.log("DataView List Table componentDidMount");
+    // console.log("DataView List Table componentDidMount");
 
     // this.handleRequestSort(new Event("sort"), {});
 
     super.componentDidMount && super.componentDidMount();
 
+    const {
+      resolve,
+    } = this.props;
+
+    // jest.useFakeTimers();
+
+    setTimeout(() => {
+      resolve();
+    }, 3000);
+
+    // jest.runAllTimers();
+
   }
+
+  // render() {
+
+  //   // return null;
+  //   return super.render();
+
+  // }
 
 }
 
@@ -43,6 +75,8 @@ describe('DataView List Table', () => {
   })
 
   it('Check content is not empty', () => {
+
+    // return undefined;
 
     return new Promise(async (resolve, reject) => {
 
@@ -121,7 +155,11 @@ describe('DataView List Table', () => {
         title="Test"
         limit={1}
         columnData={columnData}
+        resolve={resolve}
       />, node, () => {
+
+        // resolve();
+        return undefined;
 
         jest.useFakeTimers();
 
@@ -140,7 +178,7 @@ describe('DataView List Table', () => {
           // console.log("TableView textContent", table.textContent);
 
           expect(table).toNotBe(null);
-          
+
           const thead = table.querySelector("thead");
           expect(thead).toNotBe(null);
 

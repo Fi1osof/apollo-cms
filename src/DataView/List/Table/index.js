@@ -245,8 +245,6 @@ export class TableView extends Component {
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
-              // onSelectAllClick={this.handleSelectAllClick}
-              // onRequestSort={this.handleRequestSort}
               rowCount={rowCount}
               columnData={columnData}
             />
@@ -258,25 +256,7 @@ export class TableView extends Component {
               onRowSelect={this.onRowSelect}
               columnData={columnData}
             />
-
-            {/* {limit ? <TableFooter>
-              <TableRow>
-                <TablePagination
-                  colSpan={columnData.length + 1}
-                  count={count}
-                  rowsPerPage={limit}
-                  page={page}
-                  backIconButtonProps={{
-                    'aria-label': 'Previous Page',
-                  }}
-                  nextIconButtonProps={{
-                    'aria-label': 'Next Page',
-                  }}
-                  // onChangePage={this.handleChangePage}
-                  // onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                />
-              </TableRow>
-            </TableFooter> : null} */}
+ 
             
           </Table>
         </div>
