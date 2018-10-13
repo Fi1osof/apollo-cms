@@ -256,8 +256,6 @@ export default class ApolloCmsApp extends React.Component { // eslint-disable-li
 
         setTimeout(() => {
 
-          console.log("setTimeout 260", this.state.errors);
-
           const {
             errors,
           } = this.state;

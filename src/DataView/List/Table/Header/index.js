@@ -19,8 +19,8 @@ export default class EnhancedTableHead extends Component {
 
   static propTypes = {
     numSelected: PropTypes.number.isRequired,
-    onRequestSort: PropTypes.func.isRequired,
-    onSelectAllClick: PropTypes.func.isRequired,
+    // onRequestSort: PropTypes.func.isRequired,
+    // onSelectAllClick: PropTypes.func.isRequired,
     order: PropTypes.string.isRequired,
     orderBy: PropTypes.string.isRequired,
     rowCount: PropTypes.number.isRequired,
@@ -31,14 +31,14 @@ export default class EnhancedTableHead extends Component {
   static defaultProps = {
   };
 
-  createSortHandler = property => event => {
-    this.props.onRequestSort(event, property);
-  };
+  // createSortHandler = property => event => {
+  //   this.props.onRequestSort(event, property);
+  // };
 
   render() {
     
     const { 
-      onSelectAllClick, 
+      // onSelectAllClick, 
       order, 
       orderBy, 
       numSelected, 
@@ -49,20 +49,20 @@ export default class EnhancedTableHead extends Component {
     return (
       <TableHead>
         <TableRow>
-          <TableCell padding="checkbox">
+          {/* <TableCell padding="checkbox">
             <Checkbox
               indeterminate={numSelected > 0 && numSelected < rowCount}
               checked={numSelected === rowCount}
-              onChange={onSelectAllClick}
+              // onChange={onSelectAllClick}
             />
-          </TableCell>
+          </TableCell> */}
           {columnData.map(column => {
             return (
               <TableCell
                 key={column.id}
                 numeric={column.numeric}
                 padding={column.disablePadding ? 'none' : 'default'}
-                sortDirection={orderBy === column.id ? order : false}
+                // sortDirection={orderBy === column.id ? order : false}
               >
                 <Tooltip
                   title="Sort"
@@ -72,7 +72,7 @@ export default class EnhancedTableHead extends Component {
                   <TableSortLabel
                     active={orderBy === column.id}
                     direction={order}
-                    onClick={this.createSortHandler(column.id)}
+                    // onClick={this.createSortHandler(column.id)}
                   >
                     {column.label}
                   </TableSortLabel>

@@ -16,7 +16,6 @@ class Renderer extends App {
 
   async componentDidMount() {
 
-    console.log(chalk.green("App componentDidMount"));
 
     super.componentDidMount && super.componentDidMount();
 
@@ -112,7 +111,6 @@ describe('src/App', () => {
 
       setTimeout(() => {
 
-        console.log(chalk.green("done"), done);
 
         expect(done).toBe(true);
 

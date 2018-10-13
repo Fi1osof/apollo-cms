@@ -5,10 +5,10 @@ import { withStyles } from 'material-ui/styles';
 import Table, {
   // TableBody,
   // TableCell,
-  TableFooter,
+  // TableFooter,
   // TableHead,
-  TablePagination,
-  TableRow,
+  // TablePagination,
+  // TableRow,
   // TableSortLabel,
 } from 'material-ui/Table';
 
@@ -55,7 +55,7 @@ export class TableView extends Component {
 
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    // columnData: PropTypes.array.isRequired,
+    columnData: PropTypes.array.isRequired,
     data: PropTypes.object.isRequired,
     // refetch: PropTypes.func.isRequired,
     orderBy: PropTypes.string,
@@ -75,7 +75,7 @@ export class TableView extends Component {
     Header,
     Toolbar,
     Body,
-    columnData: [],
+    // columnData: [],
   };
 
   
@@ -104,77 +104,77 @@ export class TableView extends Component {
     };
   }
 
-  handleRequestSort = (event, property) => {
-    const orderBy = property;
-    let order = 'desc';
+  // handleRequestSort = (event, property) => {
+  //   const orderBy = property;
+  //   let order = 'desc';
 
-    if (this.state.orderBy === property && this.state.order === 'desc') {
-      order = 'asc';
-    }
+  //   if (this.state.orderBy === property && this.state.order === 'desc') {
+  //     order = 'asc';
+  //   }
 
-    const data =
-      order === 'desc'
-        ? this.state.data.sort((a, b) => (b[orderBy] < a[orderBy] ? -1 : 1))
-        : this.state.data.sort((a, b) => (a[orderBy] < b[orderBy] ? -1 : 1));
+  //   const data =
+  //     order === 'desc'
+  //       ? this.state.data.sort((a, b) => (b[orderBy] < a[orderBy] ? -1 : 1))
+  //       : this.state.data.sort((a, b) => (a[orderBy] < b[orderBy] ? -1 : 1));
 
-    this.setState({ data, order, orderBy });
-  };
+  //   this.setState({ data, order, orderBy });
+  // };
 
-  handleSelectAllClick = (event, checked) => {
-    if (checked) {
+  // handleSelectAllClick = (event, checked) => {
+  //   if (checked) {
 
-      const {
-        data,
-      } = this.props;
+  //     const {
+  //       data,
+  //     } = this.props;
 
-      this.setState({ selected: data.map(n => n.id) });
+  //     this.setState({ selected: data.map(n => n.id) });
 
-      return;
-    }
-    this.setState({ selected: [] });
-  };
+  //     return;
+  //   }
+  //   this.setState({ selected: [] });
+  // };
 
-  onRowSelect = (event, id) => {
+  // onRowSelect = (event, id) => {
 
-    const { selected } = this.state;
-    const selectedIndex = selected.indexOf(id);
-    let newSelected = [];
+  //   const { selected } = this.state;
+  //   const selectedIndex = selected.indexOf(id);
+  //   let newSelected = [];
 
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
+  //   if (selectedIndex === -1) {
+  //     newSelected = newSelected.concat(selected, id);
+  //   } else if (selectedIndex === 0) {
+  //     newSelected = newSelected.concat(selected.slice(1));
+  //   } else if (selectedIndex === selected.length - 1) {
+  //     newSelected = newSelected.concat(selected.slice(0, -1));
+  //   } else if (selectedIndex > 0) {
+  //     newSelected = newSelected.concat(
+  //       selected.slice(0, selectedIndex),
+  //       selected.slice(selectedIndex + 1),
+  //     );
+  //   }
 
-    this.setState({ selected: newSelected });
-  };
+  //   this.setState({ selected: newSelected });
+  // };
 
-  handleClick = (event, id) => {
+  // handleClick = (event, id) => {
     
-    const {
-      onRowClick,
-    } = this.props;
+  //   const {
+  //     onRowClick,
+  //   } = this.props;
 
-    return onRowClick ? onRowClick(event, id) : false;
+  //   return onRowClick ? onRowClick(event, id) : false;
 
-  };
+  // };
 
-  handleChangePage = (event, page) => {
-    this.setState({ page });
-  };
+  // handleChangePage = (event, page) => {
+  //   this.setState({ page });
+  // };
 
-  handleChangeRowsPerPage = event => {
-    this.setState({ rowsPerPage: event.target.value });
-  };
+  // handleChangeRowsPerPage = event => {
+  //   this.setState({ rowsPerPage: event.target.value });
+  // };
 
-  isSelected = id => this.state.selected.indexOf(id) !== -1;
+  // isSelected = id => this.state.selected.indexOf(id) !== -1;
 
 
   getColumns(){
@@ -184,7 +184,7 @@ export class TableView extends Component {
       columnData,
     } = this.props;
 
-    return columnData;
+    return columnData || [];
 
   }
 
@@ -245,8 +245,8 @@ export class TableView extends Component {
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
-              onSelectAllClick={this.handleSelectAllClick}
-              onRequestSort={this.handleRequestSort}
+              // onSelectAllClick={this.handleSelectAllClick}
+              // onRequestSort={this.handleRequestSort}
               rowCount={rowCount}
               columnData={columnData}
             />
@@ -259,7 +259,7 @@ export class TableView extends Component {
               columnData={columnData}
             />
 
-            {limit ? <TableFooter>
+            {/* {limit ? <TableFooter>
               <TableRow>
                 <TablePagination
                   colSpan={columnData.length + 1}
@@ -272,11 +272,11 @@ export class TableView extends Component {
                   nextIconButtonProps={{
                     'aria-label': 'Next Page',
                   }}
-                  onChangePage={this.handleChangePage}
-                  onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                  // onChangePage={this.handleChangePage}
+                  // onChangeRowsPerPage={this.handleChangeRowsPerPage}
                 />
               </TableRow>
-            </TableFooter> : null}
+            </TableFooter> : null} */}
             
           </Table>
         </div>
