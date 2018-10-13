@@ -39,7 +39,7 @@ const authMiddleware = new ApolloLink((operation, forward) => { // eslint-disabl
 })
 
 
-export default class ApolloCmsApp extends React.Component{ // eslint-disable-line react/prefer-stateless-function
+export default class ApolloCmsApp extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
 
   static propTypes = {
@@ -69,7 +69,7 @@ export default class ApolloCmsApp extends React.Component{ // eslint-disable-lin
   };
 
 
-  constructor(props){
+  constructor(props) {
 
     super(props);
 
@@ -79,8 +79,8 @@ export default class ApolloCmsApp extends React.Component{ // eslint-disable-lin
     } = this.props;
 
 
-    if(!endpoint){
-      throw(new Error("Endpoind required"))
+    if (!endpoint) {
+      throw (new Error("Endpoind required"))
     }
 
 
@@ -102,10 +102,10 @@ export default class ApolloCmsApp extends React.Component{ // eslint-disable-lin
 
     // }
 
-    const httpLink = createUploadLink({ 
+    const httpLink = createUploadLink({
       uri: endpoint,
     });
-    
+
     // const httpLink = createHttpLink({ 
     //   uri: endpoint,
     // });
@@ -136,10 +136,10 @@ export default class ApolloCmsApp extends React.Component{ // eslint-disable-lin
 
 
     const errorLink = onError(this.onError);
-    
+
     const link = errorLink.concat(wsHttpLink);
     // const link = errorLink.concat(httpLink);
-    
+
     const client = new ApolloClient({
       link: from([
         authMiddleware,
@@ -148,7 +148,7 @@ export default class ApolloCmsApp extends React.Component{ // eslint-disable-lin
       cache: new InMemoryCache().restore(global.__APOLLO_STATE__),
       connectToDevTools: true,
     });
-    
+
 
     this.state = {
       client,
@@ -157,7 +157,7 @@ export default class ApolloCmsApp extends React.Component{ // eslint-disable-lin
 
   }
 
-  
+
   getChildContext() {
 
     const {
@@ -165,8 +165,8 @@ export default class ApolloCmsApp extends React.Component{ // eslint-disable-lin
       user,
       errors,
     } = this.state;
-    
-    
+
+
     let context = {
       token,
       user,
@@ -223,15 +223,19 @@ export default class ApolloCmsApp extends React.Component{ // eslint-disable-lin
 
     // console.log("onError response", response);
 
-    const { networkError, graphQLErrors } = response;
-  
+    const {
+      networkError,
+      graphQLErrors,
+      messageDelay = 3000,
+    } = response;
+
     if (networkError && networkError.statusCode === 401) {
       ;
     }
 
     // console.log("onError networkError", networkError);
     // console.log("onError graphQLErrors", graphQLErrors);
-    
+
     graphQLErrors && graphQLErrors.map(n => {
 
       const {
@@ -242,7 +246,7 @@ export default class ApolloCmsApp extends React.Component{ // eslint-disable-lin
         errors = [],
       } = this.state;
 
-      if(message){
+      if (message) {
 
         const error = {
           message,
@@ -252,14 +256,16 @@ export default class ApolloCmsApp extends React.Component{ // eslint-disable-lin
 
         setTimeout(() => {
 
+          console.log("setTimeout 260", this.state.errors);
+
           const {
             errors,
           } = this.state;
 
           const index = errors && errors.indexOf(error);
 
-          if(index !== -1){
-            
+          if (index !== -1) {
+
             errors.splice(index, 1);
 
             this.setState({
@@ -268,11 +274,11 @@ export default class ApolloCmsApp extends React.Component{ // eslint-disable-lin
 
           }
 
-        }, 3000);
+        }, messageDelay);
 
       }
 
-      if(errors && errors.length){
+      if (errors && errors.length) {
 
         this.setState({
           errors,
@@ -283,26 +289,26 @@ export default class ApolloCmsApp extends React.Component{ // eslint-disable-lin
       return n;
 
     });
-    
+
 
     return graphQLErrors;
   }
 
 
-  componentDidMount(){
+  componentDidMount() {
 
     this.loadApiData();
 
   }
 
 
-  async loadApiData(){
+  async loadApiData() {
 
     const {
       apiQuery,
     } = this.props;
 
-    if(!apiQuery){
+    if (!apiQuery) {
       return false;
     }
 
@@ -314,19 +320,19 @@ export default class ApolloCmsApp extends React.Component{ // eslint-disable-lin
     const result = await client.query({
       query: gql`${apiQuery}`,
       fetchPolicy: "network-only",
-    },{
-    }).then(r => {
-      return r;
-    })
-    .catch(e => {
-      console.error(e);
-    });
-    
+    }, {
+      }).then(r => {
+        return r;
+      })
+      .catch(e => {
+        console.error(e);
+      });
+
     const {
       data,
     } = result || {};
 
-    if(data){
+    if (data) {
       this.setState({
         ...data
       });
@@ -335,9 +341,9 @@ export default class ApolloCmsApp extends React.Component{ // eslint-disable-lin
     return result;
   }
 
-  
-  render(){
-    
+
+  render() {
+
     const {
       client,
     } = this.state;
@@ -347,13 +353,13 @@ export default class ApolloCmsApp extends React.Component{ // eslint-disable-lin
       Renderer,
       ...other
     } = this.props;
-    
+
 
     return (
       <ApolloProvider
         client={client}
       >
-        
+
         <Renderer
           {...other}
         />

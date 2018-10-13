@@ -4,7 +4,9 @@ import expect from 'expect'
 import React from 'react'
 import { render, unmountComponentAtNode } from 'react-dom'
 
-import Component from 'src/DataView/Object/Editable'
+import TestApp from "./App";
+
+import Component from '../DataView/Object/Editable'
 
 describe('Editable with dirty object', () => {
   let node
@@ -21,7 +23,8 @@ describe('Editable with dirty object', () => {
   })
 
   it('Check content is not empty', () => {
-    render(<Component
+    render(<TestApp
+      Renderer={Component}
       data={{
         object: {
           name,
@@ -30,6 +33,7 @@ describe('Editable with dirty object', () => {
       _dirty={{
         name: newName,
       }}
+      mutate={() => { }}
     />, node, () => {
 
       // console.log("node", node);

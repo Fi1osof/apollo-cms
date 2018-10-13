@@ -4,12 +4,13 @@ import expect from 'expect'
 import React from 'react'
 import { render, unmountComponentAtNode } from 'react-dom'
 
-import Component from 'src/DataView/Object/Editable'
+import Component from '../../../../DataView/List'
 
-describe('Editable with object', () => {
+describe('DataView List', () => {
   let node
 
   let name = "Test";
+  let newName = "Test dirty";
 
   beforeEach(() => {
     node = document.createElement('div')
@@ -26,11 +27,11 @@ describe('Editable with object', () => {
           name,
         }
       }}
+      _dirty={{
+        name: newName,
+      }}
     />, node, () => {
 
-      // console.log("node", node);
-
-      expect(node.querySelector('h2').textContent).toContain(name)
       return true;
     })
   })
