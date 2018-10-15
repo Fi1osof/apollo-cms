@@ -1,3 +1,7 @@
+1.4.1
+===========================================
+- Fix TableView::getFilters()
+
 1.4.0
 ===========================================
 - Extend TableView by @prisma-cms/component

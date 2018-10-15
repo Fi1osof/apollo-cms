@@ -33,7 +33,8 @@ function createDOM() {
     });
 }
 
-module.exports = createDOM;
+// module.exports = createDOM;
+module.exports = () => {};
 
 it("", () => {
   

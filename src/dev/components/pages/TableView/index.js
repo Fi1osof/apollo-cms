@@ -101,7 +101,7 @@ export class DevTableView extends TableView {
   }
 
 
-  getFilters() {
+  renderFilters() {
 
     const {
       // getFilters,
@@ -114,7 +114,7 @@ export class DevTableView extends TableView {
       query,
       advantages_not,
       with_employes,
-    } = super.getFilters() || {};
+    } = this.getFilters() || {};
 
     const filters = <Grid
       container

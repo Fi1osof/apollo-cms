@@ -194,14 +194,9 @@ export class TableView extends PrismaComponent {
   }
 
 
-  // getFilters(){
-
-  //   const {
-  //     filters,
-  //   } = this.props;
-
-  //   return filters;
-  // }
+  renderFilters(){
+    return null;
+  }
 
 
   render() {
@@ -228,12 +223,25 @@ export class TableView extends PrismaComponent {
 
     const columnData = this.getColumns();
 
-    const filters = this.getFilters();
+    const filters = this.renderFilters();
 
+
+    if(!data){
+      return null;
+    }
 
     const {
+      // loading,
       objectsConnection,
     } = data;
+
+    
+    if(!objectsConnection){
+
+      return null;
+
+    }
+ 
 
     const {
       aggregate,
@@ -252,12 +260,12 @@ export class TableView extends PrismaComponent {
     return super.render(
       <Paper className={classes.root}>
 
-        <Toolbar
+        {Toolbar ? <Toolbar
           numSelected={selected.length}
           title={title}
           addObject={addObject}
           filters={filters}
-        />
+        /> : null}
 
         <div className={classes.tableWrapper}>
           <Table className={classes.table}>

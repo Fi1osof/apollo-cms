@@ -1,5 +1,5 @@
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import {
@@ -13,7 +13,7 @@ import {
 } from 'material-ui/Table';
 
 import Checkbox from 'material-ui/Checkbox';
-import Tooltip from 'material-ui/Tooltip';
+// import Tooltip from 'material-ui/Tooltip';
 
 export default class EnhancedTableHead extends Component {
 
@@ -36,12 +36,12 @@ export default class EnhancedTableHead extends Component {
   // };
 
   render() {
-    
-    const { 
+
+    const {
       // onSelectAllClick, 
-      order, 
-      orderBy, 
-      numSelected, 
+      order,
+      orderBy,
+      numSelected,
       rowCount,
       columnData,
     } = this.props;
@@ -62,9 +62,10 @@ export default class EnhancedTableHead extends Component {
                 key={column.id}
                 numeric={column.numeric}
                 padding={column.disablePadding ? 'none' : 'default'}
-                // sortDirection={orderBy === column.id ? order : false}
+              // sortDirection={orderBy === column.id ? order : false}
               >
-                <Tooltip
+                {column.label}
+                {/* <Tooltip
                   title="Sort"
                   placement={column.numeric ? 'bottom-end' : 'bottom-start'}
                   enterDelay={300}
@@ -76,7 +77,7 @@ export default class EnhancedTableHead extends Component {
                   >
                     {column.label}
                   </TableSortLabel>
-                </Tooltip>
+                </Tooltip> */}
               </TableCell>
             );
           }, this)}

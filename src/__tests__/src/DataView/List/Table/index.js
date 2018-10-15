@@ -12,10 +12,9 @@ import PropTypes from "prop-types";
 // } from '../../../../../DataView/List/Table'
 
 import withStyles from 'material-ui/styles/withStyles'
+ 
 
-import "material-ui";
-
-import createDOM from "../../../utils/createDOM";
+// import createDOM from "../../../../utils/createDOM";
 
 import {
   data,
@@ -27,7 +26,7 @@ import {
 
 import App from "../../../../App";
 
-createDOM();
+// createDOM();
 
 class CustomTableView extends TableView {
 
@@ -53,7 +52,7 @@ class CustomTableView extends TableView {
 
     setTimeout(() => {
       resolve();
-    }, 3000);
+    }, 1000);
 
     // jest.runAllTimers();
 
@@ -106,7 +105,8 @@ describe('DataView List Table', () => {
     unmountComponentAtNode(node)
   })
 
-  it('Check content is not empty', () => {
+  
+  it('Render TableView with data', () => {
 
     // return undefined;
 
@@ -123,7 +123,7 @@ describe('DataView List Table', () => {
           // resolve();
           // return undefined;
 
-          // jest.useFakeTimers();
+          jest.useFakeTimers();
 
           setTimeout(() => {
 
@@ -168,11 +168,11 @@ describe('DataView List Table', () => {
             expect(searchInput).toNotBe(null);
 
 
-            resolve();
+            // resolve();
 
           }, 1000);
 
-          // jest.runAllTimers();
+          jest.runAllTimers();
 
           // return true;
         })
