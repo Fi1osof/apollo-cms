@@ -2,25 +2,33 @@ import expect from 'expect'
 import React from 'react'
 import {render, unmountComponentAtNode} from 'react-dom'
 
-import Component from '../'
+// import Component from '../App'
 
-describe('Component', () => {
+describe('Index App', () => {
   let node
 
   beforeEach(() => {
-    node = document.createElement('div')
   })
-
+  
   afterEach(() => {
     unmountComponentAtNode(node)
   })
-
+  
   it('Test main App', () => {
-    render(<Component
-      endpoint="http://localhost/"
-    />, node, () => {
-      // expect(node.innerHTML).toContain('wefd')
-      return true;
-    })
+    
+    node = document.createElement('div')
+
+    node.id = "root";
+
+    global.document.body.append(node);
+
+    require('../');
+
+    // render(<Component
+    //   endpoint="http://localhost/"
+    // />, node, () => {
+    //   // expect(node.innerHTML).toContain('wefd')
+    //   return true;
+    // })
   })
 })

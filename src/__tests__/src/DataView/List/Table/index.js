@@ -1,15 +1,15 @@
 
 
 import expect from 'expect'
-import React from 'react'
+import React, { Component } from 'react'
 import { render, unmountComponentAtNode } from 'react-dom'
 
 import PropTypes from "prop-types";
 
-import {
-  styles,
-  TableView,
-} from '../../../../../DataView/List/Table'
+// import {
+//   styles,
+//   TableView,
+// } from '../../../../../DataView/List/Table'
 
 import withStyles from 'material-ui/styles/withStyles'
 
@@ -17,9 +17,19 @@ import "material-ui";
 
 import createDOM from "../../../utils/createDOM";
 
+import {
+  data,
+  columnData,
+  count,
+  styles,
+  TableView,
+} from "../../../../../dev/components/pages/TableView";
+
+import App from "../../../../App";
+
 createDOM();
 
-class Component extends TableView {
+class CustomTableView extends TableView {
 
 
   static propTypes = {
@@ -58,8 +68,30 @@ class Component extends TableView {
 
 }
 
+const TestTableView = withStyles(styles)(CustomTableView);
 
-const Renderer = withStyles(styles)(Component);
+
+class Renderer extends Component {
+
+  render() {
+
+    const {
+      // resolve,
+      children,
+      ...other
+    } = this.props;
+
+    return <TestTableView
+      {...other}
+      data={data}
+      title="Test"
+      limit={1}
+      columnData={columnData}
+    />;
+  }
+}
+
+
 
 
 describe('DataView List Table', () => {
@@ -80,127 +112,70 @@ describe('DataView List Table', () => {
 
     return new Promise(async (resolve, reject) => {
 
-      const edges = [
-        {
-          "node": {
-            "id": "cjn27lkhv08sp0950dcfp61c3",
-            "username": "Test",
-            "fullname": "",
-            "image": null,
-            "sudo": false,
-            "__typename": "User"
-          },
-          "__typename": "UserEdge"
-        },
-        {
-          "node": {
-            "id": "cjn29andg08zb0950gba9l3yo",
-            "username": "test",
-            "fullname": null,
-            "image": null,
-            "sudo": false,
-            "__typename": "User"
-          },
-          "__typename": "UserEdge"
-        },
-      ];
 
-      const count = edges.length;
-
-      const data = {
-        "variables": {
-          "first": 10,
-          "skip": 0,
-          "orderBy": "username_ASC",
-          "where": null
-        },
-        "loading": false,
-        "networkStatus": 7,
-        "objectsConnection": {
-          "pageInfo": {
-            "hasNextPage": false,
-            "hasPreviousPage": false,
-            "startCursor": "cjn27lkhv08sp0950dcfp61c3",
-            "endCursor": "cjn29b63508zn09504gf24kde",
-            "__typename": "PageInfo"
-          },
-          "aggregate": {
-            "count": count,
-            "__typename": "AggregateUser"
-          },
-          "edges": edges,
-          "__typename": "UserConnection"
-        }
-      };
-
-
-      const columnData = [
-        {
-          id: "id",
-        },
-        {
-          id: "username",
-          renderer: (value) => {
-            return <span
-              className="username"
-            >
-              {value}
-            </span>
-          }
-        },
-      ]
-
-      render(<Renderer
-        data={data}
-        title="Test"
-        limit={1}
-        columnData={columnData}
+      render(<App
+        Renderer={Renderer}
         resolve={resolve}
-      />, node, () => {
+      >
+      </App>
+        , node, () => {
 
-        // resolve();
-        return undefined;
+          // resolve();
+          // return undefined;
 
-        jest.useFakeTimers();
+          // jest.useFakeTimers();
 
-        setTimeout(() => {
+          setTimeout(() => {
 
-          // let table = node.querySelector("table");
+            // let table = node.querySelector("table");
 
-          let tables = node.querySelectorAll("table");
+            // console.log("Table node", node.innerHTML);
 
-          expect(tables.length).toBe(1);
+            // return;
 
-          let table = tables[0];
+            let tables = node.querySelectorAll("table");
 
-          // console.log("TableView HTML", table.innerHTML);
+            expect(tables.length).toBe(1);
 
-          // console.log("TableView textContent", table.textContent);
+            let table = tables[0];
 
-          expect(table).toNotBe(null);
+            // console.log("TableView HTML", table.innerHTML);
 
-          const thead = table.querySelector("thead");
-          expect(thead).toNotBe(null);
+            // console.log("TableView textContent", table.textContent);
 
-          expect(table.textContent).toContain("cjn27lkhv08sp0950dcfp61c3");
+            expect(table).toNotBe(null);
 
-          let usernameSpans = table.querySelectorAll(".username");
-          expect(usernameSpans.length).toBe(count);
+            const thead = table.querySelector("thead");
+            expect(thead).toNotBe(null);
 
-          // Check cols count
-          table.querySelectorAll("tr").forEach(n => {
+            expect(table.textContent).toContain("cjn27lkhv08sp0950dcfp61c3");
 
-            expect(n.children.length).toBe(columnData.length);
-          })
+            let usernameSpans = table.querySelectorAll(".username");
+            expect(usernameSpans.length).toBe(count);
 
-          resolve();
+            // Check cols count
+            table.querySelectorAll("tr").forEach(n => {
 
-        }, 3000);
+              expect(n.children.length).toBe(columnData.length);
+            })
 
-        jest.runAllTimers();
 
-        return true;
-      })
+
+            const searchInput = node.querySelector("input.searchInput");
+
+            // console.log("Table searchInput", searchInput);
+
+            expect(searchInput).toNotBe(null);
+
+
+            resolve();
+
+          }, 1000);
+
+          // jest.runAllTimers();
+
+          // return true;
+        })
 
 
     });

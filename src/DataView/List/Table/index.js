@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 
@@ -34,7 +34,7 @@ import Body from './Body';
 //   return { id: counter, name, calories, fat, carbs, protein };
 // }
 
-
+import PrismaComponent from "@prisma-cms/component";
 
 
 
@@ -51,9 +51,10 @@ export const styles = theme => ({
   },
 });
 
-export class TableView extends Component {
+export class TableView extends PrismaComponent {
 
   static propTypes = {
+    ...PrismaComponent.propTypes,
     classes: PropTypes.object.isRequired,
     columnData: PropTypes.array.isRequired,
     data: PropTypes.object.isRequired,
@@ -66,10 +67,12 @@ export class TableView extends Component {
     Toolbar: PropTypes.func.isRequired,
     Body: PropTypes.func.isRequired,
     limit: PropTypes.number.isRequired,
+    filters: PropTypes.array,
   };
 
 
   static defaultProps = {
+    ...PrismaComponent.defaultProps,
     orderBy: "",
     order: "asc",
     Header,
@@ -78,11 +81,13 @@ export class TableView extends Component {
     // columnData: [],
   };
 
-  
+
   constructor(props, context) {
+
     super(props, context);
 
     this.state = {
+      ...this.state,
       selected: [],
       // data: [
       //   createData('Cupcake', 305, 3.7, 67, 4.3),
@@ -157,7 +162,7 @@ export class TableView extends Component {
   // };
 
   // handleClick = (event, id) => {
-    
+
   //   const {
   //     onRowClick,
   //   } = this.props;
@@ -177,7 +182,7 @@ export class TableView extends Component {
   // isSelected = id => this.state.selected.indexOf(id) !== -1;
 
 
-  getColumns(){
+  getColumns() {
 
 
     const {
@@ -188,22 +193,34 @@ export class TableView extends Component {
 
   }
 
+
+  // getFilters(){
+
+  //   const {
+  //     filters,
+  //   } = this.props;
+
+  //   return filters;
+  // }
+
+
   render() {
 
-    const { 
+    const {
       classes,
       data,
-      order, 
-      orderBy, 
+      order,
+      orderBy,
       title,
       Header,
       Toolbar,
       Body,
       limit,
+      addObject,
     } = this.props;
 
-    const { 
-      selected, 
+    const {
+      selected,
       // rowsPerPage, 
       page,
     } = this.state;
@@ -211,11 +228,13 @@ export class TableView extends Component {
 
     const columnData = this.getColumns();
 
+    const filters = this.getFilters();
+
 
     const {
       objectsConnection,
     } = data;
-    
+
     const {
       aggregate,
       // pageInfo,
@@ -230,14 +249,16 @@ export class TableView extends Component {
 
     const rowCount = rows.length;
 
-    return (
+    return super.render(
       <Paper className={classes.root}>
-        
-        <Toolbar 
+
+        <Toolbar
           numSelected={selected.length}
           title={title}
+          addObject={addObject}
+          filters={filters}
         />
-        
+
         <div className={classes.tableWrapper}>
           <Table className={classes.table}>
 
@@ -245,10 +266,12 @@ export class TableView extends Component {
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
+              onSelectAllClick={this.handleSelectAllClick}
+              onRequestSort={this.handleRequestSort}
               rowCount={rowCount}
               columnData={columnData}
             />
-            
+
             <Body
               data={rows}
               isSelected={this.isSelected}
@@ -256,13 +279,107 @@ export class TableView extends Component {
               onRowSelect={this.onRowSelect}
               columnData={columnData}
             />
- 
-            
+
+            {/* {limit ? <TableFooter>
+              <TableRow>
+                <TablePagination
+                  colSpan={columnData.length + 1}
+                  count={count}
+                  rowsPerPage={limit}
+                  page={page}
+                  backIconButtonProps={{
+                    'aria-label': 'Previous Page',
+                  }}
+                  nextIconButtonProps={{
+                    'aria-label': 'Next Page',
+                  }}
+                  onChangePage={this.handleChangePage}
+                  onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                />
+              </TableRow>
+            </TableFooter> : null} */}
+
           </Table>
         </div>
       </Paper>
     );
   }
+
+  // render() {
+
+  //   const { 
+  //     classes,
+  //     data,
+  //     order, 
+  //     orderBy, 
+  //     title,
+  //     Header,
+  //     Toolbar,
+  //     Body,
+  //     limit,
+  //   } = this.props;
+
+  //   const { 
+  //     selected, 
+  //     // rowsPerPage, 
+  //     page,
+  //   } = this.state;
+
+
+  //   const columnData = this.getColumns();
+
+
+  //   const {
+  //     objectsConnection,
+  //   } = data;
+
+  //   const {
+  //     aggregate,
+  //     // pageInfo,
+  //     edges,
+  //   } = objectsConnection || {}
+
+  //   const {
+  //     count = 0,
+  //   } = aggregate || {};
+
+  //   const rows = (edges && edges.map(n => n.node)) || [];
+
+  //   const rowCount = rows.length;
+
+  //   return (
+  //     <Paper className={classes.root}>
+
+  //       <Toolbar 
+  //         numSelected={selected.length}
+  //         title={title}
+  //       />
+
+  //       <div className={classes.tableWrapper}>
+  //         <Table className={classes.table}>
+
+  //           <Header
+  //             numSelected={selected.length}
+  //             order={order}
+  //             orderBy={orderBy}
+  //             rowCount={rowCount}
+  //             columnData={columnData}
+  //           />
+
+  //           <Body
+  //             data={rows}
+  //             isSelected={this.isSelected}
+  //             handleClick={this.handleClick}
+  //             onRowSelect={this.onRowSelect}
+  //             columnData={columnData}
+  //           />
+
+
+  //         </Table>
+  //       </div>
+  //     </Paper>
+  //   );
+  // }
 }
 
 
