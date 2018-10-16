@@ -1,6 +1,6 @@
 {
   "name": "apollo-cms",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Apollo-client for prisma-cms",
   "main": "lib/App.js",
   "module": "es/App.js",
@@ -23,7 +23,7 @@
     "test:watch": "react-scripts test --watch"
   },
   "dependencies": {
-    "@prisma-cms/component":  "^1.0.3",
+    "@prisma-cms/component": "^1.0.3",
     "apollo-boost": "^0.1.16",
     "apollo-cache-inmemory": "^1.1.7",
     "apollo-client": "^2.2.3",
@@ -53,7 +53,7 @@
     "react": "16.x"
   },
   "devDependencies": {
-    "@prisma-cms/front": "^1.6.2-beta",
+    "@prisma-cms/front": "^1.9.0-beta",
     "chalk": "^2.4.1",
     "nwb": "0.23.x",
     "pre-commit": "^1.2.2",
