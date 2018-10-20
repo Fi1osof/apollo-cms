@@ -381,7 +381,7 @@ export default class EditableView extends View {
       value,
     } = event.target;
 
-    console.log("onChange", name, value);
+    // console.log("onChange", name, value);
 
     this.updateObject({
       [name]: value,

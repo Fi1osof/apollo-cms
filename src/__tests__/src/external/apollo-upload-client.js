@@ -80,19 +80,23 @@ class Renderer extends Component {
 
           const {
             data: {
-              singleUpload: {
-                id: fileId,
-                path,
-                filename,
-                mimetype,
-                encoding,
-                createdby: {
-                  id: userId,
-                },
-                hash,
-              },
+              singleUpload,
             },
           } = result;
+
+          let {
+            id: fileId,
+            path,
+            filename,
+            mimetype,
+            encoding,
+            createdby,
+            hash,
+          } = singleUpload || {};
+
+          const {
+            id: userId,
+          } = createdby || {}
 
           expect(fileId).toNotBe(null);
           expect(path).toNotBe(null);
