@@ -1,3 +1,8 @@
+1.4.3
+===========================================
+- Fix Editable::renderField()
+- Upgrade @prisma-cms/component
+
 1.4.2
 ===========================================
 - Upgrade packages
