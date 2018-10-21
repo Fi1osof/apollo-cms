@@ -76,6 +76,7 @@ export default class ApolloCmsApp extends React.Component { // eslint-disable-li
 
     let {
       endpoint,
+      credentials = 'same-origin',
     } = this.props;
 
 
@@ -89,6 +90,7 @@ export default class ApolloCmsApp extends React.Component { // eslint-disable-li
 
     const httpLink = createUploadLink({
       uri: endpoint,
+      credentials,
     });
 
     // const httpLink = createHttpLink({ 
