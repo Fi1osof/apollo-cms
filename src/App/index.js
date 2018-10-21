@@ -86,21 +86,6 @@ export default class ApolloCmsApp extends React.Component { // eslint-disable-li
 
     let wsLink;
 
-    // let protocol = 'http';
-    // let ws_protocol = 'ws';
-
-    // if(typeof window !== "undefined"){
-
-    //   const {
-    //     protocol: host_protocol,
-    //   } = window.location;
-
-    //   if(host_protocol === 'https:'){
-    //     ws_protocol = 'wss';
-    //     protocol = 'https';
-    //   }
-
-    // }
 
     const httpLink = createUploadLink({
       uri: endpoint,
@@ -111,7 +96,6 @@ export default class ApolloCmsApp extends React.Component { // eslint-disable-li
     // });
 
     wsLink = new WebSocketLink({
-      // uri: `${ws_protocol}://${endpoint}/`,
       uri: endpoint.replace(/^http/, 'ws'),
       options: {
         reconnect: true
@@ -122,8 +106,6 @@ export default class ApolloCmsApp extends React.Component { // eslint-disable-li
     const wsHttpLink = split(
       // split based on operation type
       (request) => {
-
-        // console.log("request", request);
 
         const { query } = request;
 
@@ -221,7 +203,6 @@ export default class ApolloCmsApp extends React.Component { // eslint-disable-li
 
   onError = (response) => {
 
-    // console.log("onError response", response);
 
     const {
       networkError,
@@ -232,9 +213,6 @@ export default class ApolloCmsApp extends React.Component { // eslint-disable-li
     if (networkError && networkError.statusCode === 401) {
       ;
     }
-
-    // console.log("onError networkError", networkError);
-    // console.log("onError graphQLErrors", graphQLErrors);
 
     graphQLErrors && graphQLErrors.map(n => {
 
@@ -288,8 +266,7 @@ export default class ApolloCmsApp extends React.Component { // eslint-disable-li
 
     });
 
-
-    return graphQLErrors;
+    return;
   }
 
 
