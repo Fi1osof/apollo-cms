@@ -43,6 +43,7 @@ export const styles = theme => ({
     width: '100%',
     marginTop: theme.spacing.unit * 3,
   },
+  loading: {},
   table: {
     minWidth: 800,
   },
@@ -194,7 +195,7 @@ export class TableView extends PrismaComponent {
   }
 
 
-  renderFilters(){
+  renderFilters() {
     return null;
   }
 
@@ -212,6 +213,8 @@ export class TableView extends PrismaComponent {
       Body,
       limit,
       addObject,
+      className,
+      // ...other
     } = this.props;
 
     const {
@@ -226,22 +229,22 @@ export class TableView extends PrismaComponent {
     const filters = this.renderFilters();
 
 
-    if(!data){
+    if (!data) {
       return null;
     }
 
     const {
-      // loading,
+      loading,
       objectsConnection,
     } = data;
 
-    
-    if(!objectsConnection){
+
+    if (!objectsConnection) {
 
       return null;
 
     }
- 
+
 
     const {
       aggregate,
@@ -258,7 +261,9 @@ export class TableView extends PrismaComponent {
     const rowCount = rows.length;
 
     return super.render(
-      <Paper className={classes.root}>
+      <Paper
+        className={[classes.root, loading ? classes.loading : "", className].join(" ")}
+      >
 
         {Toolbar ? <Toolbar
           numSelected={selected.length}

@@ -18,24 +18,20 @@ import Snackbar from 'material-ui/Snackbar';
 import View from '../';
 
 
-let { ...propTypes } = View.propTypes;
-
-Object.assign(propTypes, {
-  mutate: PropTypes.func.isRequired,
-  _dirty: PropTypes.object,
-  errorDelay: PropTypes.number.isRequired,
-});
-
-const defaultProps = Object.assign({ ...View.defaultProps }, {
-  errorDelay: 10000,
-});
-
 export default class EditableView extends View {
 
-  static propTypes = propTypes;
+  static propTypes = {
+    ...View.propTypes,
+    mutate: PropTypes.func.isRequired,
+    _dirty: PropTypes.object,
+    errorDelay: PropTypes.number.isRequired,
+  };
 
 
-  static defaultProps = defaultProps;
+  static defaultProps = {
+    ...View.defaultProps,
+    errorDelay: 10000,
+  };
 
 
   constructor(props) {
@@ -420,6 +416,7 @@ export default class EditableView extends View {
       name,
       helperText,
       onFocus,
+      fullWidth = true,
       ...other
     } = props;
 
@@ -445,9 +442,9 @@ export default class EditableView extends View {
       }}
       name={name}
       value={value}
-      style={{
+      style={fullWidth ? {
         width: "100%",
-      }}
+      } : undefined}
       error={error ? true : false}
       helperText={error && error.message || helperText}
       onFocus={event => {
@@ -464,6 +461,7 @@ export default class EditableView extends View {
 
         return onFocus ? onFocus(event) : null;
       }}
+      fullWidth={fullWidth}
       {...other}
     /> : null;
 
@@ -838,7 +836,7 @@ export default class EditableView extends View {
     } = data;
 
 
-    let output;
+    let output = null;
 
     if (!object) {
 
@@ -856,7 +854,7 @@ export default class EditableView extends View {
       const inEditMode = this.isInEditMode();
 
 
-      let content;
+      let content = null;
 
 
       if (inEditMode) {

@@ -1,3 +1,10 @@
+1.5.0
+===========================================
+- Upgrade packages
+- Code refactoring
+- Fix getTextField() fullWidth
+- Added TableView classes.loading
+
 1.4.6
 ===========================================
 - Upgrade packages
