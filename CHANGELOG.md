@@ -1,3 +1,9 @@
+
+1.5.3
+===========================================
+- Fix setCache
+- Added EditableView::SaveIcon prop
+
 1.5.2
 ===========================================
 - Fix dependencies

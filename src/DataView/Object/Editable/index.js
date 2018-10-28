@@ -11,11 +11,22 @@ import Button from 'material-ui/Button';
 
 import EditIcon from 'material-ui-icons/ModeEdit';
 import ResetIcon from 'material-ui-icons/Restore';
-import SaveIcon from 'material-ui-icons/Save';
+import Save from 'material-ui-icons/Save';
 
 import Snackbar from 'material-ui/Snackbar';
 
+import { CircularProgress } from 'material-ui/Progress';
+
 import View from '../';
+
+const SaveIcon = () => {
+
+  return <Save
+    style={{
+      color: "red",
+    }}
+  />
+}
 
 
 export default class EditableView extends View {
@@ -25,12 +36,18 @@ export default class EditableView extends View {
     mutate: PropTypes.func.isRequired,
     _dirty: PropTypes.object,
     errorDelay: PropTypes.number.isRequired,
+    SaveIcon: PropTypes.func.isRequired,
+    ResetIcon: PropTypes.func.isRequired,
+    EditIcon: PropTypes.func.isRequired,
   };
 
 
   static defaultProps = {
     ...View.defaultProps,
     errorDelay: 10000,
+    SaveIcon,
+    ResetIcon,
+    EditIcon,
   };
 
 
@@ -46,6 +63,7 @@ export default class EditableView extends View {
     this.state = {
       inEditMode: false,
       notifications: [],
+      loading: false,
     }
 
   }
@@ -57,13 +75,13 @@ export default class EditableView extends View {
       _dirty = null,
     } = this.props;
 
-    // this.state = {
-    //   ...this.state,
-    //   _dirty: _dirty || this.getCache(),
-    // };
+    const cache = this.getCache();
 
     Object.assign(this.state, {
-      _dirty: _dirty || this.getCache(),
+      _dirty: _dirty || cache ? {
+        ..._dirty,
+        ...cache,
+      } : undefined,
     });
 
     return super.componentWillMount ? super.componentWillMount() : true;
@@ -163,6 +181,7 @@ export default class EditableView extends View {
 
     const {
       _dirty,
+      loading,
     } = this.state;
 
     const {
@@ -170,99 +189,116 @@ export default class EditableView extends View {
     } = this.context;
 
 
-    // const result = await saveObject(_dirty);
+    if (loading) {
+      return;
+    }
 
-    // console.log("EditView result", result);
+    return new Promise((resolve, reject) => {
 
-
-    const result = await this.saveObject(_dirty)
-      .then(async result => {
-
-
-
-        console.log("await this.saveObject 2", typeof result, result instanceof Error, result);
-
-        if (result instanceof Error) {
-
-          // console.log("await this.saveObject result", result);
-
-        }
-        else {
-
-          const {
-            data: resultData,
-          } = result || {};
-
-          const {
-            response,
-          } = resultData || {};
-
-          // console.log("result", result);
-          // console.log("resultData", resultData);
-
-          let {
-            success,
-            message,
-            errors = null,
-            ...other
-          } = response || {};
+      this.setState({
+        loading: true,
+      }, async () => {
 
 
-          let newState = {
-            errors,
-          };
+        let newState = {
+          loading: false,
+        };
 
-          if (success === undefined) {
+        const result = await this.saveObject(_dirty)
+          .then(async result => {
 
-            success = true;
 
-          }
 
-          if (!success) {
+            console.log("await this.saveObject 2", typeof result, result instanceof Error, result);
 
-            this.addError(message || "Request error");
+            if (result instanceof Error) {
 
-            // errors && errors.map(error => {
-            //   this.addError(error);
-            // });
+              // console.log("await this.saveObject result", result);
 
-          }
-          else {
+            }
+            else {
 
-            Object.assign(newState, {
-              _dirty: null,
-              inEditMode: false,
-            });
+              const {
+                data: resultData,
+              } = result || {};
 
-            const {
-              onSave,
-            } = this.props;
+              const {
+                response,
+              } = resultData || {};
 
-            if (onSave) {
-              onSave(result);
+              // console.log("result", result);
+              // console.log("resultData", resultData);
+
+              let {
+                success,
+                message,
+                errors = null,
+                ...other
+              } = response || {};
+
+
+              Object.assign(newState, {
+                errors,
+              });
+
+
+              if (success === undefined) {
+
+                success = true;
+
+              }
+
+              if (!success) {
+
+                this.addError(message || "Request error");
+
+                // errors && errors.map(error => {
+                //   this.addError(error);
+                // });
+
+              }
+              else {
+
+                Object.assign(newState, {
+                  _dirty: null,
+                  inEditMode: false,
+                });
+
+                const {
+                  onSave,
+                } = this.props;
+
+                if (onSave) {
+                  onSave(result);
+                }
+
+                this.clearCache();
+
+                await client.resetStore();
+
+              }
+
+
             }
 
-            this.clearCache();
 
-            await client.resetStore();
-
-          }
-
-          this.setState(newState);
-
-        }
+            return result;
+          })
+          .catch(e => {
+            console.error(e);
+            return e;
+          });
 
 
-        return result;
-      })
-      .catch(e => {
-        console.error(e);
-        return e;
+        this.setState(newState, () => {
+          return resolve(result);
+        });
+
+        return;
+
       });
 
-    // console.log("await this.saveObject", result);
-
-    return result;
+    });
 
   }
 
@@ -523,6 +559,13 @@ export default class EditableView extends View {
 
   getButtons() {
 
+    const {
+      loading,
+    } = this.state;
+
+    const {
+      SaveIcon,
+    } = this.props;
 
     const inEditMode = this.isInEditMode();
 
@@ -534,45 +577,18 @@ export default class EditableView extends View {
 
       if (inEditMode) {
 
-        buttons.push(<IconButton
-          key="reset"
-          onClick={event => {
-            this.resetEdit();
-          }}
-        >
-          <ResetIcon
-          />
-        </IconButton>);
+        buttons.push(this.renderResetButton());
 
 
         if (isDirty) {
 
-          buttons.push(<IconButton
-            key="save"
-            onClick={event => {
-              this.save();
-            }}
-          >
-            <SaveIcon
-              style={{
-                color: "red",
-              }}
-            />
-          </IconButton>);
+          buttons.push(this.renderSaveButton());
 
         }
 
       }
       else {
-        buttons.push(<IconButton
-          key="edit"
-          onClick={event => {
-            this.startEdit()
-          }}
-        >
-          <EditIcon
-          />
-        </IconButton>);
+        buttons.push(this.renderEditButton());
       }
 
     }
@@ -581,8 +597,68 @@ export default class EditableView extends View {
   }
 
 
+  renderResetButton() {
+
+    const {
+      ResetIcon,
+    } = this.props
+
+    return <IconButton
+      key="reset"
+      onClick={event => {
+        this.resetEdit();
+      }}
+    >
+      <ResetIcon
+      />
+    </IconButton>
+  }
 
 
+  renderSaveButton() {
+
+    const {
+      SaveIcon,
+    } = this.props;
+
+    const {
+      loading,
+    } = this.state;
+
+    return <IconButton
+      key="save"
+      onClick={event => {
+        this.save();
+      }}
+      disabled={loading}
+    >
+      {loading
+        ?
+        <CircularProgress />
+        :
+        <SaveIcon
+        />
+      }
+    </IconButton>
+  }
+
+
+  renderEditButton() {
+
+    const {
+      EditIcon,
+    } = this.props;
+
+    return <IconButton
+      key="edit"
+      onClick={event => {
+        this.startEdit()
+      }}
+    >
+      <EditIcon
+      />
+    </IconButton>;
+  }
 
 
   getTitle() {
