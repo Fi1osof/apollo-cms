@@ -51,7 +51,7 @@ export class EnhancedTableToolbar extends Component {
     addObject: PropTypes.func,
   }
 
-  render() { 
+  render() {
 
     const {
       numSelected,
@@ -80,19 +80,22 @@ export class EnhancedTableToolbar extends Component {
       columns.push(<Grid
         key="filters"
         item
+        xs
       >
         {filters}
       </Grid>);
     }
+    else {
+      columns.push(<Grid
+        key="separator"
+        item
+        xs
+      >
+        {null}
+      </Grid>);
+    }
 
 
-    columns.push(<Grid
-      key="separator"
-      item
-      xs
-    >
-      {null}
-    </Grid>);
 
 
     if (addObject) {
