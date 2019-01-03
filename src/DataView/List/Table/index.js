@@ -67,7 +67,7 @@ export class TableView extends PrismaComponent {
     Header: PropTypes.func.isRequired,
     Toolbar: PropTypes.func.isRequired,
     Body: PropTypes.func.isRequired,
-    limit: PropTypes.number.isRequired,
+    // limit: PropTypes.number.isRequired,
     filters: PropTypes.array,
   };
 
@@ -79,7 +79,7 @@ export class TableView extends PrismaComponent {
     Header,
     Toolbar,
     Body,
-    // columnData: [],
+    columnData: [],
   };
 
 
@@ -211,7 +211,6 @@ export class TableView extends PrismaComponent {
       Header,
       Toolbar,
       Body,
-      limit,
       addObject,
       className,
       // ...other
@@ -292,25 +291,6 @@ export class TableView extends PrismaComponent {
               onRowSelect={this.onRowSelect}
               columnData={columnData}
             />
-
-            {/* {limit ? <TableFooter>
-              <TableRow>
-                <TablePagination
-                  colSpan={columnData.length + 1}
-                  count={count}
-                  rowsPerPage={limit}
-                  page={page}
-                  backIconButtonProps={{
-                    'aria-label': 'Previous Page',
-                  }}
-                  nextIconButtonProps={{
-                    'aria-label': 'Next Page',
-                  }}
-                  onChangePage={this.handleChangePage}
-                  onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                />
-              </TableRow>
-            </TableFooter> : null} */}
 
           </Table>
         </div>

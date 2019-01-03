@@ -1,6 +1,6 @@
 {
   "name": "apollo-cms",
-  "version": "1.5.4",
+  "version": "1.5.5",
   "description": "Apollo-client for prisma-cms",
   "main": "lib/App.js",
   "module": "es/App.js",
@@ -43,7 +43,6 @@
     "react": "^16.6.0",
     "react-apollo": "^2.0.4",
     "react-dom": "^16.6.0",
-    "react-scripts": "^2.0.5",
     "subscriptions-transport-ws": "^0.9.5"
   },
   "peerDependencies": {
@@ -54,7 +53,8 @@
     "chalk": "^2.4.1",
     "nwb": "0.23.x",
     "react": "^16.2.0",
-    "react-dom": "^16.2.0"
+    "react-dom": "^16.2.0",
+    "react-scripts": "^2.1.2"
   },
   "author": "Fi1osof",
   "homepage": "https://github.com/Fi1osof/apollo-cms#readme",
