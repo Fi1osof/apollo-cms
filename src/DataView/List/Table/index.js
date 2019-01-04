@@ -376,4 +376,6 @@ export class TableView extends PrismaComponent {
 }
 
 
-export default withStyles(styles)(TableView);
+export default withStyles(styles)(props => <TableView
+  {...props}
+/>);
