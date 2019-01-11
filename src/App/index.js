@@ -2,6 +2,8 @@ import React from 'react'
 
 import PropTypes from 'prop-types';
 
+import Context from "@prisma-cms/context";
+
 import gql from 'graphql-tag';
 
 import { ApolloProvider } from 'react-apollo'
@@ -23,22 +25,6 @@ import Renderer from './Renderer';
 // import { HttpLink } from 'apollo-boost/lib/bundle.umd';
 
 
-const localStorage = global.localStorage;
-
-
-const authMiddleware = new ApolloLink((operation, forward) => { // eslint-disable-line react/prefer-stateless-function
-  // add the authorization to the headers
-  operation.setContext(({ headers = {} }) => ({
-    headers: {
-      ...headers,
-      Authorization: localStorage && localStorage.getItem('token') || null,
-    }
-  }));
-
-  return forward(operation);
-})
-
-
 export default class ApolloCmsApp extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
 
@@ -46,6 +32,7 @@ export default class ApolloCmsApp extends React.Component { // eslint-disable-li
     endpoint: PropTypes.string.isRequired,
     Renderer: PropTypes.func.isRequired,
     apiQuery: PropTypes.string,
+    localStorage: PropTypes.object.isRequired,
   };
 
   static defaultProps = {
@@ -56,6 +43,7 @@ export default class ApolloCmsApp extends React.Component { // eslint-disable-li
         username
       }
     }`,
+    localStorage: global.localStorage,
   };
 
   static childContextTypes = {
@@ -77,12 +65,27 @@ export default class ApolloCmsApp extends React.Component { // eslint-disable-li
     let {
       endpoint,
       credentials = 'same-origin',
+      localStorage,
     } = this.props;
 
 
     if (!endpoint) {
       throw (new Error("Endpoind required"))
     }
+
+
+
+    const authMiddleware = new ApolloLink((operation, forward) => { // eslint-disable-line react/prefer-stateless-function
+      // add the authorization to the headers
+      operation.setContext(({ headers = {} }) => ({
+        headers: {
+          ...headers,
+          Authorization: localStorage && localStorage.getItem('token') || null,
+        }
+      }));
+
+      return forward(operation);
+    });
 
 
     let wsLink;
@@ -100,10 +103,14 @@ export default class ApolloCmsApp extends React.Component { // eslint-disable-li
     wsLink = new WebSocketLink({
       uri: endpoint.replace(/^http/, 'ws'),
       options: {
-        reconnect: true
+        reconnect: true,
+        connectionParams: () => ({
+          Authorization: localStorage && localStorage.token || undefined,
+        }),
       }
     });
 
+    global.wsLink = wsLink;
 
     const wsHttpLink = split(
       // split based on operation type
@@ -137,6 +144,7 @@ export default class ApolloCmsApp extends React.Component { // eslint-disable-li
     this.state = {
       client,
       errors: [],
+      wsLink,
     };
 
   }
@@ -149,6 +157,10 @@ export default class ApolloCmsApp extends React.Component { // eslint-disable-li
       user,
       errors,
     } = this.state;
+
+    const {
+      localStorage,
+    } = this.props;
 
 
     let context = {
@@ -172,7 +184,12 @@ export default class ApolloCmsApp extends React.Component { // eslint-disable-li
       user,
     } = data;
 
+    const {
+      localStorage,
+    } = this.props;
+
     token && localStorage.setItem("token", `Bearer ${token}`);
+    this.reconnectWs();
 
     this.setState({
       user,
@@ -186,6 +203,7 @@ export default class ApolloCmsApp extends React.Component { // eslint-disable-li
 
       this.forceUpdate();
 
+
     });
 
   }
@@ -193,14 +211,38 @@ export default class ApolloCmsApp extends React.Component { // eslint-disable-li
 
   logout = () => {
 
+    const {
+      localStorage,
+    } = this.props;
+
     localStorage.setItem("token", ``);
+
+    this.reconnectWs();
 
     this.setState({
       user: null,
+    }, () => {
+
     });
 
   }
 
+
+  reconnectWs = async () => {
+
+    const {
+      wsLink,
+    } = this.state;
+
+    const {
+      subscriptionClient,
+    } = wsLink || {};
+
+    if (subscriptionClient) {
+      subscriptionClient.close(false, false);
+    }
+
+  }
 
 
   onError = (response) => {
@@ -209,7 +251,7 @@ export default class ApolloCmsApp extends React.Component { // eslint-disable-li
     const {
       networkError,
       graphQLErrors,
-      messageDelay = 3000,
+      messageDelay = 5000,
     } = response;
 
     if (networkError && networkError.statusCode === 401) {
@@ -323,6 +365,7 @@ export default class ApolloCmsApp extends React.Component { // eslint-disable-li
 
     const {
       client,
+      wsLink,
     } = this.state;
 
     const {
@@ -336,10 +379,22 @@ export default class ApolloCmsApp extends React.Component { // eslint-disable-li
       <ApolloProvider
         client={client}
       >
+        <Context.Consumer>
+          {context => {
 
-        <Renderer
-          {...other}
-        />
+            return <Context.Provider
+              value={Object.assign(context, {
+                wsLink,
+                reconnectWs: this.reconnectWs,
+              })}
+            >
+              <Renderer
+                {...other}
+              />
+            </Context.Provider>
+
+          }}
+        </Context.Consumer>
 
       </ApolloProvider>
     );
