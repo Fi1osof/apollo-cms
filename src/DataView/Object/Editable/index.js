@@ -39,6 +39,8 @@ export default class EditableView extends View {
     SaveIcon: PropTypes.func.isRequired,
     ResetIcon: PropTypes.func.isRequired,
     EditIcon: PropTypes.func.isRequired,
+    cacheKey: PropTypes.string,
+    cacheKeyPrefix: PropTypes.string.isRequired,
   };
 
 
@@ -48,6 +50,7 @@ export default class EditableView extends View {
     SaveIcon,
     ResetIcon,
     EditIcon,
+    cacheKeyPrefix: "item_",
   };
 
 
@@ -90,10 +93,15 @@ export default class EditableView extends View {
   getCacheKey() {
 
     const {
+      cacheKey,
+      cacheKeyPrefix,
+    } = this.props;
+
+    const {
       id,
     } = this.getObject() || {};
 
-    return id ? `item_${id}` : null;
+    return cacheKey !== undefined ? cacheKey : id ? `${cacheKeyPrefix}${id}` : null;
   }
 
   setCache(data) {
@@ -209,7 +217,7 @@ export default class EditableView extends View {
 
 
 
-            console.log("await this.saveObject 2", typeof result, result instanceof Error, result);
+            // console.log("await this.saveObject 2", typeof result, result instanceof Error, result);
 
             if (result instanceof Error) {
 
@@ -264,6 +272,8 @@ export default class EditableView extends View {
                   inEditMode: false,
                 });
 
+                this.clearCache();
+
                 const {
                   onSave,
                 } = this.props;
@@ -271,8 +281,6 @@ export default class EditableView extends View {
                 if (onSave) {
                   onSave(result);
                 }
-
-                this.clearCache();
 
                 await client.resetStore();
 

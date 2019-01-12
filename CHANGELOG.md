@@ -1,3 +1,8 @@
+1.6.1
+===========================================
+- Added EditableView::cacheKey property
+- Added EditableView::cacheKeyPrefix property
+
 1.6.0
 ===========================================
 - Added @prisma-cms/context
