@@ -108,7 +108,7 @@ export default class EditableView extends View {
 
     const {
       localStorage,
-    } = global;
+    } = this.context;
 
     if (!localStorage) {
       return false;
@@ -140,18 +140,19 @@ export default class EditableView extends View {
 
   getCache() {
 
-    if (typeof window === "undefined") {
-      return false;
-    }
+
+    const {
+      localStorage,
+    } = this.context;
 
     let cacheData;
 
     const key = this.getCacheKey();
 
-    if (key) {
+    if (key && localStorage) {
       try {
 
-        cacheData = window.localStorage.getItem(key);
+        cacheData = localStorage.getItem(key);
 
         if (cacheData) {
           cacheData = JSON.parse(cacheData);
@@ -170,14 +171,14 @@ export default class EditableView extends View {
 
   clearCache() {
 
-    if (typeof window === "undefined") {
-      return false;
-    }
+    const {
+      localStorage
+    } = this.context;
 
     const key = this.getCacheKey();
 
-    if (key) {
-      window.localStorage.removeItem(key);
+    if (key && localStorage) {
+      localStorage.removeItem(key);
     }
 
   }
@@ -217,7 +218,7 @@ export default class EditableView extends View {
 
 
 
-            // console.log("await this.saveObject 2", typeof result, result instanceof Error, result);
+            console.log("await this.saveObject 2", typeof result, result instanceof Error, result);
 
             if (result instanceof Error) {
 
@@ -274,6 +275,11 @@ export default class EditableView extends View {
 
                 this.clearCache();
 
+                // await client.resetStore();
+                // await client.cache.reset();
+                // console.log("client.cache.clearStore");
+                await client.clearStore();
+
                 const {
                   onSave,
                 } = this.props;
@@ -282,7 +288,6 @@ export default class EditableView extends View {
                   onSave(result);
                 }
 
-                await client.resetStore();
 
               }
 
@@ -436,13 +441,17 @@ export default class EditableView extends View {
       _dirty = {},
     } = this.state;
 
+    const {
+      localStorage,
+    } = this.context;
+
     const newData = Object.assign({ ..._dirty }, data);
 
     const key = this.getCacheKey();
 
-    if (key && newData) {
+    if (key && newData && localStorage) {
 
-      window.localStorage.setItem(this.getCacheKey(), JSON.stringify(newData));
+      localStorage.setItem(this.getCacheKey(), JSON.stringify(newData));
     }
 
 
