@@ -388,13 +388,17 @@ export default class EditableView extends View {
 
   }
 
+  
   resetEdit() {
 
-    this.clearCache();
+    return new Promise(resolve => {
+      this.clearCache();
 
-    this.setState({
-      inEditMode: false,
-      _dirty: null,
+      this.setState({
+        inEditMode: false,
+        _dirty: null,
+      }, resolve);
+
     });
 
   }
@@ -435,6 +439,33 @@ export default class EditableView extends View {
   }
 
 
+  // updateObject(data) {
+
+  //   const {
+  //     _dirty = {},
+  //   } = this.state;
+
+  //   const {
+  //     localStorage,
+  //   } = this.context;
+
+  //   const newData = Object.assign({ ..._dirty }, data);
+
+  //   const key = this.getCacheKey();
+
+  //   if (key && newData && localStorage) {
+
+  //     localStorage.setItem(this.getCacheKey(), JSON.stringify(newData));
+  //   }
+
+
+  //   this.setState({
+  //     _dirty: newData,
+  //   });
+
+  // }
+
+
   updateObject(data) {
 
     const {
@@ -450,14 +481,12 @@ export default class EditableView extends View {
     const key = this.getCacheKey();
 
     if (key && newData && localStorage) {
-
       localStorage.setItem(this.getCacheKey(), JSON.stringify(newData));
     }
 
+    this.state._dirty = newData;
 
-    this.setState({
-      _dirty: newData,
-    });
+    this.forceUpdate();
 
   }
 
