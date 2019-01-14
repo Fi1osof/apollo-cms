@@ -371,6 +371,7 @@ export default class ApolloCmsApp extends React.Component { // eslint-disable-li
     const {
       // children,
       Renderer,
+      localStorage,
       ...other
     } = this.props;
 
@@ -386,6 +387,7 @@ export default class ApolloCmsApp extends React.Component { // eslint-disable-li
               value={Object.assign(context, {
                 wsLink,
                 reconnectWs: this.reconnectWs,
+                localStorage,
               })}
             >
               <Renderer
