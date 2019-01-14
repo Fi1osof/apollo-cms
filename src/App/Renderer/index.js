@@ -1,15 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import Context from "@prisma-cms/context";
 
 export default class ApolloCmsRenderer extends React.Component {
 
-  static propTypes = {
-  }
+  // static propTypes = {
+  // }
 
-  static contextTypes = {
-    user: PropTypes.object,
-  }
+  static contextType = Context;
 
   render() {
 
