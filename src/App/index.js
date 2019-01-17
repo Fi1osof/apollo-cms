@@ -365,6 +365,7 @@ export default class ApolloCmsApp extends React.Component { // eslint-disable-li
 
     const {
       client,
+      errors,
       wsLink,
     } = this.state;
 
@@ -385,6 +386,8 @@ export default class ApolloCmsApp extends React.Component { // eslint-disable-li
 
             return <Context.Provider
               value={Object.assign(context, {
+                client,
+                errors,
                 wsLink,
                 reconnectWs: this.reconnectWs,
                 ...this.getChildContext(),
