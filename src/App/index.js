@@ -110,6 +110,14 @@ export default class ApolloCmsApp extends React.Component { // eslint-disable-li
       }
     });
 
+    const {
+      subscriptionClient,
+    } = wsLink;
+
+    // console.log("App wsClient subscriptionClient", subscriptionClient);
+
+    this.prepareSubscriptionClient(subscriptionClient);
+
     global.wsLink = wsLink;
 
     const wsHttpLink = split(
@@ -150,6 +158,35 @@ export default class ApolloCmsApp extends React.Component { // eslint-disable-li
   }
 
 
+  prepareSubscriptionClient(client) {
+
+    // client.onConnecting((e) => {
+    //   console.log(`App wsClient onConnecting`, e, client.status);
+    // });
+
+    // client.onConnected((e) => {
+    //   console.log(`App wsClient onConnected`, e, client.status);
+    // });
+
+    // client.onDisconnected((e) => {
+    //   console.log(`App wsClient onDisconnected`, e, client.status);
+    // });
+
+    // client.onError((e, error) => {
+    //   console.log(`App wsClient onError`, e, error, client.status);
+    // });
+
+    // client.onReconnecting((e) => {
+    //   console.log(`App wsClient onReconnecting`, e, client.status);
+    // });
+
+    // client.onReconnected((e) => {
+    //   console.log(`App wsClient onReconnected`, e, client.status);
+    // });
+
+  }
+
+
   getChildContext() {
 
     const {
@@ -177,7 +214,7 @@ export default class ApolloCmsApp extends React.Component { // eslint-disable-li
   }
 
 
-  onAuthSuccess = (data) => {
+  onAuthSuccess = async (data) => {
 
     const {
       token,
@@ -188,20 +225,25 @@ export default class ApolloCmsApp extends React.Component { // eslint-disable-li
       localStorage,
     } = this.props;
 
+    const {
+      client,
+    } = this.state;
+    
     token && localStorage.setItem("token", `Bearer ${token}`);
-    this.reconnectWs();
 
+    // setTimeout(async () => {
+    // }, 1000);
+
+    
     this.setState({
       user,
     }, async () => {
-
-      const {
-        client,
-      } = this.state;
-
+      
       await client.resetStore();
 
-      this.forceUpdate();
+      this.reconnectWs();
+
+      // this.forceUpdate();
 
 
     });
@@ -209,19 +251,26 @@ export default class ApolloCmsApp extends React.Component { // eslint-disable-li
   }
 
 
-  logout = () => {
+  logout = async () => {
 
     const {
       localStorage,
     } = this.props;
 
+    const {
+      client,
+    } = this.state;
+
     localStorage.setItem("token", ``);
 
-    this.reconnectWs();
-
+    
     this.setState({
       user: null,
-    }, () => {
+    }, async () => {
+
+      await client.resetStore();
+      
+      this.reconnectWs();
 
     });
 
@@ -238,11 +287,23 @@ export default class ApolloCmsApp extends React.Component { // eslint-disable-li
       subscriptionClient,
     } = wsLink || {};
 
+    // console.log("reconnectWs subscriptionClient status", subscriptionClient.status);
+
     if (subscriptionClient) {
+      // subscriptionClient.unsubscribeAll();
       subscriptionClient.close(false, false);
     }
 
   }
+
+
+  // subscribe = (options, observer) => {
+
+  //   const {
+  //     wsLink,
+  //   } = this.state;
+
+  // }
 
 
   onError = (response) => {
