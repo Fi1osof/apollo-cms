@@ -1,6 +1,6 @@
 {
   "name": "apollo-cms",
-  "version": "1.6.8",
+  "version": "1.6.9",
   "description": "Apollo-client for prisma-cms",
   "main": "lib/App",
   "module": "es/App",

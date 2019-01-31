@@ -203,9 +203,9 @@ export default class ApolloCmsApp extends React.Component { // eslint-disable-li
     let context = {
       token,
       user,
-      onAuthSuccess: this.onAuthSuccess,
+      onAuthSuccess: data => this.onAuthSuccess(data),
       loadApiData: () => this.loadApiData(),
-      logout: this.logout,
+      logout: () => this.logout(),
       errors,
       localStorage,
     };
@@ -214,7 +214,7 @@ export default class ApolloCmsApp extends React.Component { // eslint-disable-li
   }
 
 
-  onAuthSuccess = async (data) => {
+  async onAuthSuccess(data) {
 
     const {
       token,
@@ -228,17 +228,17 @@ export default class ApolloCmsApp extends React.Component { // eslint-disable-li
     const {
       client,
     } = this.state;
-    
+
     token && localStorage.setItem("token", `Bearer ${token}`);
 
     // setTimeout(async () => {
     // }, 1000);
 
-    
+
     this.setState({
       user,
     }, async () => {
-      
+
       await client.resetStore();
 
       this.reconnectWs();
@@ -251,7 +251,7 @@ export default class ApolloCmsApp extends React.Component { // eslint-disable-li
   }
 
 
-  logout = async () => {
+  async logout() {
 
     const {
       localStorage,
@@ -263,13 +263,13 @@ export default class ApolloCmsApp extends React.Component { // eslint-disable-li
 
     localStorage.setItem("token", ``);
 
-    
+
     this.setState({
       user: null,
     }, async () => {
 
       await client.resetStore();
-      
+
       this.reconnectWs();
 
     });
