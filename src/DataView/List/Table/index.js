@@ -238,11 +238,11 @@ export class TableView extends PrismaComponent {
     } = data;
 
 
-    if (!objectsConnection) {
+    // if (!objectsConnection) {
 
-      return null;
+    //   return null;
 
-    }
+    // }
 
 
     const {
