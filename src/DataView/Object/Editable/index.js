@@ -278,8 +278,8 @@ export default class EditableView extends View {
                 // await client.resetStore();
                 // await client.cache.reset();
                 // console.log("client.cache.clearStore");
-                await client.clearStore();
-                await client.reFetchObservableQueries();
+                await client.clearStore().catch(console.error);
+                await client.reFetchObservableQueries().catch(console.error);
 
                 const {
                   onSave,
