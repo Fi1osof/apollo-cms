@@ -67,7 +67,9 @@ class CustomTableView extends TableView {
 
 }
 
-const TestTableView = withStyles(styles)(CustomTableView);
+const TestTableView = withStyles(styles)(props => <CustomTableView 
+  {...props}
+/>);
 
 
 class Renderer extends Component {
@@ -148,7 +150,7 @@ describe('DataView List Table', () => {
             const thead = table.querySelector("thead");
             expect(thead).toNotBe(null);
 
-            expect(table.textContent).toContain("cjn27lkhv08sp0950dcfp61c3");
+            expect(table.textContent).toContain("UsernameEmailTesttest@localhosttest");
 
             let usernameSpans = table.querySelectorAll(".username");
             expect(usernameSpans.length).toBe(count);

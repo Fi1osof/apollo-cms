@@ -23,13 +23,15 @@ import App from "../../../../App";
 // createDOM();
 
 
-const TestTableView = withStyles(styles)(TableView);
+const TestTableView = withStyles(styles)(props => <TableView
+  {...props}
+/>);
 
 
 class Renderer extends Component {
 
 
-  static propTypes = { 
+  static propTypes = {
     resolve: PropTypes.func.isRequired,
   }
 
@@ -108,13 +110,17 @@ describe('DataView List Table', () => {
 
           jest.useFakeTimers();
 
+          const table = node.querySelector("table");
+          const tbody = table.querySelector("tbody");
+
           // console.log(chalk.green("Table node"), node);
           // console.log(chalk.green("Table node.innerHTML"), node.innerHTML);
+          // console.log(chalk.green("Table tbody.innerHTML"), tbody.innerHTML);
 
 
           setTimeout(() => {
 
-            expect(node.innerHTML === "").toBe(true); 
+            expect(tbody.innerHTML === "").toBe(true);
 
           }, 1000);
 

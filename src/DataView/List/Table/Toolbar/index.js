@@ -15,6 +15,7 @@ import { lighten } from 'material-ui/styles/colorManipulator';
 import Grid from 'material-ui/Grid';
 
 import ChoseColumns from "./ChoseColumns";
+import ExportToExcel from "./ExportToExcel";
 
 const toolbarStyles = theme => ({
   root: {
@@ -53,6 +54,8 @@ export class EnhancedTableToolbar extends Component {
     addObject: PropTypes.func,
     columnData: PropTypes.array.isRequired,
     toggleColumnVisibility: PropTypes.func.isRequired,
+    exportable: PropTypes.bool.isRequired,
+    table: PropTypes.instanceOf(HTMLTableElement).isRequired,
   }
 
   render() {
@@ -65,6 +68,8 @@ export class EnhancedTableToolbar extends Component {
       filters,
       columnData,
       toggleColumnVisibility,
+      exportable,
+      table,
     } = this.props;
 
 
@@ -101,6 +106,18 @@ export class EnhancedTableToolbar extends Component {
       </Grid>);
     }
 
+    if (exportable) {
+      columns.push(<Grid
+        key="ExportToExcel"
+        item
+      >
+        <ExportToExcel
+          columnData={columnData}
+          table={table}
+        />
+      </Grid>);
+    }
+
     if (columnData && columnData.length) {
       columns.push(<Grid
         key="ChoseColumns"
@@ -112,6 +129,7 @@ export class EnhancedTableToolbar extends Component {
         />
       </Grid>);
     }
+
 
 
 
@@ -174,4 +192,6 @@ export class EnhancedTableToolbar extends Component {
 
 
 
-export default withStyles(toolbarStyles)(EnhancedTableToolbar);
+export default withStyles(toolbarStyles)(props => <EnhancedTableToolbar 
+  {...props}
+/>);

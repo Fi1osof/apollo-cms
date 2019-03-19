@@ -12,6 +12,10 @@ import Table, {
   // TableSortLabel,
 } from 'material-ui/Table';
 
+import {
+  styles as tableStyles,
+} from 'material-ui/Table/Table';
+
 
 // import Typography from 'material-ui/Typography';
 import Paper from 'material-ui/Paper';
@@ -38,19 +42,23 @@ import PrismaComponent from "@prisma-cms/component";
 
 
 
-export const styles = theme => ({
-  root: {
-    width: '100%',
-    marginTop: theme.spacing.unit * 3,
-  },
-  loading: {},
-  table: {
-    minWidth: 800,
-  },
-  tableWrapper: {
-    overflowX: 'auto',
-  },
-});
+export const styles = theme => {
+
+  return {
+    root: {
+      width: '100%',
+      marginTop: theme.spacing.unit * 3,
+    },
+    loading: {},
+    table: {
+      ...tableStyles(theme).root,
+      minWidth: 800,
+    },
+    tableWrapper: {
+      overflowX: 'auto',
+    },
+  };
+};
 
 export class TableView extends PrismaComponent {
 
@@ -69,6 +77,7 @@ export class TableView extends PrismaComponent {
     Body: PropTypes.func.isRequired,
     // limit: PropTypes.number.isRequired,
     filters: PropTypes.array,
+    exportable: PropTypes.bool.isRequired,
   };
 
 
@@ -80,6 +89,7 @@ export class TableView extends PrismaComponent {
     Toolbar,
     Body,
     columnData: [],
+    exportable: true,
   };
 
 
@@ -205,8 +215,6 @@ export class TableView extends PrismaComponent {
 
     newColumnsData[index].hidden = !checked;
 
-    console.log("toggleColumnVisibility  checked, index", checked, index, newColumnsData[index], newColumnsData);
-
     this.setState({
       columnData: newColumnsData,
     });
@@ -222,6 +230,10 @@ export class TableView extends PrismaComponent {
   render() {
 
     const {
+      table,
+    } = this;
+
+    const {
       classes,
       data,
       order,
@@ -232,6 +244,7 @@ export class TableView extends PrismaComponent {
       Body,
       addObject,
       className,
+      exportable,
       // ...other
     } = this.props;
 
@@ -283,17 +296,35 @@ export class TableView extends PrismaComponent {
         className={[classes.root, loading ? classes.loading : "", className].join(" ")}
       >
 
-        {Toolbar ? <Toolbar
+        {Toolbar && table ? <Toolbar
           numSelected={selected.length}
           title={title}
           addObject={addObject}
           filters={filters}
           columnData={columnData}
           toggleColumnVisibility={(event, checked, index) => this.toggleColumnVisibility(event, checked, index)}
+          exportable={exportable}
+          table={table}
         /> : null}
 
         <div className={classes.tableWrapper}>
-          <Table className={classes.table}>
+          <table
+            className={classes.table}
+            // component={props => {
+
+            //   return <table
+            //     id="sdfdsf"
+            //     ref={el => {
+            //       this.table = el;
+            //     }}
+            //     {...props}
+            //   />
+            // }}
+
+            ref={el => {
+              this.table = el;
+            }}
+          >
 
             <Header
               numSelected={selected.length}
@@ -313,7 +344,7 @@ export class TableView extends PrismaComponent {
               columnData={columnData}
             />
 
-          </Table>
+          </table>
         </div>
       </Paper>
     );

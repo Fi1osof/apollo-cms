@@ -289,4 +289,6 @@ export {
   DevTableView as TableView,
 };
 
-export default withStyles(styles)(DevTableView);
+export default withStyles(styles)(props => <DevTableView
+  {...props}
+/>);

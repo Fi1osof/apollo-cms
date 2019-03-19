@@ -10,13 +10,13 @@ import TableView from "../pages/TableView";
 import withStyles from "material-ui/styles/withStyles";
 
 export const styles = theme => {
-  
+
   return {
- 
+
   }
 }
 
-class DevRenderer extends PrismaCmsRenderer{
+class DevRenderer extends PrismaCmsRenderer {
 
   getRoutes() {
 
@@ -27,11 +27,13 @@ class DevRenderer extends PrismaCmsRenderer{
       path: "/",
       component: TableView,
     });
- 
+
     return routers;
 
   }
 
 }
 
-export default withStyles(styles)(DevRenderer);
+export default withStyles(styles)(props => <DevRenderer
+  {...props}
+/>);

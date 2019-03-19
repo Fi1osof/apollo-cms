@@ -1,5 +1,8 @@
+1.7.0
 ===========================================
 - Added columns selection
+- Added TableView::ExportToExcel
+- Added excellentexport
 
 1.6.11
 ===========================================

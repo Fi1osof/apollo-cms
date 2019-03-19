@@ -218,7 +218,7 @@ export default class EditableView extends View {
 
 
 
-            console.log("await this.saveObject 2", typeof result, result instanceof Error, result);
+            // console.log("await this.saveObject 2", typeof result, result instanceof Error, result);
 
             if (result instanceof Error) {
 
@@ -389,7 +389,7 @@ export default class EditableView extends View {
 
   }
 
-  
+
   resetEdit() {
 
     return new Promise(resolve => {
@@ -828,7 +828,7 @@ export default class EditableView extends View {
     });
 
 
-    console.log("click event 2", error, this.state.notifications);
+    // console.log("click event 2", error, this.state.notifications);
 
     this.forceUpdate();
 
