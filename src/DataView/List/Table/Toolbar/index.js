@@ -14,6 +14,8 @@ import AddIcon from 'material-ui-icons/AddCircleOutline';
 import { lighten } from 'material-ui/styles/colorManipulator';
 import Grid from 'material-ui/Grid';
 
+import ChoseColumns from "./ChoseColumns";
+
 const toolbarStyles = theme => ({
   root: {
     paddingRight: theme.spacing.unit,
@@ -49,6 +51,8 @@ export class EnhancedTableToolbar extends Component {
     numSelected: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
     addObject: PropTypes.func,
+    columnData: PropTypes.array.isRequired,
+    toggleColumnVisibility: PropTypes.func.isRequired,
   }
 
   render() {
@@ -59,6 +63,8 @@ export class EnhancedTableToolbar extends Component {
       title,
       addObject,
       filters,
+      columnData,
+      toggleColumnVisibility,
     } = this.props;
 
 
@@ -92,6 +98,18 @@ export class EnhancedTableToolbar extends Component {
         xs
       >
         {null}
+      </Grid>);
+    }
+
+    if (columnData && columnData.length) {
+      columns.push(<Grid
+        key="ChoseColumns"
+        item
+      >
+        <ChoseColumns
+          columnData={columnData}
+          toggleColumnVisibility={toggleColumnVisibility}
+        />
       </Grid>);
     }
 

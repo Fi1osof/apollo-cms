@@ -83,9 +83,9 @@ export class TableView extends PrismaComponent {
   };
 
 
-  constructor(props, context) {
+  constructor(props) {
 
-    super(props, context);
+    super(props);
 
     this.state = {
       ...this.state,
@@ -195,6 +195,25 @@ export class TableView extends PrismaComponent {
   }
 
 
+  toggleColumnVisibility(event, checked, index) {
+
+    const {
+      columnData,
+    } = this.state;
+
+    const newColumnsData = [...columnData];
+
+    newColumnsData[index].hidden = !checked;
+
+    console.log("toggleColumnVisibility  checked, index", checked, index, newColumnsData[index], newColumnsData);
+
+    this.setState({
+      columnData: newColumnsData,
+    });
+
+  }
+
+
   renderFilters() {
     return null;
   }
@@ -269,6 +288,8 @@ export class TableView extends PrismaComponent {
           title={title}
           addObject={addObject}
           filters={filters}
+          columnData={columnData}
+          toggleColumnVisibility={(event, checked, index) => this.toggleColumnVisibility(event, checked, index)}
         /> : null}
 
         <div className={classes.tableWrapper}>

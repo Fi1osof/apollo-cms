@@ -30,7 +30,7 @@ export default class TBody extends Component {
             id,
           } = n;
 
-          const columns = columnData.map((record, index) => {
+          const columns = columnData.filter(n => n.hidden !== true).map((record, index) => {
 
             const {
               id: fieldName,

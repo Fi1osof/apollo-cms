@@ -56,7 +56,7 @@ export default class EnhancedTableHead extends Component {
               // onChange={onSelectAllClick}
             />
           </TableCell> */}
-          {columnData.map(column => {
+          {columnData.filter(n => n.hidden !== true).map(column => {
             return (
               <TableCell
                 key={column.id}

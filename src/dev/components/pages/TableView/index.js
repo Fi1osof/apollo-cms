@@ -24,6 +24,7 @@ export const edges = [
       "fullname": "",
       "image": null,
       "sudo": false,
+      "email": "test@localhost",
       "__typename": "User"
     },
     "__typename": "UserEdge"
@@ -72,21 +73,6 @@ export const data = {
 };
 
 
-export const columnData = [
-  {
-    id: "id",
-  },
-  {
-    id: "username",
-    renderer: (value) => {
-      return <span
-        className="username"
-      >
-        {value}
-      </span>
-    }
-  },
-]
 
 export class DevTableView extends TableView {
 
@@ -96,8 +82,50 @@ export class DevTableView extends TableView {
     data,
     title: "Test",
     limit,
-    columnData,
 
+  }
+
+
+
+  constructor(props) {
+
+    super(props);
+
+    this.state = {
+      ...this.state,
+      columnData: [
+        {
+          id: "id",
+          label: "ID",
+          hidden: true,
+        },
+        {
+          id: "username",
+          label: "Username",
+          description: "Unique username",
+          hidden: false,
+          renderer: (value) => {
+            return <span
+              className="username"
+            >
+              {value}
+            </span>
+          },
+        },
+        {
+          id: "email",
+          label: "Email",
+          hidden: false,
+          renderer: (value) => {
+            return value ? <a
+              href={`mailto:${value}`}
+            >
+              {value}
+            </a> : null
+          },
+        },
+      ],
+    };
   }
 
 
@@ -242,24 +270,16 @@ export class DevTableView extends TableView {
   }
 
 
-  // getColumns() {
+  getColumns() {
 
-  //   let columnData = super.getColumns().map(n => n);
+    const {
+      columnData,
+    } = this.state;
 
+    return columnData || [];
 
-  //   const {
-  //     user: currentUser,
-  //   } = this.context;
+  }
 
-
-  //   const {
-  //     sudo,
-  //   } = currentUser || {}
-
-
-  //   return columnData;
-
-  // }
 
 }
 
