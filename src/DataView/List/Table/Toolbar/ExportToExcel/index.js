@@ -88,15 +88,21 @@ export class ExportToExcel extends Component {
 
     if (includeHeaders) {
 
-      const headers = [...table.querySelector("thead").children];
+      let theadRows = table.querySelector("thead").children;
 
-      if (headers && headers.length) {
-        rows = rows.concat(headers);
+      for (let item of theadRows) {
+        rows.push(item);
       }
 
     }
 
-    rows = rows.concat([...table.querySelector("tbody").children]);
+    // rows = rows.concat(table.querySelector("tbody").children);
+
+    const tbodyRows = table.querySelector("tbody").children;
+
+    for (let row of tbodyRows) {
+      rows.push(row);
+    }
 
     // const table2 = window.document.querySelector("table");
 
@@ -107,21 +113,24 @@ export class ExportToExcel extends Component {
 
 
 
-    // console.log("table rows", { ...rows });
+    // console.log("table rows", rows, { ...rows });
 
     rows.map(row => {
 
       let values = [];
 
-      const cols = [...row.children];
+      // console.log("cols parent", row, { ...row });
+
+
+      const cols = row.children;
 
       // console.log("cols", cols);
 
-      cols.map(col => {
+      for (let col of cols) {
 
-        values.push(col.textContent);
+        values.push(col ? col.textContent : "");
 
-      });
+      }
 
 
       data.push(values);
@@ -145,6 +154,7 @@ export class ExportToExcel extends Component {
 
     ];
 
+    // console.log("data", data);
 
     // return false;
 
@@ -153,7 +163,6 @@ export class ExportToExcel extends Component {
     // console.log(workbook, 'Result must not be null');
 
 
-    // console.log("data", data);
 
     // const anchor = document.getElementById('datatable');
     // const anchor = document.getElementById('datatable');
