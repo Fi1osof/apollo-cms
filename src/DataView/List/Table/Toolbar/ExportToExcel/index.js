@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 
 import DownloadIcon from 'material-ui-icons/CloudDownload';
 import { IconButton } from 'material-ui';
-
-import ExcellentExport from 'excellentexport';
+ 
 import { withStyles } from 'material-ui';
 
 import moment from "moment";
@@ -50,6 +49,8 @@ export class ExportToExcel extends Component {
 
 
   exportTable(event) {
+
+    const ExcellentExport = require('excellentexport');
 
     let {
       table,
