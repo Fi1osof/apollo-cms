@@ -227,6 +227,17 @@ export class TableView extends PrismaComponent {
   }
 
 
+  componentDidMount() {
+
+    /**
+     * Required for handle this.table ref
+     */
+    this.forceUpdate();
+
+    super.componentDidMount && super.componentDidMount();
+  }
+
+
   render() {
 
     const {
@@ -322,7 +333,21 @@ export class TableView extends PrismaComponent {
             // }}
 
             ref={el => {
+
+              // console.log("Toolbar && table ref", el);
+
+              // let needReload = false;
+
+              // if (el && !this.table) {
+              //   needReload = true;
+              // }
+
               this.table = el;
+
+              // if (needReload) {
+              //   this.forceUpdate();
+              // }
+
             }}
           >
 
