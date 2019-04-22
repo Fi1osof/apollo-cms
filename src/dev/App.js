@@ -15,7 +15,7 @@ export default class App extends Component {
   
   static defaultProps = {
     queryFragments,
-    lang: "ru",
+    // lang: "ru",
     Renderer,
   }
 

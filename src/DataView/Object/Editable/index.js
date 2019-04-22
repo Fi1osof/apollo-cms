@@ -424,20 +424,20 @@ export default class EditableView extends View {
   }
 
 
-  onChange(event) {
+  // onChange(event) {
 
-    const {
-      name,
-      value,
-    } = event.target;
+  //   const {
+  //     name,
+  //     value,
+  //   } = event.target;
 
-    // console.log("onChange", name, value);
+  //   // console.log("onChange", name, value);
 
-    this.updateObject({
-      [name]: value,
-    });
+  //   this.updateObject({
+  //     [name]: value,
+  //   });
 
-  }
+  // }
 
 
   // updateObject(data) {
