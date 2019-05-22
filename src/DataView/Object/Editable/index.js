@@ -61,9 +61,8 @@ export default class EditableView extends View {
     const {
     } = props;
 
-
-
     this.state = {
+      ...this.state,
       inEditMode: false,
       notifications: [],
       loading: false,
