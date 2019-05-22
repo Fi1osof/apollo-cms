@@ -499,6 +499,7 @@ export default class EditableView extends View {
       helperText,
       onFocus,
       fullWidth = true,
+      label,
       ...other
     } = props;
 
@@ -518,6 +519,8 @@ export default class EditableView extends View {
 
     const error = errors ? errors.find(n => n.key === name) : "";
 
+    const helperTextMessage = error && error.message || helperText;
+
     return Editor ? <Editor
       onChange={event => {
         this.onChange(event);
@@ -527,8 +530,9 @@ export default class EditableView extends View {
       style={fullWidth ? {
         width: "100%",
       } : undefined}
+      label={label ? this.lexicon(label) : label}
       error={error ? true : false}
-      helperText={error && error.message || helperText}
+      helperText={helperTextMessage ? this.lexicon(helperTextMessage) : helperTextMessage}
       onFocus={event => {
 
         if (error) {

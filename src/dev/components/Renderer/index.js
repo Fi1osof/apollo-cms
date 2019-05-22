@@ -8,6 +8,7 @@ import { Renderer as PrismaCmsRenderer } from "@prisma-cms/front";
 import TableView from "../pages/TableView";
 
 import withStyles from "material-ui/styles/withStyles";
+import EditableView from "../../../DataView/Object/Editable";
 
 export const styles = theme => {
 
@@ -26,6 +27,30 @@ class DevRenderer extends PrismaCmsRenderer {
       exact: true,
       path: "/",
       component: TableView,
+      // render: (props) => {
+
+      //   return <EditableView
+      //     data={{
+      //       object: {
+      //         name: "SFDgdsf",
+      //       }
+      //     }}
+      //     locales={{
+      //       en: {
+      //         values: {
+      //           aa: "SDfsdfds",
+      //           bb: "SDfsdfds",
+      //         },
+      //       },
+      //       ru: {
+      //         values: {
+
+      //           aa: "SDfsdfds",
+      //         },
+      //       },
+      //     }}
+      //   />
+      // }
     });
 
     return routers;
