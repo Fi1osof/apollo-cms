@@ -9,7 +9,7 @@ import {
   TableHead,
   // TablePagination,
   TableRow,
-  TableSortLabel,
+  // TableSortLabel,
 } from 'material-ui/Table';
 
 import Checkbox from 'material-ui/Checkbox';

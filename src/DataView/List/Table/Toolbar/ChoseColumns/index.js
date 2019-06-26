@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { Tooltip, IconButton, Menu, ListItem } from 'material-ui';
 
 import ChoseColumnsIcon from 'material-ui-icons/MoreVert';
-import { MenuItem } from 'material-ui';
+// import { MenuItem } from 'material-ui';
 import { ListItemText } from 'material-ui';
-import { ListItemSecondaryAction } from 'material-ui';
+// import { ListItemSecondaryAction } from 'material-ui';
 import { Switch } from 'material-ui';
 import { withStyles } from 'material-ui';
 

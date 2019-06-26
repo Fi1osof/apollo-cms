@@ -7,7 +7,7 @@ import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import IconButton from 'material-ui/IconButton';
 import Tooltip from 'material-ui/Tooltip';
-import DeleteIcon from 'material-ui-icons/Delete';
+// import DeleteIcon from 'material-ui-icons/Delete';
 // import FilterListIcon from 'material-ui-icons/FilterList';
 import AddIcon from 'material-ui-icons/AddCircleOutline';
 
@@ -15,7 +15,7 @@ import { lighten } from 'material-ui/styles/colorManipulator';
 import Grid from 'material-ui/Grid';
 
 import ChoseColumns from "./ChoseColumns";
-import ExportToExcel from "./ExportToExcel";
+// import ExportToExcel from "./ExportToExcel";
 
 const toolbarStyles = theme => ({
   root: {
@@ -106,17 +106,17 @@ export class EnhancedTableToolbar extends Component {
       </Grid>);
     }
 
-    if (exportable) {
-      columns.push(<Grid
-        key="ExportToExcel"
-        item
-      >
-        <ExportToExcel
-          columnData={columnData}
-          table={table}
-        />
-      </Grid>);
-    }
+    // if (exportable) {
+    //   columns.push(<Grid
+    //     key="ExportToExcel"
+    //     item
+    //   >
+    //     <ExportToExcel
+    //       columnData={columnData}
+    //       table={table}
+    //     />
+    //   </Grid>);
+    // }
 
     if (columnData && columnData.length) {
       columns.push(<Grid
