@@ -3,18 +3,18 @@ import PropTypes from "prop-types";
 
 import PrismaCmsApp from '@prisma-cms/front'
 
-import * as queryFragments from "@prisma-cms/front/lib/schema/generated/api.fragments";
+// import * as queryFragments from "@prisma-cms/front/lib/schema/generated/api.fragments";
 
 import Renderer from "./components/Renderer";
 
 export default class App extends Component {
 
   static propTypes = {
-    queryFragments: PropTypes.object.isRequired,
+    // queryFragments: PropTypes.object.isRequired,
   }
-  
+
   static defaultProps = {
-    queryFragments,
+    // queryFragments,
     // lang: "ru",
     Renderer,
   }
@@ -22,12 +22,12 @@ export default class App extends Component {
   render() {
 
     const {
-      queryFragments,
+      // queryFragments,
       ...other
     } = this.props;
 
     return <PrismaCmsApp
-      queryFragments={queryFragments}
+      // queryFragments={queryFragments}
       {...other}
     />
   }

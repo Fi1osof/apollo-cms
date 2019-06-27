@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import DownloadIcon from 'material-ui-icons/CloudDownload';
-import { IconButton } from 'material-ui';
- 
-import { withStyles } from 'material-ui';
+import IconButton from 'material-ui/IconButton';
 
 import moment from "moment";
 

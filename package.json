@@ -1,13 +1,11 @@
 {
   "name": "apollo-cms",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "description": "Apollo-client for prisma-cms",
   "main": "lib/App",
-  "module": "es/App",
   "files": [
     "src",
     "css",
-    "es",
     "lib",
     "umd"
   ],
@@ -59,6 +57,9 @@
     "react-dom": "^16.2.0",
     "react-scripts": "^2.1.2",
     "source-map-explorer": "^2.0.1"
+  },
+  "resolutions": {
+    "graphql": "14.0.2"
   },
   "author": "Fi1osof",
   "homepage": "https://github.com/Fi1osof/apollo-cms#readme",

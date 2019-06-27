@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Tooltip, IconButton, Menu, ListItem } from 'material-ui';
 
 import ChoseColumnsIcon from 'material-ui-icons/MoreVert';
-// import { MenuItem } from 'material-ui';
-import { ListItemText } from 'material-ui';
-// import { ListItemSecondaryAction } from 'material-ui';
-import { Switch } from 'material-ui';
-import { withStyles } from 'material-ui';
+
+import Tooltip from 'material-ui/Tooltip';
+import IconButton from 'material-ui/IconButton';
+import Menu from 'material-ui/Menu';
+
+import ListItem from 'material-ui/List/ListItem';
+import ListItemText from 'material-ui/List/ListItemText';
+import Switch from 'material-ui/Switch';
+import withStyles from 'material-ui/styles/withStyles';
 
 
 export const styles = {
