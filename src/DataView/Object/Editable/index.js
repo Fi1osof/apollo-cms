@@ -597,13 +597,14 @@ export default class EditableView extends View {
 
     const {
       data,
+      object,
     } = this.props;
 
-    const {
-      object,
-    } = data || {};
+    // const {
+    //   object,
+    // } = data || {};
 
-    return object;
+    return object !== undefined ? object : (data && data.object) || null;
   }
 
 
@@ -943,7 +944,6 @@ export default class EditableView extends View {
   }
 
 
-
   render() {
 
 
@@ -952,17 +952,19 @@ export default class EditableView extends View {
     } = this.props;
 
 
-    if (!data) {
-      return null;
-    }
+    // if (!data) {
+    //   return null;
+    // }
 
     const {
-      object,
+      // object,
       loading,
-    } = data;
+    } = data || {};
 
 
     let output = null;
+
+    const object = this.getObject();
 
     if (!object) {
 
