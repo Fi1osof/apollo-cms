@@ -11,6 +11,7 @@ import withStyles from "material-ui/styles/withStyles";
 import EditableView from "./EditableObject";
 import gql from "graphql-tag";
 import { graphql } from "react-apollo";
+import Typography from "material-ui/Typography";
 
 export const styles = theme => {
 
@@ -135,7 +136,13 @@ class DevRenderer extends PrismaCmsRenderer {
                 },
               },
             }}
-          />
+          >
+            <Typography
+              color="error"
+            >
+              Дочерние компоненты не должный выводиться
+            </Typography>
+          </EditableView>
         },
       },
     ].concat(routers);

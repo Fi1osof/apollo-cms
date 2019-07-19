@@ -529,7 +529,7 @@ export class EditableObject extends View {
                 // await client.resetStore();
                 // await client.cache.reset();
                 // console.log("client.cache.clearStore");
-                
+
                 // await client.clearStore().catch(console.error);
 
                 await client.reFetchObservableQueries().catch(console.error);
@@ -1250,15 +1250,15 @@ export class EditableObject extends View {
 
     }
 
-    return super.render(output);
+    // return super.render(output);
 
-    // return <Fragment>
+    return <Fragment>
 
-    //   {output}
+      {output}
 
-    //   {/* {this.renderErrors()} */}
+      {this.renderErrors()}
 
-    // </Fragment>
+    </Fragment>
 
   }
 

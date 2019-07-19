@@ -1,3 +1,7 @@
+1.10.1
+===========================================
+- Fix EditableObject::render children
+
 1.10.0
 ===========================================
 - Fix EditableObject::errors
