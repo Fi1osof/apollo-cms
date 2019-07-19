@@ -202,12 +202,22 @@ export class EditableObject extends View {
 
         if (result && !(result instanceof Error)) {
 
+          this.clearCache();
+
+          const {
+            onSave,
+          } = this.props;
+
+          let callback;
+
+          if (onSave) {
+            callback = () => onSave(result);
+          }
+
           this.setState({
             _dirty: null,
             inEditMode: false,
-          });
-
-          this.clearCache();
+          }, callback);
 
         }
 
@@ -550,15 +560,6 @@ export class EditableObject extends View {
 
                 await client.reFetchObservableQueries().catch(console.error);
 
-                const {
-                  onSave,
-                } = this.props;
-
-                if (onSave) {
-                  onSave(result);
-                }
-
-
               }
 
 
@@ -578,6 +579,7 @@ export class EditableObject extends View {
 
 
         this.setState(newState, () => {
+
           return resolve(result);
         });
 

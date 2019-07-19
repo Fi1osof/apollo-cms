@@ -75,6 +75,7 @@ class DevRenderer extends PrismaCmsRenderer {
     // console.log("mutate", mutate);
     // console.log("mutation", mutation);
     // console.log("this.props", this.props);
+    // console.log("this.context", this.context);
 
     return [
       {
@@ -122,6 +123,19 @@ class DevRenderer extends PrismaCmsRenderer {
             }}
             mutate={mutate}
             mutation={!mutate ? mutation : undefined}
+            onSave={result => {
+
+              console.log("onSave result", result);
+
+              const {
+                router: {
+                  history,
+                },
+              } = this.context;
+
+              history.push(decodeURIComponent("/"));
+
+            }}
             locales={{
               en: {
                 values: {
