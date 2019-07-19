@@ -76,7 +76,7 @@ class Renderer extends Component {
         variables: { file }
       })
         .then(result => {
-          console.log(chalk.green("Upload success"), result);
+          // console.log(chalk.green("Upload success"), result);
 
           const {
             data: {
@@ -110,7 +110,7 @@ class Renderer extends Component {
 
       setTimeout(() => {
 
-        console.log(chalk.green("componentDidMount client"), "client");
+        // console.log(chalk.green("componentDidMount client"), "client");
 
 
         resolve();

@@ -1,3 +1,8 @@
+1.10.0
+===========================================
+- Fix EditableObject::errors
+- Fix EditableObject::mutate()
+
 1.9.0
 ===========================================
 - Get object from props

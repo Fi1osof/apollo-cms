@@ -18,6 +18,7 @@ import Snackbar from 'material-ui/Snackbar';
 import { CircularProgress } from 'material-ui/Progress';
 
 import View from '../';
+import gql from 'graphql-tag';
 
 const SaveIcon = () => {
 
@@ -29,11 +30,14 @@ const SaveIcon = () => {
 }
 
 
-export default class EditableView extends View {
+export class EditableObject extends View {
 
   static propTypes = {
     ...View.propTypes,
-    mutate: PropTypes.func.isRequired,
+    // mutate: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+
+    mutate: PropTypes.func,
+    mutation: PropTypes.object,
     _dirty: PropTypes.object,
     errorDelay: PropTypes.number.isRequired,
     SaveIcon: PropTypes.func.isRequired,
@@ -46,7 +50,7 @@ export default class EditableView extends View {
 
   static defaultProps = {
     ...View.defaultProps,
-    errorDelay: 10000,
+    errorDelay: 5000,
     SaveIcon,
     ResetIcon,
     EditIcon,
@@ -185,7 +189,225 @@ export default class EditableView extends View {
 
 
 
-  async save() {
+  save() {
+
+    const {
+      _dirty,
+    } = this.state;
+
+    return this.saveObject(_dirty);
+
+  }
+
+
+  // async save() {
+
+  //   const {
+  //     _dirty,
+  //     loading,
+  //   } = this.state;
+
+  //   const {
+  //     client,
+  //   } = this.context;
+
+
+  //   if (loading) {
+  //     return;
+  //   }
+
+  //   return new Promise((resolve, reject) => {
+
+  //     this.setState({
+  //       loading: true,
+  //     }, async () => {
+
+
+  //       let newState = {
+  //         loading: false,
+  //       };
+
+  //       const result = await this.saveObject(_dirty)
+  //         .then(async result => {
+
+
+
+  //           // console.log("await this.saveObject 2", typeof result, result instanceof Error, result);
+
+  //           if (result instanceof Error) {
+
+  //             // console.log("await this.saveObject result", result);
+
+  //           }
+  //           else {
+
+  //             const {
+  //               data: resultData,
+  //             } = result || {};
+
+  //             const {
+  //               response,
+  //             } = resultData || {};
+
+  //             // console.log("result", result);
+  //             // console.log("resultData", resultData);
+
+  //             let {
+  //               success,
+  //               message,
+  //               errors = null,
+  //               ...other
+  //             } = response || {};
+
+
+  //             Object.assign(newState, {
+  //               errors,
+  //             });
+
+
+  //             if (success === undefined) {
+
+  //               success = true;
+
+  //             }
+
+  //             if (!success) {
+
+  //               this.addError(message || "Request error");
+
+  //               // errors && errors.map(error => {
+  //               //   this.addError(error);
+  //               // });
+
+  //             }
+  //             else {
+
+  //               Object.assign(newState, {
+  //                 _dirty: null,
+  //                 inEditMode: false,
+  //               });
+
+  //               this.clearCache();
+
+  //               // await client.resetStore();
+  //               // await client.cache.reset();
+  //               // console.log("client.cache.clearStore");
+  //               await client.clearStore().catch(console.error);
+  //               await client.reFetchObservableQueries().catch(console.error);
+
+  //               const {
+  //                 onSave,
+  //               } = this.props;
+
+  //               if (onSave) {
+  //                 onSave(result);
+  //               }
+
+
+  //             }
+
+
+  //           }
+
+
+  //           return result;
+  //         })
+  //         .catch(e => {
+  //           console.error(e);
+  //           return e;
+  //         });
+
+
+  //       this.setState(newState, () => {
+  //         return resolve(result);
+  //       });
+
+  //       return;
+
+  //     });
+
+  //   });
+
+  // }
+
+
+  async saveObject(data) {
+
+    // const {
+    //   object,
+    //   saveObject,
+    // } = this.props;
+
+    // if(saveObject){
+    //   return saveObject(data);
+    // }
+
+    // console.log("saveObject data", data);
+
+    // const {
+    //   mutate,
+    // } = this.props;
+
+    // if (!mutate) {
+    //   throw (new Error("Mutate not defined"));
+    // }
+
+    const options = this.getMutation(data);
+
+    const result = await this.mutate(options)
+      .then(r => r)
+      .catch(e => {
+
+        // console.error(e);
+
+        // throw (e);
+        return e;
+      });
+
+    // console.log("result 333", result);
+
+    return result;
+
+  }
+
+
+
+  // async mutate___(options = {}) {
+
+  //   const {
+  //     mutation,
+  //   } = this.props;
+
+  //   console.log("mutation", mutation);
+  //   console.log("options", options);
+
+
+  //   const {
+  //     client,
+  //   } = this.context;
+
+
+
+  //   return client.mutate({
+  //     mutation,
+  //     options: {
+  //       ...options,
+  //     }
+  //   })
+  //     .catch(error => {
+
+  //       console.error("request error", error);
+
+  //       const message = error.message && error.message.replace(/^GraphQL error: */, '') || "";
+
+  //       this.addError(message);
+
+  //     })
+  // }
+
+
+  async mutate(props) {
+
 
     const {
       _dirty,
@@ -203,6 +425,35 @@ export default class EditableView extends View {
 
     return new Promise((resolve, reject) => {
 
+
+      // console.log("mutate props", props);
+
+      let {
+        mutate,
+        mutation,
+      } = this.props;
+
+
+      if (mutation && !props.mutation) {
+        props.mutation = mutation;
+      }
+
+      if (!mutate) {
+
+        const {
+          client,
+        } = this.context;
+
+        mutate = client.mutate;
+      }
+
+      // console.log("mutate", mutate);
+
+      if (!mutate) {
+        throw (new Error("Mutate is not defined"));
+      }
+
+
       this.setState({
         loading: true,
       }, async () => {
@@ -212,7 +463,7 @@ export default class EditableView extends View {
           loading: false,
         };
 
-        const result = await this.saveObject(_dirty)
+        const result = await mutate(props)
           .then(async result => {
 
 
@@ -222,6 +473,7 @@ export default class EditableView extends View {
             if (result instanceof Error) {
 
               // console.log("await this.saveObject result", result);
+              // reject(result);
 
             }
             else {
@@ -277,7 +529,9 @@ export default class EditableView extends View {
                 // await client.resetStore();
                 // await client.cache.reset();
                 // console.log("client.cache.clearStore");
-                await client.clearStore().catch(console.error);
+                
+                // await client.clearStore().catch(console.error);
+
                 await client.reFetchObservableQueries().catch(console.error);
 
                 const {
@@ -297,9 +551,13 @@ export default class EditableView extends View {
 
             return result;
           })
-          .catch(e => {
-            console.error(e);
-            return e;
+          .catch(error => {
+
+            const message = error.message && error.message.replace(/^GraphQL error: */, '') || "";
+
+            this.addError(message);
+
+            return error;
           });
 
 
@@ -316,40 +574,19 @@ export default class EditableView extends View {
   }
 
 
-  async saveObject(data) {
+  // prepareRequest() {
 
-    // const {
-    //   object,
-    //   saveObject,
-    // } = this.props;
+  //   const {
+  //     mutate,
+  //   } = this.props;
 
-    // if(saveObject){
-    //   return saveObject(data);
-    // }
+  //   if (!mutate) {
+  //     throw (new Error("Mutate not defined"));
+  //   }
 
-    // console.log("saveObject data", data);
+  //   return mutate;
 
-    const {
-      mutate,
-    } = this.props;
-
-    if (!mutate) {
-      throw (new Error("Mutate not defined"));
-    }
-
-    const mutation = this.getMutation(data);
-
-    const result = await mutate(mutation).then(r => r).catch(e => {
-
-      // throw (e);
-      return e;
-    });
-
-    // console.log("result 333", result);
-
-    return result;
-
-  }
+  // }
 
 
   getMutation(data) {
@@ -762,63 +999,67 @@ export default class EditableView extends View {
   }
 
 
-  addError(error) {
+  // addError(error) {
 
-    const {
-      errorDelay,
-    } = this.props;
+  //   const {
+  //     errorDelay,
+  //   } = this.props;
 
-    if (typeof error !== "object") {
-      error = {
-        message: error,
-      };
-    }
+  //   if (typeof error !== "object") {
+  //     error = {
+  //       message: error,
+  //     };
+  //   }
 
-    Object.assign(error, {
-      _id: new Date().getTime(),
-    });
+  //   Object.assign(error, {
+  //     _id: new Date().getTime(),
+  //   });
 
-    const {
-      notifications = [],
-    } = this.state;
+  //   const {
+  //     notifications: oldNotifications,
+  //   } = this.state;
 
-    notifications.push(error);
+  //   let notifications = (oldNotifications || []).slice(0);
 
-    setTimeout(() => this.removeError(error), errorDelay);
+  //   notifications.push(error);
 
-
-    this.setState({
-      notifications,
-    });
-
-    return error;
-
-  }
+  //   setTimeout(() => this.removeError(error), errorDelay);
 
 
-  removeError(error) {
+  //   this.setState({
+  //     notifications,
+  //   });
 
-    const {
-      notifications,
-    } = this.state;
+  //   return error;
 
-    if (notifications) {
+  // }
 
-      const index = notifications.indexOf(error);
 
-      if (index !== -1) {
+  // removeError(error) {
 
-        notifications.splice(index, 1);
+  //   const {
+  //     notifications: oldNotifications,
+  //   } = this.state;
 
-        this.setState({
-          notifications,
-        });
+  //   if (oldNotifications && oldNotifications.length) {
 
-      }
+  //     const notifications = oldNotifications.slice(0);
 
-    }
+  //     const index = notifications.indexOf(error);
 
-  }
+  //     if (index !== -1) {
+
+  //       notifications.splice(index, 1);
+
+  //       this.setState({
+  //         notifications,
+  //       });
+
+  //     }
+
+  //   }
+
+  // }
 
 
   closeError(error) {
@@ -861,87 +1102,87 @@ export default class EditableView extends View {
   // }
 
 
-  renderErrors() {
+  // renderErrors() {
 
-    const {
-      errorDelay,
-    } = this.props;
+  //   const {
+  //     errorDelay,
+  //   } = this.props;
 
-    const {
-      notifications,
-    } = this.state;
+  //   const {
+  //     notifications,
+  //   } = this.state;
 
-    if (notifications && notifications.length) {
+  //   if (notifications && notifications.length) {
 
-      let output = null;
+  //     let output = null;
 
-      let errors = notifications.map((error, index) => {
+  //     let errors = notifications.map((error, index) => {
 
-        let {
-          _id,
-          message,
-          open = true,
-        } = error;
+  //       let {
+  //         _id,
+  //         message,
+  //         open = true,
+  //       } = error;
 
-        return <Snackbar
-          key={_id}
-          open={open}
-          autoHideDuration={errorDelay}
-          SnackbarContentProps={{
-          }}
-          anchorOrigin={{
-            vertical: "top",
-            horizontal: "center",
-          }}
-          message={<span
-          // id="snackbar-fab-message-id"
-          >
-            {message}
-          </span>}
-          action={
-            <Fragment>
+  //       return <Snackbar
+  //         key={_id}
+  //         open={open}
+  //         autoHideDuration={errorDelay}
+  //         SnackbarContentProps={{
+  //         }}
+  //         anchorOrigin={{
+  //           vertical: "top",
+  //           horizontal: "center",
+  //         }}
+  //         message={<span
+  //         // id="snackbar-fab-message-id"
+  //         >
+  //           {message}
+  //         </span>}
+  //         action={
+  //           <Fragment>
 
-              <Button
-                color="primary"
-                variant="raised"
-                size="small"
-                onClick={event => {
-                  // console.log("click event", event.target);
-                  event.stopPropagation();
-                  this.closeError(error)
-                }}
-              >
-                Отмена
-            </Button>
+  //             <Button
+  //               color="primary"
+  //               variant="raised"
+  //               size="small"
+  //               onClick={event => {
+  //                 // console.log("click event", event.target);
+  //                 event.stopPropagation();
+  //                 this.closeError(error)
+  //               }}
+  //             >
+  //               Отмена
+  //           </Button>
 
-            </Fragment>
-          }
-        />
+  //           </Fragment>
+  //         }
+  //       />
 
-      });
+  //     });
 
-      const {
-        document,
-      } = global;
+  //     const {
+  //       document,
+  //     } = global;
 
-      if (document.createRange) {
-        output = ReactDOM.createPortal(<Fragment
-        >
-          {errors}
-        </Fragment>, window.document.body);
-      }
-      else {
-        output = errors;
-      }
+  //     if (document.createRange) {
+  //       output = ReactDOM.createPortal(<Fragment
+  //       >
+  //         {errors}
+  //       </Fragment>, window.document.body);
+  //     }
+  //     else {
+  //       output = errors;
+  //     }
 
-      return output;
+  //     return output;
 
-    }
-    else {
-      return null;
-    }
+  //   }
+  //   else {
+  //     return null;
+  //   }
 
-  }
+  // }
 
 
   render() {
@@ -1009,14 +1250,25 @@ export default class EditableView extends View {
 
     }
 
-    return <Fragment>
+    return super.render(output);
 
-      {output}
+    // return <Fragment>
 
-      {this.renderErrors()}
+    //   {output}
 
-    </Fragment>
+    //   {/* {this.renderErrors()} */}
+
+    // </Fragment>
 
   }
 
 }
+
+
+/**
+ * For backward compatibility
+ */
+export const EditableView = EditableObject;
+
+
+export default EditableObject;

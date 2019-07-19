@@ -8,7 +8,9 @@ import { Renderer as PrismaCmsRenderer } from "@prisma-cms/front";
 import TableView from "../pages/TableView";
 
 import withStyles from "material-ui/styles/withStyles";
-import EditableView from "../../../DataView/Object/Editable";
+import EditableView from "./EditableObject";
+import gql from "graphql-tag";
+import { graphql } from "react-apollo";
 
 export const styles = theme => {
 
@@ -17,48 +19,164 @@ export const styles = theme => {
   }
 }
 
+
+
+
 class DevRenderer extends PrismaCmsRenderer {
+
+
+
+  constructor(props) {
+
+    super(props);
+
+    this.state = {
+      ...this.state,
+      mutation: gql`
+        mutation updateUserProcessor(
+          $data: UserUpdateInput!
+        ){
+          response: updateUserProcessor ( 
+            data: $data
+          ){
+            success
+            message
+            errors{
+              key
+              message
+            }
+            data{
+              id
+              username
+              fullname
+            }
+          }
+        }
+      `,
+    }
+
+  }
+
 
   getRoutes() {
 
     let routers = super.getRoutes();
 
-    routers.unshift({
-      exact: true,
-      path: "/",
-      component: TableView,
-      // render: (props) => {
 
-      //   return <EditableView
-      //     data={{
-      //       object: {
-      //         name: "SFDgdsf",
-      //       }
-      //     }}
-      //     locales={{
-      //       en: {
-      //         values: {
-      //           aa: "SDfsdfds",
-      //           bb: "SDfsdfds",
-      //         },
-      //       },
-      //       ru: {
-      //         values: {
+    const {
+      mutation,
+    } = this.state;
 
-      //           aa: "SDfsdfds",
-      //         },
-      //       },
-      //     }}
-      //   />
-      // }
-    });
+    const {
+      mutate,
+    } = this.props;
 
-    return routers;
+    // console.log("mutate", mutate);
+    // console.log("mutation", mutation);
+    // console.log("this.props", this.props);
+
+    return [
+      {
+        exact: true,
+        path: "/",
+        component: TableView,
+        // render: (props) => {
+
+        //   return <EditableView
+        //     data={{
+        //       object: {
+        //         name: "SFDgdsf",
+        //       }
+        //     }}
+        //     locales={{
+        //       en: {
+        //         values: {
+        //           aa: "SDfsdfds",
+        //           bb: "SDfsdfds",
+        //         },
+        //       },
+        //       ru: {
+        //         values: {
+
+        //           aa: "SDfsdfds",
+        //         },
+        //       },
+        //     }}
+        //   />
+        // }
+      },
+      {
+        exact: true,
+        path: "/editable",
+        render: (props) => {
+
+          return <EditableView
+            data={{
+              object: {
+                name: "SFDgdsf",
+              }
+            }}
+            _dirty={{
+              password: "",
+            }}
+            mutate={mutate}
+            mutation={!mutate ? mutation : undefined}
+            locales={{
+              en: {
+                values: {
+                  aa: "SDfsdfds",
+                  bb: "SDfsdfds",
+                },
+              },
+              ru: {
+                values: {
+
+                  aa: "SDfsdfds",
+                },
+              },
+            }}
+          />
+        },
+      },
+    ].concat(routers);
 
   }
 
 }
 
+
+const Renderer = graphql(gql`
+  mutation updateUserProcessor{
+    response: updateUserProcessor ( 
+      data:{ 
+        Groups:{
+          connect:{
+            id:"cjq4l53962thz0860n7nfsniw"
+          }
+        }
+      }
+    ){
+      success
+      message
+      errors{
+        key
+        message
+      }
+      data{
+        id
+        username
+      }
+    }
+  }
+  `)(DevRenderer);
+
+
+
+// export default withStyles(styles)(props => <Renderer
+//   {...props}
+// />);
+
 export default withStyles(styles)(props => <DevRenderer
   {...props}
 />);
+
