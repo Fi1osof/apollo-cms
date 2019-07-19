@@ -189,13 +189,37 @@ export class EditableObject extends View {
 
 
 
-  save() {
+  async save() {
 
     const {
       _dirty,
     } = this.state;
 
-    return this.saveObject(_dirty);
+    return await this.saveObject(_dirty)
+      .then(result => {
+
+        // console.log("Save result", result);
+
+        if (result && !(result instanceof Error)) {
+
+          this.setState({
+            _dirty: null,
+            inEditMode: false,
+          });
+
+          this.clearCache();
+
+        }
+
+        return result;
+
+      })
+      .catch(error => {
+
+        console.error("Save error", error);
+
+        return error;
+      });
 
   }
 
@@ -354,19 +378,7 @@ export class EditableObject extends View {
 
     const options = this.getMutation(data);
 
-    const result = await this.mutate(options)
-      .then(r => r)
-      .catch(e => {
-
-        // console.error(e);
-
-        // throw (e);
-        return e;
-      });
-
-    // console.log("result 333", result);
-
-    return result;
+    return this.mutate(options);
 
   }
 
@@ -410,7 +422,7 @@ export class EditableObject extends View {
 
 
     const {
-      _dirty,
+      // _dirty,
       loading,
     } = this.state;
 
@@ -516,15 +528,19 @@ export class EditableObject extends View {
                 //   this.addError(error);
                 // });
 
+                // result = new Error(message || "Request error", result);
+
+                return reject(result);
+
               }
               else {
 
-                Object.assign(newState, {
-                  _dirty: null,
-                  inEditMode: false,
-                });
+                // Object.assign(newState, {
+                //   _dirty: null,
+                //   inEditMode: false,
+                // });
 
-                this.clearCache();
+                // this.clearCache();
 
                 // await client.resetStore();
                 // await client.cache.reset();

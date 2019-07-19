@@ -9,21 +9,58 @@ class DevEditableObject extends EditableView {
 
   render() {
 
+    const {
+      Grid,
+    } = this.context;
+
 
     return <Fragment>
 
       {super.render()}
 
 
-      {this.renderField(<TextField
-        label="Логин"
-        name="username"
-      />)}
+      <Grid
+        container
+        spacing={8}
+      >
 
-      {this.renderField(<TextField
-        label="Емейл"
-        name="email"
-      />)}
+        <Grid
+          item
+
+        >
+          {this.renderField(<TextField
+            label="Логин"
+            name="username"
+          />)}
+
+        </Grid>
+
+        <Grid
+          item
+
+        >
+
+          {this.renderField(<TextField
+            label="Емейл"
+            name="email"
+          />)}
+
+        </Grid>
+
+        <Grid
+          item
+
+        >
+          {this.renderField(<TextField
+            label="Fake"
+            name="fake"
+          />)}
+
+        </Grid>
+
+      </Grid>
+
+
 
 
     </Fragment>
