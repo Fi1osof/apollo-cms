@@ -55,21 +55,22 @@ export const data = {
   },
   "loading": false,
   "networkStatus": 7,
-  "objectsConnection": {
-    "pageInfo": {
-      "hasNextPage": false,
-      "hasPreviousPage": false,
-      "startCursor": "cjn27lkhv08sp0950dcfp61c3",
-      "endCursor": "cjn29b63508zn09504gf24kde",
-      "__typename": "PageInfo"
-    },
-    "aggregate": {
-      "count": count,
-      "__typename": "AggregateUser"
-    },
-    "edges": edges,
-    "__typename": "UserConnection"
-  }
+  // "objectsConnection": {
+  //   "pageInfo": {
+  //     "hasNextPage": false,
+  //     "hasPreviousPage": false,
+  //     "startCursor": "cjn27lkhv08sp0950dcfp61c3",
+  //     "endCursor": "cjn29b63508zn09504gf24kde",
+  //     "__typename": "PageInfo"
+  //   },
+  //   "aggregate": {
+  //     "count": count,
+  //     "__typename": "AggregateUser"
+  //   },
+  //   "edges": edges,
+  //   "__typename": "UserConnection"
+  // },
+  "objects": edges.map(({ node }) => node),
 };
 
 

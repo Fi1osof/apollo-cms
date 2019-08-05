@@ -125,7 +125,7 @@ class DevRenderer extends PrismaCmsRenderer {
             mutation={!mutate ? mutation : undefined}
             onSave={result => {
 
-              console.log("onSave result", result);
+              // console.log("onSave result", result);
 
               const {
                 router: {
@@ -163,6 +163,14 @@ class DevRenderer extends PrismaCmsRenderer {
 
   }
 
+
+  renderWrapper() {
+
+    return <Fragment>
+      {this.renderMenu()}
+      {super.renderWrapper()}
+    </Fragment>
+  }
 }
 
 

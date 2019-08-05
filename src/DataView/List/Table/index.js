@@ -278,6 +278,7 @@ export class TableView extends PrismaComponent {
     const {
       loading,
       objectsConnection,
+      objects,
     } = data;
 
 
@@ -298,7 +299,7 @@ export class TableView extends PrismaComponent {
       count = 0,
     } = aggregate || {};
 
-    const rows = (edges && edges.map(n => n.node)) || [];
+    const rows = (edges && edges.map(n => n.node)) || objects || [];
 
     const rowCount = rows.length;
 
