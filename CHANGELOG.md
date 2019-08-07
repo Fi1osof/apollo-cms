@@ -1,3 +1,7 @@
+1.10.5
+===========================================
+- Fix client.resetStore() on Editable::mutate()
+
 1.10.4
 ===========================================
 - Fix TableView render objects

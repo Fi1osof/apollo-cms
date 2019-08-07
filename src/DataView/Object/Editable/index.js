@@ -552,13 +552,13 @@ export class EditableObject extends View {
 
                 // this.clearCache();
 
-                // await client.resetStore();
+                await client.resetStore().catch(console.error);
                 // await client.cache.reset();
                 // console.log("client.cache.clearStore");
 
                 // await client.clearStore().catch(console.error);
 
-                await client.reFetchObservableQueries().catch(console.error);
+                // await client.reFetchObservableQueries().catch(console.error);
 
               }
 
