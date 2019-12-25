@@ -1,3 +1,8 @@
+1.10.6
+===========================================
+- Cleanup code
+- EditableObject::mutate(props) allow pass mutate and mutation throw props
+
 1.10.5
 ===========================================
 - Fix client.resetStore() on Editable::mutate()

@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import ReactDOM from 'react-dom';
+// import ReactDOM from 'react-dom';
 
 import PropTypes from 'prop-types'
 
@@ -7,18 +7,18 @@ import TextField from 'material-ui/TextField';
 // import Grid from 'material-ui/Grid';
 import Typography from 'material-ui/Typography';
 import IconButton from 'material-ui/IconButton';
-import Button from 'material-ui/Button';
+// import Button from 'material-ui/Button';
 
 import EditIcon from 'material-ui-icons/ModeEdit';
 import ResetIcon from 'material-ui-icons/Restore';
 import Save from 'material-ui-icons/Save';
 
-import Snackbar from 'material-ui/Snackbar';
+// import Snackbar from 'material-ui/Snackbar';
 
 import { CircularProgress } from 'material-ui/Progress';
 
 import View from '../';
-import gql from 'graphql-tag';
+// import gql from 'graphql-tag';
 
 const SaveIcon = () => {
 
@@ -445,15 +445,18 @@ export class EditableObject extends View {
       return;
     }
 
+    let {
+      mutate,
+      mutation,
+    } = {
+      ...this.props,
+      ...props,
+    };
+
     return new Promise((resolve, reject) => {
 
 
       // console.log("mutate props", props);
-
-      let {
-        mutate,
-        mutation,
-      } = this.props;
 
 
       if (mutation && !props.mutation) {
@@ -552,7 +555,10 @@ export class EditableObject extends View {
 
                 // this.clearCache();
 
-                await client.resetStore().catch(console.error);
+                if (!client.queryManager.fetchQueryRejectFns.size) {
+                  await client.resetStore().catch(console.error);
+                }
+
                 // await client.cache.reset();
                 // console.log("client.cache.clearStore");
 
@@ -659,7 +665,7 @@ export class EditableObject extends View {
   }
 
 
-  isInEditMode() {
+  inEditMode() {
 
     const {
       inEditMode,
@@ -667,6 +673,12 @@ export class EditableObject extends View {
     } = this.state;
 
     return inEditMode || _dirty ? true : false;
+
+  }
+
+  isInEditMode() {
+
+    return this.inEditMode();
 
   }
 
@@ -749,7 +761,7 @@ export class EditableObject extends View {
   getEditor(props) {
 
     const {
-      Editor,
+      Editor = TextField,
       name,
       helperText,
       onFocus,
@@ -848,30 +860,30 @@ export class EditableObject extends View {
   }
 
 
-  getObject() {
+  // getObject() {
 
-    const {
-      data,
-      object,
-    } = this.props;
+  //   const {
+  //     data,
+  //     object,
+  //   } = this.props;
 
-    // const {
-    //   object,
-    // } = data || {};
+  //   // const {
+  //   //   object,
+  //   // } = data || {};
 
-    return object !== undefined ? object : (data && data.object) || null;
-  }
+  //   return object !== undefined ? object : (data && data.object) || null;
+  // }
 
 
   getButtons() {
 
-    const {
-      loading,
-    } = this.state;
+    // const {
+    //   loading,
+    // } = this.state;
 
-    const {
-      SaveIcon,
-    } = this.props;
+    // const {
+    //   SaveIcon,
+    // } = this.props;
 
     const inEditMode = this.isInEditMode();
 
