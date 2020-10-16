@@ -55,7 +55,7 @@ export class EnhancedTableToolbar extends Component {
     columnData: PropTypes.array.isRequired,
     toggleColumnVisibility: PropTypes.func.isRequired,
     exportable: PropTypes.bool.isRequired,
-    table: PropTypes.instanceOf(HTMLTableElement).isRequired,
+    // table: PropTypes.instanceOf(global.HTMLTableElement).isRequired,
   }
 
   render() {
@@ -68,8 +68,8 @@ export class EnhancedTableToolbar extends Component {
       filters,
       columnData,
       toggleColumnVisibility,
-      exportable,
-      table,
+      // exportable,
+      // table,
     } = this.props;
 
 

@@ -232,7 +232,7 @@ export class TableView extends PrismaComponent {
     /**
      * Required for handle this.table ref
      */
-    this.forceUpdate();
+    // this.forceUpdate();
 
     super.componentDidMount && super.componentDidMount();
   }
@@ -240,9 +240,11 @@ export class TableView extends PrismaComponent {
 
   render() {
 
-    const {
-      table,
-    } = this;
+    // TODO: Сейчас если table не передан, тулбар не прорисовывается.
+    // Надо поправить тесты и перепроверить все.
+    // const {
+    //   table,
+    // } = this;
 
     const {
       classes,
@@ -308,7 +310,8 @@ export class TableView extends PrismaComponent {
         className={[classes.root, loading ? classes.loading : "", className].join(" ")}
       >
 
-        {Toolbar && table ? <Toolbar
+        {/* {Toolbar && table ? <Toolbar */}
+        {Toolbar ? <Toolbar
           numSelected={selected.length}
           title={title}
           addObject={addObject}
@@ -316,7 +319,7 @@ export class TableView extends PrismaComponent {
           columnData={columnData}
           toggleColumnVisibility={(event, checked, index) => this.toggleColumnVisibility(event, checked, index)}
           exportable={exportable}
-          table={table}
+          // table={table}
         /> : null}
 
         <div className={classes.tableWrapper}>
@@ -333,23 +336,23 @@ export class TableView extends PrismaComponent {
             //   />
             // }}
 
-            ref={el => {
+            // ref={el => {
 
-              // console.log("Toolbar && table ref", el);
+            //   // console.log("Toolbar && table ref", el);
 
-              // let needReload = false;
+            //   // let needReload = false;
 
-              // if (el && !this.table) {
-              //   needReload = true;
-              // }
+            //   // if (el && !this.table) {
+            //   //   needReload = true;
+            //   // }
 
-              this.table = el;
+            //   this.table = el;
 
-              // if (needReload) {
-              //   this.forceUpdate();
-              // }
+            //   // if (needReload) {
+            //   //   this.forceUpdate();
+            //   // }
 
-            }}
+            // }}
           >
 
             <Header

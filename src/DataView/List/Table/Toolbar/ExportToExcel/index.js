@@ -30,7 +30,7 @@ export class ExportToExcel extends Component {
 
   static propTypes = {
     // classes: PropTypes.object.isRequired,
-    table: PropTypes.instanceOf(HTMLTableElement).isRequired,
+    table: PropTypes.instanceOf(global.HTMLTableElement).isRequired,
     format: PropTypes.oneOf(["csv", "xls", "xlsx"]).isRequired,
     filename: PropTypes.string.isRequired,
     columnData: PropTypes.array.isRequired,
@@ -51,7 +51,7 @@ export class ExportToExcel extends Component {
     const ExcellentExport = require('excellentexport');
 
     let {
-      table,
+      // table,
       filename,
       format,
       sheetName,
@@ -85,23 +85,23 @@ export class ExportToExcel extends Component {
 
     let rows = [];
 
-    if (includeHeaders) {
+    // if (includeHeaders) {
 
-      let theadRows = table.querySelector("thead").children;
+    //   let theadRows = table.querySelector("thead").children;
 
-      for (let item of theadRows) {
-        rows.push(item);
-      }
+    //   for (let item of theadRows) {
+    //     rows.push(item);
+    //   }
 
-    }
+    // }
 
     // rows = rows.concat(table.querySelector("tbody").children);
 
-    const tbodyRows = table.querySelector("tbody").children;
+    // const tbodyRows = table.querySelector("tbody").children;
 
-    for (let row of tbodyRows) {
-      rows.push(row);
-    }
+    // for (let row of tbodyRows) {
+    //   rows.push(row);
+    // }
 
     // const table2 = window.document.querySelector("table");
 
@@ -178,16 +178,16 @@ export class ExportToExcel extends Component {
       columnData,
       filename,
       format,
-      table,
+      // table,
       sheetName,
       includeHeaders,
       // classes,
       ...other
     } = this.props;
 
-    if (!table) {
-      return;
-    }
+    // if (!table) {
+    //   return;
+    // }
 
     return (
       <IconButton
