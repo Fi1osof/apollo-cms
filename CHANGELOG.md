@@ -1,3 +1,7 @@
+1.11.1
+===========================================
+- Added key prop for columns
+
 1.11.0
 ===========================================
 - Breaking changes^ remove table ref

@@ -97,11 +97,13 @@ export class DevTableView extends TableView {
       columnData: [
         {
           id: "id",
+          key: "id",
           label: "ID",
           hidden: true,
         },
         {
           id: "username",
+          key: "username",
           label: "Username",
           description: "Unique username",
           hidden: false,
@@ -115,6 +117,7 @@ export class DevTableView extends TableView {
         },
         {
           id: "email",
+          key: "email",
           label: "Email",
           hidden: false,
           renderer: (value) => {

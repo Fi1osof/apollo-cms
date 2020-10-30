@@ -57,9 +57,15 @@ export default class EnhancedTableHead extends Component {
             />
           </TableCell> */}
           {columnData.filter(n => n.hidden !== true).map(column => {
+
+            const {
+              id,
+              key,
+            } = column;
+
             return (
               <TableCell
-                key={column.id}
+                key={key || id}
                 numeric={column.numeric}
                 padding={column.disablePadding ? 'none' : 'default'}
               // sortDirection={orderBy === column.id ? order : false}

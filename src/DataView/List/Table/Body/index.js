@@ -34,6 +34,7 @@ export default class TBody extends Component {
 
             const {
               id: fieldName,
+              key,
               label,
               disablePadding,
               padding,
@@ -45,7 +46,7 @@ export default class TBody extends Component {
             const value = n[fieldName];
 
             return <TableCell
-              key={index}
+              key={key || index}
               padding={disablePadding === true ? "none" : padding}
               {...other}
             >
@@ -60,9 +61,7 @@ export default class TBody extends Component {
               hover
               tabIndex={-1}
             >
-
               {columns}
-
             </TableRow>
           );
         })}
