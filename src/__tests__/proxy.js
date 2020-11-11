@@ -1,19 +1,13 @@
+import proxy from '../setupProxy'
 
-
-import proxy from "../setupProxy";
-
-describe('@prisma-cms/tests proxy', () => { 
-
+describe('@prisma-cms/tests proxy', () => {
   it('Proxy test', () => {
-
     let fakeServer = {
-      use: rule => {
+      use: () => {
         // console.log("rule", rule);
       },
     }
 
-    proxy(fakeServer);
- 
-  });
-
+    proxy(fakeServer)
+  })
 })

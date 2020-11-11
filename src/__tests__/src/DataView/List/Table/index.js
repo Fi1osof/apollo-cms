@@ -1,10 +1,8 @@
-
-
 import expect from 'expect'
 import React, { Component } from 'react'
 import { render, unmountComponentAtNode } from 'react-dom'
 
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types'
 
 // import {
 //   styles,
@@ -12,7 +10,6 @@ import PropTypes from "prop-types";
 // } from '../../../../../DataView/List/Table'
 
 import withStyles from 'material-ui/styles/withStyles'
- 
 
 // import createDOM from "../../../../utils/createDOM";
 
@@ -22,40 +19,34 @@ import {
   count,
   styles,
   TableView,
-} from "../../../../../dev/components/pages/TableView";
+} from '../../../../../dev/components/pages/TableView'
 
-import App from "../../../../App";
+import App from '../../../../App'
 
 // createDOM();
 
 class CustomTableView extends TableView {
-
-
   static propTypes = {
     ...TableView.propTypes,
     resolve: PropTypes.func.isRequired,
   }
 
   componentDidMount() {
-
     // console.log("DataView List Table componentDidMount");
 
     // this.handleRequestSort(new Event("sort"), {});
 
-    super.componentDidMount && super.componentDidMount();
+    super.componentDidMount && super.componentDidMount()
 
-    const {
-      resolve,
-    } = this.props;
+    const { resolve } = this.props
 
     // jest.useFakeTimers();
 
     setTimeout(() => {
-      resolve();
-    }, 1000);
+      resolve()
+    }, 1000)
 
     // jest.runAllTimers();
-
   }
 
   // render() {
@@ -64,40 +55,35 @@ class CustomTableView extends TableView {
   //   return super.render();
 
   // }
-
 }
 
-const TestTableView = withStyles(styles)(props => <CustomTableView 
-  {...props}
-/>);
-
+const TestTableView = withStyles(styles)((props) => (
+  <CustomTableView {...props} />
+))
 
 class Renderer extends Component {
-
   render() {
-
     const {
       // resolve,
-      children,
       ...other
-    } = this.props;
+    } = this.props
 
-    return <TestTableView
-      {...other}
-      data={data}
-      title="Test"
-      limit={1}
-      columnData={columnData}
-    />;
+    return (
+      <TestTableView
+        {...other}
+        data={data}
+        title="Test"
+        limit={1}
+        columnData={columnData}
+        // eslint-disable-next-line react/no-children-prop
+        children={null}
+      />
+    )
   }
 }
 
-
-
-
 describe('DataView List Table', () => {
   let node
-
 
   beforeEach(() => {
     node = document.createElement('div')
@@ -107,82 +93,64 @@ describe('DataView List Table', () => {
     unmountComponentAtNode(node)
   })
 
-  
   it('Render TableView with data', () => {
-
     // return undefined;
 
-    return new Promise(async (resolve, reject) => {
+    // eslint-disable-next-line no-async-promise-executor
+    return new Promise(async (resolve) => {
+      render(<App Renderer={Renderer} resolve={resolve}></App>, node, () => {
+        // resolve();
+        // return undefined;
 
+        jest.useFakeTimers()
 
-      render(<App
-        Renderer={Renderer}
-        resolve={resolve}
-      >
-      </App>
-        , node, () => {
+        setTimeout(() => {
+          // let table = node.querySelector("table");
+
+          // console.log("Table node", node.innerHTML);
+
+          // return;
+
+          let tables = node.querySelectorAll('table')
+
+          expect(tables.length).toBe(1)
+
+          let table = tables[0]
+
+          // console.log("TableView HTML", table.innerHTML);
+
+          // console.log("TableView textContent", table.textContent);
+
+          expect(table).toNotBe(null)
+
+          const thead = table.querySelector('thead')
+          expect(thead).toNotBe(null)
+
+          expect(table.textContent).toContain(
+            'UsernameEmailTesttest@localhosttest'
+          )
+
+          let usernameSpans = table.querySelectorAll('.username')
+          expect(usernameSpans.length).toBe(count)
+
+          // Check cols count
+          table.querySelectorAll('tr').forEach((n) => {
+            expect(n.children.length).toBe(columnData.length)
+          })
+
+          const searchInput = node.querySelector('input.searchInput')
+
+          // console.log("Table searchInput", searchInput);
+
+          expect(searchInput).toNotBe(null)
 
           // resolve();
-          // return undefined;
+        }, 1000)
 
-          jest.useFakeTimers();
+        jest.runAllTimers()
 
-          setTimeout(() => {
-
-            // let table = node.querySelector("table");
-
-            // console.log("Table node", node.innerHTML);
-
-            // return;
-
-            let tables = node.querySelectorAll("table");
-
-            expect(tables.length).toBe(1);
-
-            let table = tables[0];
-
-            // console.log("TableView HTML", table.innerHTML);
-
-            // console.log("TableView textContent", table.textContent);
-
-            expect(table).toNotBe(null);
-
-            const thead = table.querySelector("thead");
-            expect(thead).toNotBe(null);
-
-            expect(table.textContent).toContain("UsernameEmailTesttest@localhosttest");
-
-            let usernameSpans = table.querySelectorAll(".username");
-            expect(usernameSpans.length).toBe(count);
-
-            // Check cols count
-            table.querySelectorAll("tr").forEach(n => {
-
-              expect(n.children.length).toBe(columnData.length);
-            })
-
-
-
-            const searchInput = node.querySelector("input.searchInput");
-
-            // console.log("Table searchInput", searchInput);
-
-            expect(searchInput).toNotBe(null);
-
-
-            // resolve();
-
-          }, 1000);
-
-          jest.runAllTimers();
-
-          // return true;
-        })
-
-
-    });
-
+        // return true;
+      })
+    })
   })
 })
-
-

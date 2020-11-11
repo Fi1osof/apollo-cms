@@ -1,69 +1,55 @@
-
-
+/* eslint-disable no-async-promise-executor */
 import expect from 'expect'
 import React from 'react'
 
 import { render, unmountComponentAtNode } from 'react-dom'
 
-import chalk from "chalk";
-
 import App from '../../../App'
 
-let done = false;
+let done = false
 
 class Renderer extends App {
-
-
   async componentDidMount() {
+    super.componentDidMount && super.componentDidMount()
 
+    this.getChildContext()
 
-    super.componentDidMount && super.componentDidMount();
+    await this.loadApiData()
 
-    this.getChildContext();
+    await this.onAuthSuccess({})
 
-    await this.loadApiData();
+    await this.logout()
 
-    await this.onAuthSuccess({});
+    await this.testOnError()
 
-    await this.logout();
-
-    await this.testOnError();
-
-    done = true;
-
+    done = true
   }
 
   testOnError() {
-
-    return new Promise(async resolve => {
-
-      jest.useFakeTimers();
+    return new Promise(async (resolve) => {
+      jest.useFakeTimers()
 
       this.state.errors = []
-      
+
       await this.onError({
-        graphQLErrors: [{
-          message: "test",
-          messageDelay: 100,
-        }],
-      });
-
-
+        graphQLErrors: [
+          {
+            message: 'test',
+            messageDelay: 100,
+          },
+        ],
+      })
 
       setTimeout(() => {
-        resolve();
-      }, 100);
+        resolve()
+      }, 100)
 
-      jest.runAllTimers();
-
-    });
-
+      jest.runAllTimers()
+    })
   }
-
 }
 
 describe('src/App', () => {
-
   let node
 
   beforeEach(() => {
@@ -75,51 +61,34 @@ describe('src/App', () => {
   })
 
   it('Render', () => {
+    return new Promise(async (resolve) => {
+      let options
 
-    return new Promise((async resolve => {
-
-
-      let options;
-
-      let testURL;
+      let testURL
 
       try {
-        options = JSON.parse(process.env.npm_config_argv);
+        options = JSON.parse(process.env.npm_config_argv)
 
-        const {
-          original,
-        } = options;
+        const { original } = options
 
-        testURL = original && original.find(n => /--testURL=/.test(n));
+        testURL = original && original.find((n) => /--testURL=/.test(n))
 
-        testURL = testURL && testURL.replace(/--testURL=/, '') || "";
-
-      }
-      catch (error) {
-        console.error(error);
+        testURL = (testURL && testURL.replace(/--testURL=/, '')) || ''
+      } catch (error) {
+        console.error(error)
       }
 
+      let endpoint = testURL || 'http://localhost'
 
-      let endpoint = testURL || "http://localhost";
-
-      await render(<Renderer
-        endpoint={endpoint + '/api/'}
-      />, node, () => {
-
-        return true;
+      await render(<Renderer endpoint={endpoint + '/api/'} />, node, () => {
+        return true
       })
 
       setTimeout(() => {
+        expect(done).toBe(true)
 
-
-        expect(done).toBe(true);
-
-        resolve();
+        resolve()
       }, 2000)
-
-    }));
-
+    })
   })
 })
-
-

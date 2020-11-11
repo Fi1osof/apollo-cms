@@ -1,18 +1,16 @@
+// import expect from 'expect'
+// import React from 'react'
+import { unmountComponentAtNode } from 'react-dom'
 
+// import TestApp from './App'
 
-import expect from 'expect'
-import React from 'react'
-import { render, unmountComponentAtNode } from 'react-dom'
-
-import TestApp from "./App";
-
-import Component from '../DataView/Object/Editable'
+// import Component from '../DataView/Object/Editable'
 
 describe('Editable with dirty object', () => {
   let node
 
-  let name = "Test";
-  let newName = "Test dirty";
+  // let name = 'Test'
+  // let newName = 'Test dirty'
 
   beforeEach(() => {
     node = document.createElement('div')
@@ -23,28 +21,28 @@ describe('Editable with dirty object', () => {
   })
 
   it('Check content is not empty', () => {
+    return undefined
 
-    return undefined;
+    // render(
+    //   <TestApp
+    //     Renderer={Component}
+    //     data={{
+    //       object: {
+    //         name,
+    //       },
+    //     }}
+    //     _dirty={{
+    //       name: newName,
+    //     }}
+    //     mutate={() => {}}
+    //   />,
+    //   node,
+    //   () => {
+    //     // console.log("node", node);
 
-    render(<TestApp
-      Renderer={Component}
-      data={{
-        object: {
-          name,
-        }
-      }}
-      _dirty={{
-        name: newName,
-      }}
-      mutate={() => { }}
-    />, node, () => {
-
-      // console.log("node", node);
-
-      expect(node.querySelector('h2').textContent).toContain(newName)
-      return true;
-    })
+    //     expect(node.querySelector('h2').textContent).toContain(newName)
+    //     return true
+    //   }
+    // )
   })
 })
-
-

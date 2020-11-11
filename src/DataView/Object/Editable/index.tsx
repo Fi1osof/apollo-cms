@@ -1,0 +1,632 @@
+import React, { Fragment } from 'react'
+
+// import PropTypes from 'prop-types'
+import TextField from 'material-ui/TextField'
+import Typography from 'material-ui/Typography'
+import IconButton from 'material-ui/IconButton'
+import EditIcon from 'material-ui-icons/ModeEdit'
+import ResetIcon from 'material-ui-icons/Restore'
+import Save from 'material-ui-icons/Save'
+
+import { CircularProgress } from 'material-ui/Progress'
+
+// import View from '..'
+import PrismaCmsComponent from '@prisma-cms/component'
+import {
+  EditableObjectEditorProps,
+  EditableObjectMutateProps,
+  EditableObjectProps,
+  EditableObjectState,
+  saveResult,
+} from './interfaces'
+
+const SaveIcon = (): JSX.Element => {
+  return (
+    <Save
+      style={{
+        color: 'red',
+      }}
+    />
+  )
+}
+
+export class EditableObject<
+  P extends EditableObjectProps = EditableObjectProps,
+  S extends EditableObjectState = EditableObjectState
+> extends PrismaCmsComponent<P, S> {
+  // static propTypes = {
+  //   ...View.propTypes,
+
+  //   mutate: PropTypes.func,
+  //   mutation: PropTypes.object,
+  //   _dirty: PropTypes.object,
+  //   errorDelay: PropTypes.number.isRequired,
+  //   SaveIcon: PropTypes.func.isRequired,
+  //   ResetIcon: PropTypes.func.isRequired,
+  //   EditIcon: PropTypes.func.isRequired,
+  //   cacheKey: PropTypes.string,
+  //   cacheKeyPrefix: PropTypes.string.isRequired,
+  // }
+
+  static defaultProps = {
+    ...PrismaCmsComponent.defaultProps,
+    errorDelay: 5000,
+    SaveIcon,
+    ResetIcon,
+    EditIcon,
+    cacheKeyPrefix: 'item_',
+  }
+
+  constructor(props: P) {
+    super(props)
+
+    this.save = this.save.bind(this)
+    this.startEdit = this.startEdit.bind(this)
+
+    this.state = {
+      ...this.state,
+      inEditMode: false,
+      notifications: [],
+      loading: false,
+    }
+  }
+
+  componentWillMount(): void {
+    this.initCache()
+
+    super.componentWillMount && super.componentWillMount()
+  }
+
+  initCache(): void {
+    const { _dirty = null } = this.props
+
+    const cache = this.getCache()
+
+    Object.assign(this.state, {
+      _dirty:
+        _dirty || cache
+          ? {
+              ..._dirty,
+              ...cache,
+            }
+          : undefined,
+    })
+  }
+
+  getCacheKey(): string | null | undefined {
+    const { cacheKey, cacheKeyPrefix } = this.props
+
+    const { id } = this.getObject() || {}
+
+    return cacheKey !== undefined
+      ? cacheKey
+      : id
+      ? `${cacheKeyPrefix}${id}`
+      : null
+  }
+
+  setCache(data: Record<string, any> | null): boolean {
+    const { localStorage } = this.context
+
+    if (!localStorage) {
+      return false
+    }
+
+    let cacheData
+
+    const key = this.getCacheKey()
+
+    if (key) {
+      if (data) {
+        try {
+          cacheData = JSON.stringify(data)
+        } catch (error) {
+          console.error(error)
+          return false
+        }
+        localStorage.setItem(key, cacheData)
+      } else {
+        localStorage.removeItem(key)
+      }
+    }
+
+    return true
+  }
+
+  getCache(): Record<string, any> | null | undefined {
+    const { localStorage } = this.context
+
+    let cacheData
+
+    const key = this.getCacheKey()
+
+    if (key && localStorage) {
+      try {
+        cacheData = localStorage.getItem(key)
+
+        if (cacheData) {
+          cacheData = JSON.parse(cacheData)
+        }
+      } catch (error) {
+        console.error(error)
+        return
+      }
+    }
+
+    return cacheData
+  }
+
+  clearCache(): void {
+    const { localStorage } = this.context
+
+    const key = this.getCacheKey()
+
+    if (key && localStorage) {
+      localStorage.removeItem(key)
+    }
+  }
+
+  onSave = (result: saveResult): (() => void) => {
+    let callback = () => undefined
+
+    const { onSave } = this.props
+
+    if (onSave) {
+      callback = () => {
+        onSave(result)
+        return undefined
+      }
+    }
+
+    return callback
+  }
+
+  async save(): Promise<saveResult | Error> {
+    const { _dirty } = this.state
+
+    return await this.saveObject(_dirty)
+      .then((result: saveResult) => {
+        // console.log("Save result", result);
+
+        if (result && !(result instanceof Error)) {
+          this.clearCache()
+
+          this.setState(
+            {
+              _dirty: null,
+              inEditMode: false,
+            },
+            this.onSave(result)
+          )
+        }
+
+        return result
+      })
+      .catch((error: Error) => {
+        console.error('Save error', error)
+
+        return error
+      })
+  }
+
+  async saveObject(data: P['_dirty']): Promise<saveResult> {
+    const options = this.getMutation(data)
+
+    return this.mutate(options)
+  }
+
+  async mutate(props: EditableObjectMutateProps): Promise<saveResult> {
+    const { loading } = this.state
+
+    const { client } = this.context
+
+    if (loading) {
+      return
+    }
+
+    const { mutate: mutateProp, mutation } = {
+      ...this.props,
+      ...props,
+    }
+
+    let mutate = mutateProp
+
+    return new Promise((resolve, reject) => {
+      if (props && mutation && !props.mutation) {
+        props.mutation = mutation
+      }
+
+      if (!mutate) {
+        const { client } = this.context
+
+        mutate = client.mutate
+      }
+
+      if (!mutate) {
+        throw new Error('Mutate is not defined')
+      }
+
+      this.setState(
+        {
+          loading: true,
+        },
+        async () => {
+          const newState = {
+            loading: false,
+          }
+
+          let result: saveResult
+
+          if (mutate) {
+            result = await mutate(props)
+              .then(async (result) => {
+                if (!(result instanceof Error)) {
+                  const { data: resultData } = result || {}
+
+                  const { response } = resultData || {}
+
+                  const { success: successProp, message, errors = null } =
+                    response || {}
+
+                  let success = successProp
+
+                  Object.assign(newState, {
+                    errors,
+                  })
+
+                  if (success === undefined) {
+                    success = true
+                  }
+
+                  if (!success) {
+                    this.addError(message || 'Request error')
+
+                    return reject(result)
+                  } else {
+                    if (!client.queryManager.fetchQueryRejectFns.size) {
+                      await client.resetStore().catch(console.error)
+                    }
+                  }
+                }
+
+                return result
+              })
+              .catch((error) => {
+                const message =
+                  (error.message &&
+                    error.message.replace(/^GraphQL error: */, '')) ||
+                  ''
+
+                this.addError(message)
+
+                return error
+              })
+          }
+
+          this.setState(newState, () => {
+            return resolve(result)
+          })
+
+          return
+        }
+      )
+    })
+  }
+
+  getMutation(data: EditableObjectMutateProps): EditableObjectMutateProps {
+    const variables = this.getMutationVariables(data)
+
+    return {
+      variables,
+    }
+  }
+
+  getMutationVariables(
+    data: EditableObjectMutateProps
+  ): EditableObjectMutateProps {
+    const object = this.getObjectWithMutations()
+
+    const { id } = object || {}
+
+    const where = id ? { id } : undefined
+
+    return {
+      where,
+      data,
+    }
+  }
+
+  startEdit(): void {
+    this.setState({
+      inEditMode: true,
+    })
+  }
+
+  resetEdit = (): Promise<void> => {
+    return new Promise((resolve) => {
+      this.clearCache()
+
+      this.setState(
+        {
+          inEditMode: false,
+          _dirty: null,
+        },
+        resolve
+      )
+    })
+  }
+
+  inEditMode(): boolean {
+    const { inEditMode, _dirty } = this.state
+
+    return inEditMode || _dirty ? true : false
+  }
+
+  isDirty(): boolean {
+    return this.state._dirty ? true : false
+  }
+
+  updateObject(data: P['_dirty']): void {
+    const { _dirty = {} } = this.state
+
+    const { localStorage } = this.context
+
+    const newData = Object.assign({ ..._dirty }, data)
+
+    const key = this.getCacheKey()
+
+    if (key && newData && localStorage) {
+      localStorage.setItem(this.getCacheKey(), JSON.stringify(newData))
+    }
+
+    /**
+     * Переделал, так как ТС ругался на ридонли,
+     * но надо будет понаблюдать. Ранее так делалось, чтобы получить изменения
+     * в стейте сразу же. Вероятно надо будет как-то вернуть.
+     */
+    // this.state._dirty = newData
+    // this.forceUpdate()
+
+    this.setState({
+      _dirty: newData,
+    })
+  }
+
+  getEditor(props: EditableObjectEditorProps): JSX.Element | null {
+    const {
+      Editor = TextField,
+      name,
+      helperText,
+      onFocus,
+      fullWidth = true,
+      label,
+      ...other
+    } = props
+
+    const object = this.getObjectWithMutations()
+
+    if (!object) {
+      return null
+    }
+
+    const value = object[name] || ''
+
+    const { errors } = this.state
+
+    const error = errors ? errors.find((n) => n.key === name) : ''
+
+    const helperTextMessage = (error && error.message) || helperText
+
+    return Editor ? (
+      <Editor
+        onChange={this.onChangeBind}
+        name={name}
+        value={value}
+        style={
+          fullWidth
+            ? {
+                width: '100%',
+              }
+            : undefined
+        }
+        label={label ? this.lexicon(label) : label}
+        error={error ? true : false}
+        helperText={
+          helperTextMessage
+            ? this.lexicon(helperTextMessage)
+            : helperTextMessage
+        }
+        // onFocus={(event: React.FocusEvent) => {
+        //   if (error) {
+        //     const index = errors.indexOf(error)
+        //     if (index !== -1) {
+        //       errors.splice(index, 1)
+        //       this.setState({
+        //         errors,
+        //       })
+        //     }
+        //   }
+
+        //   return onFocus ? onFocus(event) : null
+        // }}
+        fullWidth={fullWidth}
+        {...other}
+        // TODO: call both onFocus and this.onFocusBind
+        onFocus={onFocus || this.onFocusBind}
+      />
+    ) : null
+  }
+
+  getTextField(
+    props: EditableObjectEditorProps = { name: '', Editor: TextField }
+  ): JSX.Element | null {
+    props = {
+      Editor: TextField,
+      autoComplete: 'off',
+      ...props,
+    }
+    return this.getEditor(props)
+  }
+
+  getObjectWithMutations(): Record<string, any> {
+    const object = this.getObject()
+
+    if (!object) {
+      return object
+    }
+
+    const { _dirty } = this.state
+
+    if (_dirty) {
+      const draftObject = { ...object }
+
+      return Object.assign(draftObject, _dirty)
+    } else {
+      return object
+    }
+  }
+
+  getButtons(): Array<JSX.Element | null> | null {
+    const inEditMode = this.inEditMode()
+
+    const isDirty = this.isDirty()
+
+    const buttons = []
+
+    if (this.canEdit()) {
+      if (inEditMode) {
+        buttons.push(this.renderResetButton())
+
+        if (isDirty) {
+          buttons.push(this.renderSaveButton())
+        }
+      } else {
+        buttons.push(this.renderEditButton())
+      }
+    }
+
+    return buttons && buttons.length ? buttons : null
+  }
+
+  renderResetButton(): JSX.Element | null {
+    const ResetIcon = this.props.ResetIcon as
+      | React.ElementType
+      | null
+      | undefined
+
+    return ResetIcon ? (
+      <IconButton key="reset" onClick={this.resetEdit}>
+        <ResetIcon />
+      </IconButton>
+    ) : null
+  }
+
+  renderSaveButton(): JSX.Element | null {
+    const SaveIcon = this.props.SaveIcon as React.ElementType | null | undefined
+
+    const { loading } = this.state
+
+    return (
+      <IconButton key="save" onClick={this.save} disabled={loading}>
+        {loading ? <CircularProgress /> : SaveIcon ? <SaveIcon /> : null}
+      </IconButton>
+    )
+  }
+
+  renderEditButton(): JSX.Element | null {
+    const EditIcon = this.props.EditIcon as React.ElementType | null | undefined
+
+    return EditIcon ? (
+      <IconButton key="edit" onClick={this.startEdit}>
+        <EditIcon />
+      </IconButton>
+    ) : null
+  }
+
+  getTitle(): JSX.Element {
+    const object = this.getObjectWithMutations()
+
+    const { name } = object || {}
+
+    return name
+  }
+
+  renderHeader(): JSX.Element {
+    return (
+      <Typography variant="title">
+        {this.getTitle()}
+
+        {this.getButtons()}
+      </Typography>
+    )
+  }
+
+  renderEmpty(): JSX.Element | null {
+    return null
+  }
+
+  renderDefaultView(): JSX.Element | null {
+    return null
+  }
+
+  renderEditableView(): JSX.Element | null {
+    return null
+  }
+
+  closeError(error: Record<string, any>): void {
+    Object.assign(error, {
+      open: false,
+    })
+
+    this.forceUpdate()
+  }
+
+  render(): JSX.Element | null {
+    const { loading } = this.props
+
+    let output = null
+
+    const object = this.getObject()
+
+    if (!object) {
+      if (loading) {
+        return null
+      } else {
+        output = this.renderEmpty()
+      }
+    } else {
+      const inEditMode = this.inEditMode()
+
+      let content = null
+
+      if (inEditMode) {
+        content = this.renderEditableView()
+      } else {
+        content = this.renderDefaultView()
+      }
+
+      output = (
+        <Fragment>
+          {this.renderHeader()}
+
+          {content}
+        </Fragment>
+      )
+    }
+
+    return (
+      <Fragment>
+        {output}
+
+        {this.renderErrors()}
+      </Fragment>
+    )
+  }
+}
+
+/**
+ * For backward compatibility
+ */
+export const EditableView = EditableObject
+
+export default EditableObject

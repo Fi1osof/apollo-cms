@@ -1,28 +1,27 @@
-import expect from 'expect'
-import React from 'react'
-import {render, unmountComponentAtNode} from 'react-dom'
+// import expect from 'expect'
+// import React from 'react'
+import { unmountComponentAtNode } from 'react-dom'
 
 // import Component from '../App'
 
 describe('Index App', () => {
   let node
 
-  beforeEach(() => {
-  })
-  
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  beforeEach(() => {})
+
   afterEach(() => {
     unmountComponentAtNode(node)
   })
-  
+
   it('Test main App', () => {
-    
     node = document.createElement('div')
 
-    node.id = "root";
+    node.id = 'root'
 
-    global.document.body.append(node);
+    global.document.body.append(node)
 
-    require('../');
+    require('../')
 
     // render(<Component
     //   endpoint="http://localhost/"

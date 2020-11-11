@@ -1,12 +1,10 @@
+// import expect from 'expect'
+// import React from 'react'
+import { unmountComponentAtNode } from 'react-dom'
 
+// import TestApp from './App'
 
-import expect from 'expect'
-import React from 'react'
-import { render, unmountComponentAtNode } from 'react-dom'
-
-import TestApp from "./App";
-
-import Component from '../DataView/Object/Editable'
+// import Component from '../DataView/Object/Editable'
 
 describe('Editable without object', () => {
   let node
@@ -20,19 +18,15 @@ describe('Editable without object', () => {
   })
 
   it('Check content is empty', () => {
+    return undefined
 
-    return undefined;
-
-    render(<TestApp
-      Renderer={Component}
-      mutate={() => { }}
-      data={{
-      }}
-    />, node, () => {
-      expect(node.innerHTML).toContain('')
-      return true;
-    })
+    // render(
+    //   <TestApp Renderer={Component} mutate={() => {}} data={{}} />,
+    //   node,
+    //   () => {
+    //     expect(node.innerHTML).toContain('')
+    //     return true
+    //   }
+    // )
   })
 })
-
-

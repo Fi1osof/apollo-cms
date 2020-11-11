@@ -1,33 +1,30 @@
-
-
+/* eslint-disable no-console */
+/* eslint-disable no-async-promise-executor */
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable react/jsx-no-bind */
 import expect from 'expect'
 import React, { Component } from 'react'
-import { render, unmountComponentAtNode } from 'react-dom'
+import { render } from 'react-dom'
 
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
 
-import chalk from "chalk";
+import chalk from 'chalk'
 
-import App from "../../../App";
+import App from '../../../App'
 
 import EditableProto from '../../../../DataView/Object/Editable'
 
-let name = "Test";
-let newName = "Test dirty";
-
+let name = 'Test'
+let newName = 'Test dirty'
 
 const object = {
-  id: "Sdfsdf",
+  id: 'Sdfsdf',
   name,
-};
+}
 
-
-class EditableEmpty extends EditableProto { }
-
+class EditableEmpty extends EditableProto {}
 
 class Editable extends EditableProto {
-
-
   static propTypes = {
     ...EditableProto.propTypes,
     resolve: PropTypes.func.isRequired,
@@ -38,18 +35,12 @@ class Editable extends EditableProto {
     errorDelay: 200,
   }
 
-
-
   componentDidMount() {
+    super.componentDidMount && super.componentDidMount()
 
+    const { errorDelay } = this.props
 
-    super.componentDidMount && super.componentDidMount();
-
-    const {
-      errorDelay,
-    } = this.props;
-
-    expect(errorDelay).toBe(200);
+    expect(errorDelay).toBe(200)
 
     // await this.testSetCache();
 
@@ -62,48 +53,31 @@ class Editable extends EditableProto {
     // const callback = jest.fn();
 
     // this.startTests(callback);
-    this.startTests();
+    this.startTests()
 
     // setTimeout(() => {
 
     // }, 1000);
 
     // jest.runAllTimers();
-
-
-
-
-
   }
 
-
   canEdit() {
+    super.canEdit()
 
-    super.canEdit();
-
-    return true;
-
+    return true
   }
 
   async testS() {
-
-    return new Promise(resolve => {
-
+    return new Promise((resolve) => {
       setTimeout(() => {
-        resolve(111111111);
+        resolve(111111111)
       }, 1000)
-
-    });
-
+    })
   }
 
-
   startTests() {
-
-    let tests = [
-      this.testS,
-    ]
-
+    // let tests = [this.testS]
 
     // describe('Pages test', () => {
     // first way
@@ -127,15 +101,11 @@ class Editable extends EditableProto {
     //   })
     // }
 
+    it('Save object', async () => {
+      console.log(chalk.green('Loop test'), new Date(), true)
 
-
-    it(("Save object"), async () => {
-
-      console.log(chalk.green("Loop test"), new Date(), true);
-
-      return new Promise(async resolve => {
-
-        console.log(chalk.green("Loop test promise"), new Date(), true);
+      return new Promise(async (resolve) => {
+        console.log(chalk.green('Loop test promise'), new Date(), true)
 
         // setTimeout(() => {
 
@@ -147,53 +117,48 @@ class Editable extends EditableProto {
 
         // let result = await this.ttt();
         // let result = await this.save();
-        let result = await this.testSave();
+        let result = await this.testSave()
 
+        console.log(chalk.green('Loop test promise result'), new Date(), result)
 
-        console.log(chalk.green("Loop test promise result"), new Date(), result);
-
-        resolve();
-
+        resolve()
       })
-
     })
 
+    it('testSetCache', async () => {
+      console.log(chalk.green('Loop testSetCache'), new Date(), true)
 
-    it(("testSetCache"), async () => {
+      return new Promise(async (resolve) => {
+        console.log(chalk.green('Loop testSetCache promise'), new Date(), true)
 
-      console.log(chalk.green("Loop testSetCache"), new Date(), true);
+        let result = await this.testSetCache()
 
-      return new Promise(async resolve => {
+        console.log(
+          chalk.green('Loop testSetCache promise result'),
+          new Date(),
+          result
+        )
 
-        console.log(chalk.green("Loop testSetCache promise"), new Date(), true);
-
-        let result = await this.testSetCache();
-
-        console.log(chalk.green("Loop testSetCache promise result"), new Date(), result);
-
-        resolve();
-
+        resolve()
       })
-
     })
 
+    it('testStartEdit', async () => {
+      console.log(chalk.green('Loop testStartEdit'), new Date(), true)
 
-    it(("testStartEdit"), async () => {
+      return new Promise(async (resolve) => {
+        console.log(chalk.green('Loop testStartEdit promise'), new Date(), true)
 
-      console.log(chalk.green("Loop testStartEdit"), new Date(), true);
+        let result = await this.testStartEdit()
 
-      return new Promise(async resolve => {
+        console.log(
+          chalk.green('Loop testStartEdit promise result'),
+          new Date(),
+          result
+        )
 
-        console.log(chalk.green("Loop testStartEdit promise"), new Date(), true);
-
-        let result = await this.testStartEdit();
-
-        console.log(chalk.green("Loop testStartEdit promise result"), new Date(), result);
-
-        resolve();
-
+        resolve()
       })
-
     })
 
     // it(("testStartEdit"), async () => {
@@ -212,190 +177,149 @@ class Editable extends EditableProto {
 
     //   })
 
-    // }) 
+    // })
 
-    this.testRenderFields();
+    this.testRenderFields()
 
-
-    this.testErrors();
+    this.testErrors()
   }
 
-
   testRenderFields() {
-
-    it("Check TextField rendered", () => {
-
-
-      return new Promise(resolve => {
-
+    it('Check TextField rendered', () => {
+      return new Promise((resolve) => {
         setTimeout(() => {
+          const { element } = this
 
-          const {
-            element,
-          } = this;
+          console.log(chalk.green('element', element))
 
-          console.log(chalk.green("element", element));
+          expect(element !== undefined).toBe(true)
 
-          expect(element !== undefined).toBe(true);
-
-
-          const input = element.querySelector("input[type=text]");
+          const input = element.querySelector('input[type=text]')
 
           // console.log(chalk.green("element input"), input);
 
-          expect(input).toNotBe(null);
+          expect(input).toNotBe(null)
 
-          input.dispatchEvent(new Event("focus"));
+          input.dispatchEvent(new Event('focus'))
 
-
-          resolve();
-
-        }, 100);
-
-      });
-
+          resolve()
+        }, 100)
+      })
     })
-
   }
-
 
   testErrors() {
-
-    it("testErrors", () => {
-
-
-      return new Promise(resolve => {
-
+    it('testErrors', () => {
+      return new Promise((resolve) => {
         let error = {
-          message: "Test Error",
+          message: 'Test Error',
         }
 
-        let secondError = "error";
+        let secondError = 'error'
 
-        const newError = this.addError(error);
+        const newError = this.addError(error)
 
-        expect(newError).toBe(error);
+        expect(newError).toBe(error)
 
-        let secondErrorAdded = this.addError(secondError);
+        let secondErrorAdded = this.addError(secondError)
 
-        expect(secondErrorAdded).toNotBe(secondError);
+        expect(secondErrorAdded).toNotBe(secondError)
 
         setTimeout(() => {
+          expect(
+            this.state.notifications.findIndex(
+              (n) => n.message === error.message
+            )
+          ).toNotBe(-1)
+          expect(
+            this.state.notifications.findIndex((n) => n.message === secondError)
+          ).toNotBe(-1)
 
-          expect(this.state.notifications.findIndex(n => n.message === error.message)).toNotBe(-1);
-          expect(this.state.notifications.findIndex(n => n.message === secondError)).toNotBe(-1);
-
-          this.removeError(secondErrorAdded);
+          this.removeError(secondErrorAdded)
 
           setTimeout(() => {
-
-            expect(this.state.notifications.findIndex(n => n.message === secondError)).toBe(-1);
-
+            expect(
+              this.state.notifications.findIndex(
+                (n) => n.message === secondError
+              )
+            ).toBe(-1)
 
             // fake
-            this.closeError({});
+            this.closeError({})
 
-            resolve();
-
+            resolve()
           }, 50)
-
-
-        }, 100);
-
-      });
-
+        }, 100)
+      })
     })
-
   }
-
-
-
 
   async testSetCache() {
+    const key = this.getCacheKey()
 
-    const key = this.getCacheKey();
+    expect(key).toNotBe(null)
 
-    expect(key).toNotBe(null);
+    this.setCache(object)
 
-    this.setCache(object);
+    let cachedData = this.getCache()
 
-    let cachedData = this.getCache();
+    expect(cachedData).toNotBe(null)
 
-    expect(cachedData).toNotBe(null);
+    expect(cachedData.id).toBe(object.id)
 
-    expect(cachedData.id).toBe(object.id);
-
-    expect(localStorage.getItem(key)).toNotBe(null);
+    expect(localStorage.getItem(key)).toNotBe(null)
 
     // clear cache
-    this.clearCache();
+    this.clearCache()
 
-    expect(localStorage.getItem(key)).toBe(null);
-
+    expect(localStorage.getItem(key)).toBe(null)
   }
-
 
   async testStartEdit() {
-
     return new Promise((resolve) => {
+      expect(this.inEditMode()).toBe(false)
 
-      expect(this.isInEditMode()).toBe(false);
-
-      this.startEdit();
+      this.startEdit()
 
       setTimeout(() => {
+        expect(this.inEditMode()).toBe(true)
 
-        expect(this.isInEditMode()).toBe(true);
-
-        this.resetEdit();
+        this.resetEdit()
 
         setTimeout(() => {
+          expect(this.inEditMode()).toBe(false)
 
-          expect(this.isInEditMode()).toBe(false);
-
-          resolve();
-
-        }, 100);
-
-
-      }, 100);
-
-    });
-
+          resolve()
+        }, 100)
+      }, 100)
+    })
   }
 
-
   async testSave() {
-
-    console.log(chalk.green("Start test"));
+    console.log(chalk.green('Start test'))
 
     return new Promise((resolve) => {
+      expect(this.inEditMode()).toBe(false)
 
-      expect(this.isInEditMode()).toBe(false);
-
-      var input = document.createElement("INPUT");
+      var input = document.createElement('INPUT')
 
       Object.assign(input, {
-        type: "text",
-        name: "name",
+        type: 'text',
+        name: 'name',
         value: newName,
-      });
-
+      })
 
       input.addEventListener(
-        "change",
+        'change',
         (event) => {
-
-          this.onChange(event);
-
+          this.onChange(event)
         },
         false
-      );
+      )
 
-      var event = new Event("change");
+      var event = new Event('change')
 
-      input.dispatchEvent(event);
-
+      input.dispatchEvent(event)
 
       // let Editor = this.getEditor({
       //   name: "name",
@@ -403,107 +327,80 @@ class Editable extends EditableProto {
 
       // console.log("Editor", Editor);
 
-
       setTimeout(async () => {
+        const { name } = this.getObjectWithMutations()
 
-        const {
-          name,
-        } = this.getObjectWithMutations();
+        expect(name).toBe(newName)
 
-        expect(name).toBe(newName);
-
-        expect(this.isInEditMode()).toBe(true);
+        expect(this.inEditMode()).toBe(true)
 
         await this.save()
-          .then(r => {
-
-            console.log(chalk.green("Save result"), r);
-
+          .then((r) => {
+            console.log(chalk.green('Save result'), r)
           })
-          .catch(error => {
-            console.error(chalk.yellow("Save error"), error);
+          .catch((error) => {
+            console.error(chalk.yellow('Save error'), error)
           })
 
-        resolve();
-
-      }, 100);
-
-
-    });
-
+        resolve()
+      }, 100)
+    })
   }
-
 
   getCacheKey() {
+    const { id } = this.getObjectWithMutations()
 
-    const {
-      id,
-    } = this.getObjectWithMutations();
+    expect(id).toBe(object.id)
 
-    expect(id).toBe(object.id);
+    const key = super.getCacheKey()
 
-    const key = super.getCacheKey();
+    expect(key).toNotBe(null)
 
-    expect(key).toNotBe(null);
+    expect(key).toBe(`item_${id}`)
 
-    expect(key).toBe(`item_${id}`);
-
-    return key;
-
+    return key
   }
-
 
   render() {
+    return (
+      <div>
+        {this.renderEmpty()}
 
+        <div
+          ref={(element) => {
+            this.element = element
+          }}
+        >
+          {this.getTextField({
+            name: 'name',
+            className: 'input',
+          })}
+        </div>
 
-    return <div>
-
-      {this.renderEmpty()}
-
-      <div
-        ref={element => {
-          this.element = element
-        }}
-      >
-        {this.getTextField({
-          name: "name",
-          className: "input",
-        })}
+        {super.render()}
       </div>
-
-      {super.render()}
-
-    </div >
-
+    )
   }
-
 }
 
-
 class Renderer extends Component {
-
-
   render() {
+    const { ...other } = this.props
 
-    const {
-      ...other
-    } = this.props;
-
-    return <Editable
-      data={{
-        object,
-      }}
-      // _dirty={{
-      //   name: newName,
-      // }}
-      mutate={async (data) => {
-
-        console.log(chalk.green("mutate data"), data);
-
-      }}
-      {...other}
-    />
-
+    return (
+      <Editable
+        data={{
+          object,
+        }}
+        // _dirty={{
+        //   name: newName,
+        // }}
+        mutate={async (data) => {
+          console.log(chalk.green('mutate data'), data)
+        }}
+        {...other}
+      />
+    )
   }
 }
 
@@ -520,7 +417,6 @@ describe('DataView Object/Editable', () => {
     // unmountComponentAtNode(node)
   })
 
-
   // return new Promise(async resolve => {
   //   render(<App
   //     Renderer={Renderer}
@@ -535,29 +431,19 @@ describe('DataView Object/Editable', () => {
   // })
   // it('Render', () => {
 
-
-
-
-  return new Promise(async resolve => {
-    render(<App
-      Renderer={Renderer}
-      resolve={resolve}
-    />, node, () => {
-
+  return new Promise(async (resolve) => {
+    render(<App Renderer={Renderer} resolve={resolve} />, node, () => {
       // jest.useFakeTimers();
 
       setTimeout(() => {
-        resolve();
-      }, 4000);
+        resolve()
+      }, 4000)
 
       // jest.runAllTimers();
-
     })
-  });
-
+  })
 
   // return true;
-
 
   // })
 })
@@ -567,43 +453,31 @@ describe('DataView Object/Editable Empty', () => {
 
   node = document.createElement('div')
 
-  
-
-
-  it("Render empty object", () => {
-
-    render(<App
-      Renderer={EditableEmpty}
-      data={{
-        loading: false,
-      }}
-      mutate={() => {
-        
-      }}
-    />, node, () => {
-
-
-    })
-
+  it('Render empty object', () => {
+    render(
+      <App
+        Renderer={EditableEmpty}
+        data={{
+          loading: false,
+        }}
+        mutate={() => {}}
+      />,
+      node,
+      () => {}
+    )
   })
 
-  it("Render empty object loading", () => {
-
-    render(<App
-      Renderer={EditableEmpty}
-      data={{
-        loading: true,
-      }}
-      mutate={() => {
-        
-      }}
-    />, node, () => {
-
-
-    })
-
+  it('Render empty object loading', () => {
+    render(
+      <App
+        Renderer={EditableEmpty}
+        data={{
+          loading: true,
+        }}
+        mutate={() => {}}
+      />,
+      node,
+      () => {}
+    )
   })
-
 })
-
-

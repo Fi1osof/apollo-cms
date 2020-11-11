@@ -1,12 +1,11 @@
-import expect from 'expect'
 import React from 'react'
-import {render, unmountComponentAtNode} from 'react-dom'
+import { render, unmountComponentAtNode } from 'react-dom'
 
-import App from '../dev';
+import App from '../dev'
 
-import createDOM from "./utils/createDOM";
+import createDOM from './utils/createDOM'
 
-createDOM();
+createDOM()
 
 describe('Apollo-cms dev App', () => {
   let node
@@ -20,11 +19,15 @@ describe('Apollo-cms dev App', () => {
   })
 
   it('Dev App', () => {
-    render(<App
+    render(
+      <App
       // endpoint="http://localhost/"
-    />, node, () => {
-      // expect(node.innerHTML).toContain('wefd')
-      return true;
-    })
+      />,
+      node,
+      () => {
+        // expect(node.innerHTML).toContain('wefd')
+        return true
+      }
+    )
   })
 })

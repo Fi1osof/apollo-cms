@@ -1,7 +1,4 @@
-
-const {
-  fetch,
-} = global;
+const { fetch } = global
 
 const { ApolloLink, Observable } = require('apollo-link')
 const {
@@ -10,10 +7,9 @@ const {
   fallbackHttpConfig,
   serializeFetchParameter,
   createSignalIfSupported,
-  parseAndCheckHttpResponse
+  parseAndCheckHttpResponse,
 } = require('apollo-link-http-common')
 const { extractFiles, ReactNativeFile } = require('extract-files/lib/index')
- 
 
 /**
  * A React Native [`File`](https://developer.mozilla.org/docs/web/api/file)
@@ -101,23 +97,23 @@ exports.createUploadLink = ({
   fetchOptions,
   credentials,
   headers,
-  includeExtensions
+  includeExtensions,
 } = {}) => {
   const linkConfig = {
     http: { includeExtensions },
     options: fetchOptions,
     credentials,
-    headers
+    headers,
   }
 
-  return new ApolloLink(operation => {
+  return new ApolloLink((operation) => {
     const uri = selectURI(operation, fetchUri)
     const context = operation.getContext()
     const contextConfig = {
       http: context.http,
       options: context.fetchOptions,
       credentials: context.credentials,
-      headers: context.headers
+      headers: context.headers,
     }
 
     const { options, body } = selectHttpOptionsAndBody(
@@ -152,23 +148,23 @@ exports.createUploadLink = ({
       )
     } else options.body = payload
 
-    return new Observable(observer => {
+    return new Observable((observer) => {
       // Allow aborting fetch, if supported.
       const { controller, signal } = createSignalIfSupported()
       if (controller) options.signal = signal
 
       linkFetch(uri, options)
-        .then(response => {
+        .then((response) => {
           // Forward the response on the context.
           operation.setContext({ response })
           return response
         })
         .then(parseAndCheckHttpResponse(operation))
-        .then(result => {
+        .then((result) => {
           observer.next(result)
           observer.complete()
         })
-        .catch(error => {
+        .catch((error) => {
           if (error.name === 'AbortError')
             // Fetch was aborted.
             return
