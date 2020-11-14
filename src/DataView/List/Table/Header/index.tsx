@@ -27,7 +27,7 @@ const EnhancedTableHead: React.FC<TableHeaderProps> = (props) => {
 
             return (
               <TableCell
-                key={key ? key : id && typeof id === "string" ? id : index}
+                key={key ? key : id && typeof id === 'string' ? id : index}
                 numeric={column.numeric}
                 padding={column.disablePadding ? 'none' : 'default'}
               >
@@ -36,7 +36,7 @@ const EnhancedTableHead: React.FC<TableHeaderProps> = (props) => {
             )
           }, this)}
         </TableRow>
-      </TableHead >
+      </TableHead>
     )
   }, [columnData])
 

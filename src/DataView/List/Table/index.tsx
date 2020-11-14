@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React from 'react'
 // import PropTypes from 'prop-types'
 import { withStyles, Theme } from 'material-ui/styles'
@@ -37,7 +36,7 @@ export const styles = (theme: Theme): Record<string, any> => {
 export class TableView<
   P extends TableViewProps = TableViewProps,
   S extends TableViewState = TableViewState
-  > extends PrismaComponent<P, S> {
+> extends PrismaComponent<P, S> {
   // static propTypes = {
   //   ...PrismaComponent.propTypes,
   //   classes: PropTypes.object.isRequired,
@@ -72,9 +71,7 @@ export class TableView<
   }
 
   getColumns(): ColumnConfig[] | undefined {
-    return this.state.columnData
-      || this.props.columnData
-      || []
+    return this.state.columnData || this.props.columnData || []
   }
 
   toggleColumnVisibility = (
@@ -122,13 +119,9 @@ export class TableView<
 
     const filters = this.renderFilters()
 
-    console.log("TableView props", { ...this.props });
-    console.log("TableView data", { ...data });
-
     if (!data) {
       return null
     }
-
 
     const objectsConnection = data.objectsConnection
     const objects = data.objects
@@ -139,65 +132,63 @@ export class TableView<
 
     // const rows = (edges && edges.map((n) => n?.node)) || objects || []
 
-    let rows: any[] = [];
+    let rows: any[] = []
 
     if (edges) {
       edges.reduce<any[]>((curr, next) => {
-
         if (next) {
-          curr.push(next.node);
+          curr.push(next.node)
         }
 
-        return curr;
-      }, rows);
+        return curr
+      }, rows)
+    } else if (objects) {
+      rows = objects
     }
-    else if (objects) {
-      rows = objects;
-    }
-
-    console.log("TableView rows", [...rows]);
 
     // const rowCount = rows.length
 
-    return <>
-      {super.render()}
-      <Paper
-        className={[
-          classes?.root,
-          loading ? classes?.loading : '',
-          className,
-        ].join(' ')}
-      >
-        <Toolbar
-          // numSelected={selected.length}
-          title={title}
-          addObject={addObject}
-          filters={filters}
-          columnData={columnData}
-          toggleColumnVisibility={this.toggleColumnVisibility}
-        />
+    return (
+      <>
+        {super.render()}
+        <Paper
+          className={[
+            classes?.root,
+            loading ? classes?.loading : '',
+            className,
+          ].join(' ')}
+        >
+          <Toolbar
+            // numSelected={selected.length}
+            title={title}
+            addObject={addObject}
+            filters={filters}
+            columnData={columnData}
+            toggleColumnVisibility={this.toggleColumnVisibility}
+          />
 
-        <div className={classes?.tableWrapper}>
-          <table className={classes?.table}>
-            <Header
-              // numSelected={selected.length}
-              // onSelectAllClick={this.handleSelectAllClick}
-              // onRequestSort={this.handleRequestSort}
-              // rowCount={rowCount}
-              columnData={columnData}
-            />
+          <div className={classes?.tableWrapper}>
+            <table className={classes?.table}>
+              <Header
+                // numSelected={selected.length}
+                // onSelectAllClick={this.handleSelectAllClick}
+                // onRequestSort={this.handleRequestSort}
+                // rowCount={rowCount}
+                columnData={columnData}
+              />
 
-            <Body
-              data={rows}
-              // isSelected={this.isSelected}
-              // handleClick={this.handleClick}
-              // onRowSelect={this.onRowSelect}
-              columnData={columnData}
-            />
-          </table>
-        </div>
-      </Paper>
-    </>
+              <Body
+                data={rows}
+                // isSelected={this.isSelected}
+                // handleClick={this.handleClick}
+                // onRowSelect={this.onRowSelect}
+                columnData={columnData}
+              />
+            </table>
+          </div>
+        </Paper>
+      </>
+    )
   }
 }
 

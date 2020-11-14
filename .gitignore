@@ -1,4 +1,5 @@
-/dist
+dist
+/.next
 /coverage
 # /demo/dist
 /demo
@@ -8,4 +9,5 @@
 /es
 npm-debug.log*
 /yarn.lock
+/yarn-error.log
 /build

@@ -8,16 +8,19 @@ import EditIcon from 'material-ui-icons/ModeEdit'
 import ResetIcon from 'material-ui-icons/Restore'
 import Save from 'material-ui-icons/Save'
 
-import { CircularProgress } from 'material-ui/Progress'
+import CircularProgress from 'material-ui/Progress/CircularProgress'
 
 // import View from '..'
-import PrismaCmsComponent from '@prisma-cms/component'
+import PrismaCmsComponent, {
+  PrismaCmsComponentError,
+} from '@prisma-cms/component'
 import {
   EditableObjectEditorProps,
   EditableObjectMutateProps,
   EditableObjectProps,
   EditableObjectState,
-  saveResult,
+  EditableObjectSaveResult,
+  EditableObjectProcessorResponse,
 } from './interfaces'
 
 export * from './interfaces'
@@ -35,7 +38,7 @@ const SaveIcon = (): JSX.Element => {
 export class EditableObject<
   P extends EditableObjectProps = EditableObjectProps,
   S extends EditableObjectState = EditableObjectState
-  > extends PrismaCmsComponent<P, S> {
+> extends PrismaCmsComponent<P, S> {
   // static propTypes = {
   //   ...View.propTypes,
 
@@ -73,10 +76,15 @@ export class EditableObject<
     }
   }
 
-  componentWillMount(): void {
+  UNSAFE_componentWillMount(): void {
     this.initCache()
 
-    super.componentWillMount && super.componentWillMount()
+    // deprecated
+    // super.UNSAFE_componentWillMount && super.UNSAFE_componentWillMount()
+  }
+
+  getStorage = () => {
+    return this.context.localStorage ?? global.localStorage
   }
 
   initCache(): void {
@@ -88,9 +96,9 @@ export class EditableObject<
       _dirty:
         _dirty || cache
           ? {
-            ..._dirty,
-            ...cache,
-          }
+              ..._dirty,
+              ...cache,
+            }
           : undefined,
     })
   }
@@ -98,17 +106,17 @@ export class EditableObject<
   getCacheKey(): string | null | undefined {
     const { cacheKey, cacheKeyPrefix } = this.props
 
-    const { id } = this.getObject() || {}
+    const id = this.getObject()?.id
 
     return cacheKey !== undefined
       ? cacheKey
       : id
-        ? `${cacheKeyPrefix}${id}`
-        : null
+      ? `${cacheKeyPrefix}${id}`
+      : null
   }
 
   setCache(data: Record<string, any> | null): boolean {
-    const { localStorage } = this.context
+    const localStorage = this.getStorage()
 
     if (!localStorage) {
       return false
@@ -136,7 +144,7 @@ export class EditableObject<
   }
 
   getCache(): Record<string, any> | null | undefined {
-    const { localStorage } = this.context
+    const localStorage = this.getStorage()
 
     let cacheData
 
@@ -159,7 +167,7 @@ export class EditableObject<
   }
 
   clearCache(): void {
-    const { localStorage } = this.context
+    const localStorage = this.getStorage()
 
     const key = this.getCacheKey()
 
@@ -168,7 +176,7 @@ export class EditableObject<
     }
   }
 
-  onSave = (result: saveResult): (() => void) => {
+  onSave = (result: EditableObjectSaveResult): (() => void) => {
     let callback = () => undefined
 
     const { onSave } = this.props
@@ -183,11 +191,11 @@ export class EditableObject<
     return callback
   }
 
-  async save(): Promise<saveResult | Error> {
+  async save(): Promise<EditableObjectSaveResult | Error> {
     const { _dirty } = this.state
 
     return await this.saveObject(_dirty)
-      .then((result: saveResult) => {
+      .then((result: EditableObjectSaveResult) => {
         // console.log("Save result", result);
 
         if (result && !(result instanceof Error)) {
@@ -211,13 +219,15 @@ export class EditableObject<
       })
   }
 
-  async saveObject(data: P['_dirty']): Promise<saveResult> {
+  async saveObject(data: P['_dirty']): Promise<EditableObjectSaveResult> {
     const options = this.getMutation(data)
 
     return this.mutate(options)
   }
 
-  async mutate(props: EditableObjectMutateProps): Promise<saveResult> {
+  async mutate(
+    props: EditableObjectMutateProps
+  ): Promise<EditableObjectSaveResult> {
     const { loading } = this.state
 
     // const { client } = this.context
@@ -257,20 +267,40 @@ export class EditableObject<
             loading: false,
           }
 
-          let result: saveResult
+          let result: EditableObjectSaveResult
 
           if (mutate) {
             result = await mutate(props)
               .then(async (result) => {
                 if (!(result instanceof Error)) {
-                  const { data: resultData } = result || {}
+                  // const { data: resultData } = result || {}
 
-                  const { response } = resultData || {}
+                  // const { response } = resultData || {}
 
-                  const { success: successProp, message, errors = null } =
-                    response || {}
+                  const resultData: EditableObjectProcessorResponse =
+                    result?.data
 
-                  let success = successProp
+                  const response = resultData.response
+
+                  // const { success: successProp, message, errors = null } = response;
+
+                  let success = response?.success
+                  const message = response?.message
+                  const errors =
+                    response?.errors?.map(({ key, message, ...other }) => {
+                      const error: PrismaCmsComponentError = new Error(message)
+
+                      /**
+                       * For Fields compability
+                       */
+                      Object.assign(error, {
+                        key,
+                        name: key,
+                        ...other,
+                      })
+
+                      return error
+                    }) ?? []
 
                   Object.assign(newState, {
                     errors,
@@ -285,7 +315,7 @@ export class EditableObject<
 
                     return reject(result)
                   } else {
-                    await this.resetStore();
+                    await this.resetStore()
                   }
                 }
 
@@ -314,25 +344,17 @@ export class EditableObject<
   }
 
   resetStore = async (): Promise<void> => {
-
-    const {
-      apiClientResetStore,
-    } = this.context;
+    const { apiClientResetStore } = this.context
 
     if (apiClientResetStore) {
-      return apiClientResetStore.call(this);
-    }
-    else {
-
-      const {
-        client,
-      } = this.context;
+      return apiClientResetStore.call(this)
+    } else {
+      const { client } = this.context
 
       if (!client.queryManager.fetchQueryRejectFns.size) {
         await client.resetStore().catch(console.error)
       }
     }
-
   }
 
   getMutation(data: EditableObjectMutateProps): EditableObjectMutateProps {
@@ -348,7 +370,7 @@ export class EditableObject<
   ): EditableObjectMutateProps {
     const object = this.getObjectWithMutations()
 
-    const { id } = object || {}
+    const id = object?.id
 
     const where = id ? { id } : undefined
 
@@ -391,7 +413,7 @@ export class EditableObject<
   updateObject(data: P['_dirty']): void {
     const { _dirty = {} } = this.state
 
-    const { localStorage } = this.context
+    const localStorage = this.getStorage()
 
     const newData = Object.assign({ ..._dirty }, data)
 
@@ -433,7 +455,7 @@ export class EditableObject<
 
     const value = object[name] || ''
 
-    const { errors } = this.state
+    const errors = this.state.errors
 
     // const error = errors ? errors.find((n) => n.key === name) : ''
     const error = errors ? errors.find((n) => n.name === name) : ''
@@ -448,8 +470,8 @@ export class EditableObject<
         style={
           fullWidth
             ? {
-              width: '100%',
-            }
+                width: '100%',
+              }
             : undefined
         }
         label={label ? this.lexicon(label) : label}
@@ -491,7 +513,8 @@ export class EditableObject<
     return this.getEditor(props)
   }
 
-  getObjectWithMutations(): Record<string, any> | null | undefined {
+  // TODO add generic
+  getObjectWithMutations() {
     const object = this.getObject()
 
     if (!object) {
@@ -501,7 +524,7 @@ export class EditableObject<
     const { _dirty } = this.state
 
     if (_dirty) {
-      const draftObject = { ...object }
+      const draftObject: typeof object = { ...object }
 
       return Object.assign(draftObject, _dirty)
     } else {
@@ -566,12 +589,8 @@ export class EditableObject<
     ) : null
   }
 
-  getTitle(): JSX.Element {
-    const object = this.getObjectWithMutations()
-
-    const { name } = object || {}
-
-    return name
+  getTitle() {
+    return this.getObjectWithMutations()?.name
   }
 
   renderHeader(): JSX.Element {
@@ -604,7 +623,7 @@ export class EditableObject<
     this.forceUpdate()
   }
 
-  render(): React.ReactNode  {
+  render(): React.ReactNode {
     const { loading } = this.props
 
     let output = null
@@ -618,7 +637,7 @@ export class EditableObject<
         output = this.renderEmpty()
       }
     } else {
-      const inEditMode = this.inEditMode()
+      const inEditMode = this.canEdit() && this.inEditMode()
 
       let content = null
 

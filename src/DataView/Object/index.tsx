@@ -2,6 +2,9 @@
 
 import PrismaComponent from '@prisma-cms/component'
 
+/**
+ * @deprecated Use @prisma-cms/component instead
+ */
 export default class ObjectView extends PrismaComponent {
   // eslint-disable-line react/prefer-stateless-function
   // static propTypes = {

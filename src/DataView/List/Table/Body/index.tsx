@@ -39,15 +39,20 @@ const TBody: React.FC<TBodyProps> = (props) => {
                   ...other
                 } = record
 
-                const value = fieldName && typeof fieldName === "string" ? n[fieldName] : undefined;
+                const value =
+                  fieldName && typeof fieldName === 'string'
+                    ? n[fieldName]
+                    : undefined
 
                 return (
                   <TableCell
-                    key={key ? key : id && typeof id === "string" ? id : index2}
+                    key={key ? key : id && typeof id === 'string' ? id : index2}
                     padding={disablePadding === true ? 'none' : padding}
                     {...other}
                   >
-                    {value !== undefined && renderer ? renderer(value, n) : (value || '')}
+                    {value !== undefined && renderer
+                      ? renderer(value, n)
+                      : value || ''}
                   </TableCell>
                 )
               })}

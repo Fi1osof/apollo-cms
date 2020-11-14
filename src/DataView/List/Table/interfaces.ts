@@ -1,6 +1,6 @@
 import {
   PrismaCmsComponentProps,
-  PrismaCmsComponentPropsData,
+  // PrismaCmsComponentPropsData,
   PrismaCmsComponentState,
 } from '@prisma-cms/component'
 import { Padding } from 'material-ui/Table'
@@ -52,13 +52,13 @@ export type Column<P> = {
 // export type ColumnConfig<P extends TableViewQueryFragment = any > = Column<P>
 export type ColumnConfig<P = any> = Column<P>
 
-
-
 interface Variables extends Record<string, any> {
   first?: number | null
 }
 
-export interface TableViewPropsData extends PrismaCmsComponentPropsData {
+// export interface TableViewPropsData extends PrismaCmsComponentPropsData {
+
+export interface TableViewPropsData {
   objectsConnection?: {
     edges: Array<{ node: Record<string, any> } | null>
     aggregate: {
@@ -68,11 +68,10 @@ export interface TableViewPropsData extends PrismaCmsComponentPropsData {
   objects?: Record<string, any>[]
 }
 
-export interface TableViewProps
-  extends PrismaCmsComponentProps {
+export interface TableViewProps extends PrismaCmsComponentProps {
   columnData?: ColumnConfig[]
 
-  data: TableViewPropsData;
+  data: TableViewPropsData | null | undefined
   // data: {
   //   objectsConnection?: {
   //     edges: Array<{node: Record<string, any>} | null>
@@ -84,11 +83,11 @@ export interface TableViewProps
   //   object?: PrismaCmsComponentPropsDataObject | null
   // };
 
-  loading: boolean;
+  loading: boolean
 
-  page: number
+  // page: number
 
-  withPagination?: boolean
+  // withPagination?: boolean
 
   // data:
   // | {
