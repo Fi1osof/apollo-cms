@@ -9,7 +9,7 @@ import Button from 'material-ui/Button'
 import { styles, TableView } from '../../../../DataView/List/Table'
 
 import withStyles from 'material-ui/styles/withStyles'
-import { TableViewProps } from 'src/DataView/List/Table/interfaces'
+import { ColumnConfig, TableViewProps } from 'src/DataView/List/Table'
 
 export const edges = [
   {
@@ -53,11 +53,17 @@ export const data = {
   objects: edges.map(({ node }) => node),
 }
 
-interface DevTableViewProps extends TableViewProps {}
+interface DevTableViewProps extends TableViewProps { }
+
+type UserFragment = {
+  id: string;
+  username: string | null;
+  email: string | null;
+};
 
 export class DevTableView<
   P extends DevTableViewProps = DevTableViewProps
-> extends TableView<P> {
+  > extends TableView<P> {
   static defaultProps = {
     ...TableView.defaultProps,
     data,
@@ -70,38 +76,41 @@ export class DevTableView<
 
     this.state = {
       ...this.state,
-      columnData: [
-        {
-          id: 'id',
-          key: 'id',
-          label: 'ID',
-          hidden: true,
-        },
-        {
-          id: 'username',
-          key: 'username',
-          label: 'Username',
-          description: 'Unique username',
-          hidden: false,
-          renderer: (value) => {
-            return <span className="username">{value}</span>
-          },
-        },
-        {
-          id: 'email',
-          key: 'email',
-          label: 'Email',
-          hidden: false,
-          renderer: (value) => {
-            return value ? <a href={`mailto:${value}`}>{value}</a> : null
-          },
-        },
-      ],
+      // columnData: [
+      //   {
+      //     id: 'id',
+      //     key: 'id',
+      //     label: 'ID',
+      //     hidden: true,
+      //   },
+      //   {
+      //     id: 'username',
+      //     key: 'username',
+      //     label: 'Username',
+      //     description: 'Unique username',
+      //     hidden: false,
+      //     renderer: (value) => {
+      //       return <span className="username">{value}</span>
+      //     },
+      //   },
+      //   {
+      //     id: 'email',
+      //     key: 'email',
+      //     label: 'Email',
+      //     hidden: false,
+      //     renderer: (value) => {
+      //       return value ? <a href={`mailto:${value}`}>{value}</a> : null
+      //     },
+      //   },
+      // ],
     }
   }
 
   renderFilters(): JSX.Element {
-    const { query, advantages_not, with_employes } = this.getFilters() || {}
+
+    const _filters: Record<string, any> = this.getFilters() || {};
+
+    const { query, advantages_not, with_employes } = _filters;
 
     const filters = (
       <Grid container spacing={8} alignItems="baseline">
@@ -176,10 +185,45 @@ export class DevTableView<
     return filters
   }
 
-  getColumns(): P['columnData'] {
-    const { columnData } = this.state
+  // getColumns(): P['columnData'] {
+  //   const { columnData } = this.state
 
-    return columnData || []
+  //   return columnData || []
+  // }
+
+  // getColumns(): P['columnData'] {
+
+
+  getColumns(): ColumnConfig<UserFragment>[] {
+    // getColumns<CC extends UserFragment = UserFragment>(): ColumnConfig<CC>[] {
+
+    return [
+      {
+        id: 'id',
+        key: 'id',
+        label: 'ID',
+        hidden: true,
+      },
+      {
+        id: "username",
+        key: 'username',
+        label: 'Username',
+        description: 'Unique username',
+        hidden: false,
+        renderer: (value: UserFragment["username"]) => {
+          return <span className="username">{value}</span>
+        },
+      },
+      {
+        id: 'email',
+        key: 'email',
+        label: 'Email',
+        hidden: false,
+        renderer: (value: UserFragment["email"], record) => {
+          return value ? <a href={`mailto:${value}`}>{value}&laquo;{record.username}&raquo;</a> : null
+        },
+      },
+    ];
   }
 }
 

@@ -3,6 +3,8 @@ import React, { useMemo } from 'react'
 import { TableCell, TableHead, TableRow } from 'material-ui/Table'
 import { TableHeaderProps } from './interfaces'
 
+export * from './interfaces'
+
 const EnhancedTableHead: React.FC<TableHeaderProps> = (props) => {
   const { columnData } = props
 
@@ -20,12 +22,12 @@ const EnhancedTableHead: React.FC<TableHeaderProps> = (props) => {
     return (
       <TableHead>
         <TableRow>
-          {columns.map((column) => {
+          {columns.map((column, index) => {
             const { id, key } = column
 
             return (
               <TableCell
-                key={key || id}
+                key={key ? key : id && typeof id === "string" ? id : index}
                 numeric={column.numeric}
                 padding={column.disablePadding ? 'none' : 'default'}
               >
@@ -34,7 +36,7 @@ const EnhancedTableHead: React.FC<TableHeaderProps> = (props) => {
             )
           }, this)}
         </TableRow>
-      </TableHead>
+      </TableHead >
     )
   }, [columnData])
 

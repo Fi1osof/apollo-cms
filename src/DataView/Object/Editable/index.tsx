@@ -20,6 +20,8 @@ import {
   saveResult,
 } from './interfaces'
 
+export * from './interfaces'
+
 const SaveIcon = (): JSX.Element => {
   return (
     <Save
@@ -33,7 +35,7 @@ const SaveIcon = (): JSX.Element => {
 export class EditableObject<
   P extends EditableObjectProps = EditableObjectProps,
   S extends EditableObjectState = EditableObjectState
-> extends PrismaCmsComponent<P, S> {
+  > extends PrismaCmsComponent<P, S> {
   // static propTypes = {
   //   ...View.propTypes,
 
@@ -86,9 +88,9 @@ export class EditableObject<
       _dirty:
         _dirty || cache
           ? {
-              ..._dirty,
-              ...cache,
-            }
+            ..._dirty,
+            ...cache,
+          }
           : undefined,
     })
   }
@@ -101,8 +103,8 @@ export class EditableObject<
     return cacheKey !== undefined
       ? cacheKey
       : id
-      ? `${cacheKeyPrefix}${id}`
-      : null
+        ? `${cacheKeyPrefix}${id}`
+        : null
   }
 
   setCache(data: Record<string, any> | null): boolean {
@@ -218,7 +220,7 @@ export class EditableObject<
   async mutate(props: EditableObjectMutateProps): Promise<saveResult> {
     const { loading } = this.state
 
-    const { client } = this.context
+    // const { client } = this.context
 
     if (loading) {
       return
@@ -283,9 +285,7 @@ export class EditableObject<
 
                     return reject(result)
                   } else {
-                    if (!client.queryManager.fetchQueryRejectFns.size) {
-                      await client.resetStore().catch(console.error)
-                    }
+                    await this.resetStore();
                   }
                 }
 
@@ -311,6 +311,28 @@ export class EditableObject<
         }
       )
     })
+  }
+
+  resetStore = async (): Promise<void> => {
+
+    const {
+      apiClientResetStore,
+    } = this.context;
+
+    if (apiClientResetStore) {
+      return apiClientResetStore.call(this);
+    }
+    else {
+
+      const {
+        client,
+      } = this.context;
+
+      if (!client.queryManager.fetchQueryRejectFns.size) {
+        await client.resetStore().catch(console.error)
+      }
+    }
+
   }
 
   getMutation(data: EditableObjectMutateProps): EditableObjectMutateProps {
@@ -413,7 +435,8 @@ export class EditableObject<
 
     const { errors } = this.state
 
-    const error = errors ? errors.find((n) => n.key === name) : ''
+    // const error = errors ? errors.find((n) => n.key === name) : ''
+    const error = errors ? errors.find((n) => n.name === name) : ''
 
     const helperTextMessage = (error && error.message) || helperText
 
@@ -425,8 +448,8 @@ export class EditableObject<
         style={
           fullWidth
             ? {
-                width: '100%',
-              }
+              width: '100%',
+            }
             : undefined
         }
         label={label ? this.lexicon(label) : label}
@@ -468,7 +491,7 @@ export class EditableObject<
     return this.getEditor(props)
   }
 
-  getObjectWithMutations(): Record<string, any> {
+  getObjectWithMutations(): Record<string, any> | null | undefined {
     const object = this.getObject()
 
     if (!object) {
@@ -581,7 +604,7 @@ export class EditableObject<
     this.forceUpdate()
   }
 
-  render(): JSX.Element | null {
+  render(): React.ReactNode  {
     const { loading } = this.props
 
     let output = null

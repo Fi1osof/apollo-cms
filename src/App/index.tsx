@@ -29,6 +29,8 @@ import {
 } from './interfaces'
 // import { HttpLink } from 'apollo-boost/lib/bundle.umd';
 
+export * from './interfaces'
+
 const globalAny: any = global
 
 // class ApolloCmsApp<P extends ApolloCmsAppProps = ApolloCmsAppProps, S extends ApolloCmsAppState = ApolloCmsAppState>

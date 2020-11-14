@@ -14,6 +14,7 @@ import {
   TableViewChoseColumnsState,
 } from './interfaces'
 
+export * from './interfaces'
 export class TableViewChoseColumns extends Component<
   TableViewChoseColumnsProps,
   TableViewChoseColumnsState

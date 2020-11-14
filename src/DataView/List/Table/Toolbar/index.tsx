@@ -14,6 +14,8 @@ import Grid from 'material-ui/Grid'
 import ChoseColumns from './ChoseColumns'
 import { ToolbarProps } from './interfaces'
 
+export * from './interfaces'
+
 const toolbarStyles = (theme: Theme) => ({
   root: {
     paddingRight: theme.spacing.unit,

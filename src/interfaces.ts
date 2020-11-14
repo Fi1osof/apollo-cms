@@ -1,3 +1,2 @@
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K]
-}
+
+export * from '@prisma-cms/component';

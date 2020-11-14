@@ -2,7 +2,8 @@
   "name": "apollo-cms",
   "version": "1.11.1",
   "description": "Apollo-client for prisma-cms",
-  "main": "lib/App",
+  "main": "./dist/App/index.js",
+  "types": "./dist/App/index.d.ts",
   "files": [
     "src",
     "css",
@@ -10,7 +11,8 @@
     "umd"
   ],
   "scripts": {
-    "build": "nwb build-react-component --copy-files",
+    "build": "tsc -p tsconfig.build.json",
+    "build_nwb": "nwb build-react-component --copy-files",
     "build-app": "react-scripts build",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "clean": "nwb clean-module && nwb clean-demo",

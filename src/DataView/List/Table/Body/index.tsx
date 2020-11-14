@@ -4,6 +4,8 @@ import React, { useMemo } from 'react'
 import { TableBody, TableCell, TableRow } from 'material-ui/Table'
 import { TBodyProps } from './interfaces'
 
+export * from './interfaces'
+
 const TBody: React.FC<TBodyProps> = (props) => {
   const { data, columnData } = props
 
@@ -20,12 +22,12 @@ const TBody: React.FC<TBodyProps> = (props) => {
 
     return (
       <TableBody>
-        {data.map((n) => {
+        {data.map((n, index) => {
           const { id } = n
 
           return (
-            <TableRow key={id} hover tabIndex={-1}>
-              {columns.map((record, index) => {
+            <TableRow key={id || index} hover tabIndex={-1}>
+              {columns.map((record, index2) => {
                 const {
                   id: fieldName,
                   key,
@@ -37,15 +39,15 @@ const TBody: React.FC<TBodyProps> = (props) => {
                   ...other
                 } = record
 
-                const value = n[fieldName]
+                const value = fieldName && typeof fieldName === "string" ? n[fieldName] : undefined;
 
                 return (
                   <TableCell
-                    key={key || index}
+                    key={key ? key : id && typeof id === "string" ? id : index2}
                     padding={disablePadding === true ? 'none' : padding}
                     {...other}
                   >
-                    {renderer ? renderer(value, n) : value || ''}
+                    {value !== undefined && renderer ? renderer(value, n) : (value || '')}
                   </TableCell>
                 )
               })}

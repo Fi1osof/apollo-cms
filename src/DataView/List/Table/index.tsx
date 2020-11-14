@@ -1,5 +1,6 @@
+/* eslint-disable no-console */
 import React from 'react'
-import PropTypes from 'prop-types'
+// import PropTypes from 'prop-types'
 import { withStyles, Theme } from 'material-ui/styles'
 
 import Paper from 'material-ui/Paper'
@@ -10,9 +11,11 @@ import Body from './Body'
 import { TBodyProps } from './Body/interfaces'
 
 import PrismaComponent from '@prisma-cms/component'
-import { TableViewProps, TableViewState } from './interfaces'
+import { ColumnConfig, TableViewProps, TableViewState } from './interfaces'
 import { ToolbarProps } from './Toolbar/interfaces'
 // import EnhancedTableHead from './Header'
+
+export * from './interfaces'
 
 export const styles = (theme: Theme): Record<string, any> => {
   return {
@@ -34,19 +37,19 @@ export const styles = (theme: Theme): Record<string, any> => {
 export class TableView<
   P extends TableViewProps = TableViewProps,
   S extends TableViewState = TableViewState
-> extends PrismaComponent<P, S> {
-  static propTypes = {
-    ...PrismaComponent.propTypes,
-    classes: PropTypes.object.isRequired,
-    columnData: PropTypes.array.isRequired,
-    data: PropTypes.object.isRequired,
-    title: PropTypes.string.isRequired,
+  > extends PrismaComponent<P, S> {
+  // static propTypes = {
+  //   ...PrismaComponent.propTypes,
+  //   classes: PropTypes.object.isRequired,
+  //   columnData: PropTypes.array.isRequired,
+  //   data: PropTypes.object.isRequired,
+  //   title: PropTypes.string.isRequired,
 
-    Header: PropTypes.func.isRequired,
-    Toolbar: PropTypes.func.isRequired,
-    Body: PropTypes.func.isRequired,
-    filters: PropTypes.array,
-  }
+  //   Header: PropTypes.func.isRequired,
+  //   Toolbar: PropTypes.func.isRequired,
+  //   Body: PropTypes.func.isRequired,
+  //   filters: PropTypes.array,
+  // }
 
   static defaultProps = {
     ...PrismaComponent.defaultProps,
@@ -68,8 +71,10 @@ export class TableView<
     }
   }
 
-  getColumns(): P['columnData'] {
-    return this.state.columnData || this.props.columnData || []
+  getColumns(): ColumnConfig[] | undefined {
+    return this.state.columnData
+      || this.props.columnData
+      || []
   }
 
   toggleColumnVisibility = (
@@ -117,25 +122,49 @@ export class TableView<
 
     const filters = this.renderFilters()
 
+    console.log("TableView props", { ...this.props });
+    console.log("TableView data", { ...data });
+
     if (!data) {
       return null
     }
 
-    const { objectsConnection, objects } = data
+
+    const objectsConnection = data.objectsConnection
+    const objects = data.objects
 
     const edges = objectsConnection?.edges
 
     // const count = objectsConnection?.aggregate?.count || 0;
 
-    const rows = (edges && edges.map((n) => n.node)) || objects || []
+    // const rows = (edges && edges.map((n) => n?.node)) || objects || []
+
+    let rows: any[] = [];
+
+    if (edges) {
+      edges.reduce<any[]>((curr, next) => {
+
+        if (next) {
+          curr.push(next.node);
+        }
+
+        return curr;
+      }, rows);
+    }
+    else if (objects) {
+      rows = objects;
+    }
+
+    console.log("TableView rows", [...rows]);
 
     // const rowCount = rows.length
 
-    return super.render(
+    return <>
+      {super.render()}
       <Paper
         className={[
-          classes.root,
-          loading ? classes.loading : '',
+          classes?.root,
+          loading ? classes?.loading : '',
           className,
         ].join(' ')}
       >
@@ -148,8 +177,8 @@ export class TableView<
           toggleColumnVisibility={this.toggleColumnVisibility}
         />
 
-        <div className={classes.tableWrapper}>
-          <table className={classes.table}>
+        <div className={classes?.tableWrapper}>
+          <table className={classes?.table}>
             <Header
               // numSelected={selected.length}
               // onSelectAllClick={this.handleSelectAllClick}
@@ -168,7 +197,7 @@ export class TableView<
           </table>
         </div>
       </Paper>
-    )
+    </>
   }
 }
 

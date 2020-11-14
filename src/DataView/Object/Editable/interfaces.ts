@@ -1,9 +1,10 @@
 import {
   PrismaCmsComponentProps,
+  PrismaCmsComponentPropsData,
   PrismaCmsComponentState,
 } from '@prisma-cms/component'
 // import { ApolloQueryResult } from 'apollo-client';
-import { QueryResult } from 'react-apollo'
+// import { QueryResult } from 'react-apollo'
 
 export interface ProcessorResponse {
   response?: {
@@ -13,24 +14,33 @@ export interface ProcessorResponse {
       key: string
       message: string
     }>
-    data: EditableObjectPropsDataObject
+    data: PrismaCmsComponentPropsData
   }
 }
 
 // export type saveResult = Record<string, any> | boolean | null | number | undefined | Error;
 
-export type saveResult = QueryResult<ProcessorResponse> | undefined | Error
+export type saveResult = {
+  data?: ProcessorResponse | undefined | null
+} | undefined | Error
 
 export type EditableObject_Dirty = Record<string, any> | null
 
-export type EditableObjectPropsDataObject = Record<string, any> | null
+// export type EditableObjectPropsDataObject = Record<string, any> | null
 
-export interface EditableObjectPropsData {
-  object?: EditableObjectPropsDataObject
-  data?: {
-    object?: EditableObjectPropsDataObject
-  }
-}
+// export interface EditableObjectPropsData {
+//   object?: EditableObjectPropsDataObject
+//   data?: {
+//     object?: EditableObjectPropsDataObject
+//   }
+// }
+
+// export interface EditableObjectPropsData {
+//   // object: EditableObjectPropsDataObject | null | undefined
+//   // data?: {
+//   //   object?: EditableObjectPropsDataObject
+//   // }
+// }
 
 // export interface EditableObjectMutationResult extends ApolloQueryResult<{ object?: EditableObjectPropsDataObject }> {
 // }
@@ -38,9 +48,10 @@ export interface EditableObjectPropsData {
 export interface EditableObjectProps extends PrismaCmsComponentProps {
   loading?: boolean
 
-  data: EditableObjectPropsData
+  // data: EditableObjectPropsData
+  // object?: EditableObjectPropsDataObject
 
-  mutate?(arg0: any): Promise<saveResult>
+  mutate?(arg0: any): Promise<saveResult | Record<string, any>>
   // mutation: MutationFn<saveResult>;
 
   /**
@@ -54,7 +65,7 @@ export interface EditableObjectProps extends PrismaCmsComponentProps {
 
   cacheKeyPrefix?: string
 
-  onSave(result: saveResult): void
+  onSave? (result: saveResult): void
 
   ResetIcon?: React.ElementType
   SaveIcon?: React.ElementType
