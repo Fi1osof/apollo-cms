@@ -70,6 +70,7 @@ export class TableView<
     }
   }
 
+  // TODO get type front array
   getColumns(): ColumnConfig[] | undefined {
     return this.state.columnData || this.props.columnData || []
   }
@@ -100,7 +101,8 @@ export class TableView<
 
     const {
       classes,
-      data,
+      // data,
+      objects,
       title,
       // Header,
       // Toolbar,
@@ -119,32 +121,32 @@ export class TableView<
 
     const filters = this.renderFilters()
 
-    if (!data) {
-      return null
-    }
+    // if (!data) {
+    //   return null
+    // }
 
-    const objectsConnection = data.objectsConnection
-    const objects = data.objects
+    // const objectsConnection = data.objectsConnection
+    // const objects = data.objects
 
-    const edges = objectsConnection?.edges
+    // const edges = objectsConnection?.edges
 
     // const count = objectsConnection?.aggregate?.count || 0;
 
     // const rows = (edges && edges.map((n) => n?.node)) || objects || []
 
-    let rows: any[] = []
+    // let rows: any[] = []
 
-    if (edges) {
-      edges.reduce<any[]>((curr, next) => {
-        if (next) {
-          curr.push(next.node)
-        }
+    // if (edges) {
+    //   edges.reduce<any[]>((curr, next) => {
+    //     if (next) {
+    //       curr.push(next.node)
+    //     }
 
-        return curr
-      }, rows)
-    } else if (objects) {
-      rows = objects
-    }
+    //     return curr
+    //   }, rows)
+    // } else if (objects) {
+    //   rows = objects
+    // }
 
     // const rowCount = rows.length
 
@@ -178,7 +180,7 @@ export class TableView<
               />
 
               <Body
-                data={rows}
+                data={objects}
                 // isSelected={this.isSelected}
                 // handleClick={this.handleClick}
                 // onRowSelect={this.onRowSelect}

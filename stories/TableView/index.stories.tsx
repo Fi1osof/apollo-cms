@@ -214,7 +214,7 @@ export const TableView: React.FC<TableViewProps> = (props) => {
 }
 
 const args: Partial<TableViewProps> = {
-  data,
+  objects: data.objects,
   title: 'Test TableView',
 }
 

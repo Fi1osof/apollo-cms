@@ -196,8 +196,6 @@ export class EditableObject<
 
     return await this.saveObject(_dirty)
       .then((result: EditableObjectSaveResult) => {
-        // console.log("Save result", result);
-
         if (result && !(result instanceof Error)) {
           this.clearCache()
 
@@ -593,7 +591,7 @@ export class EditableObject<
     return this.getObjectWithMutations()?.name
   }
 
-  renderHeader(): JSX.Element {
+  renderHeader(): React.ReactNode {
     return (
       <Typography variant="title">
         {this.getTitle()}

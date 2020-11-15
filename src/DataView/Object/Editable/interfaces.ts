@@ -91,7 +91,7 @@ export interface EditableObjectState extends PrismaCmsComponentState {
 export type EditableObjectMutateProps = EditableObjectProps['_dirty']
 
 // export interface EditableObjectEditorProps extends Record<string, any> {
-export interface EditableObjectEditorProps {
+export interface EditableObjectEditorProps extends Record<string, any> {
   Editor?: React.ElementType
 
   name: string
@@ -105,4 +105,8 @@ export interface EditableObjectEditorProps {
   label?: string
 
   autoComplete?: 'on' | 'off'
+
+  type?: 'text' | 'number' | 'date' | 'time'
+
+  value?: any
 }

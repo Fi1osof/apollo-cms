@@ -58,20 +58,22 @@ interface Variables extends Record<string, any> {
 
 // export interface TableViewPropsData extends PrismaCmsComponentPropsData {
 
-export interface TableViewPropsData {
-  objectsConnection?: {
-    edges: Array<{ node: Record<string, any> } | null>
-    aggregate: {
-      count: number
-    }
-  }
-  objects?: Record<string, any>[]
-}
+// export interface TableViewPropsData {
+//   objectsConnection?: {
+//     edges: Array<{ node: Record<string, any> } | null>
+//     aggregate: {
+//       count: number
+//     }
+//   }
+//   objects?: Record<string, any>[]
+// }
 
 export interface TableViewProps extends PrismaCmsComponentProps {
   columnData?: ColumnConfig[]
 
-  data: TableViewPropsData | null | undefined
+  // data: TableViewPropsData | null | undefined
+  objects: Record<string, any>[]
+
   // data: {
   //   objectsConnection?: {
   //     edges: Array<{node: Record<string, any>} | null>
