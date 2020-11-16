@@ -18,7 +18,7 @@
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "preversion": "yarn test",
-    "postversion": "npm publish",
+    "postversion": "yarn run npm publish",
     "postpublish": "git push origin --all; git push origin --tags"
   },
   "husky": {
@@ -72,6 +72,7 @@
     "jest-watch-typeahead": "^0.5.0",
     "lint-staged": "^10.5.1",
     "next": "^10.0.1",
+    "npm": "^6.14.8",
     "prettier": "^2.1.2",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
@@ -94,6 +95,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
   },
   "homepage": "https://github.com/Fi1osof/apollo-cms#readme",
   "license": "MIT",
