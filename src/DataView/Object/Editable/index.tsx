@@ -25,7 +25,7 @@ import {
 
 export * from './interfaces'
 
-const SaveIcon = (): JSX.Element => {
+const SaveIcon: React.ComponentType = () => {
   return (
     <Save
       style={{

@@ -75,9 +75,9 @@ export interface EditableObjectProps extends PrismaCmsComponentProps {
 
   onSave?(result: EditableObjectSaveResult): void
 
-  ResetIcon?: React.ElementType
-  SaveIcon?: React.ElementType
-  EditIcon?: React.ElementType
+  ResetIcon?: React.ComponentType
+  SaveIcon?: React.ComponentType
+  EditIcon?: React.ComponentType
 }
 
 export interface EditableObjectState extends PrismaCmsComponentState {
