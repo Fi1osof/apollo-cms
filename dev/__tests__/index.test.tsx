@@ -25,7 +25,7 @@ describe('Component', () => {
   })
 
   it('Render styled', () => {
-    const tree = render(<ComponentStyled />)
+    const tree = render(<ComponentStyled object={null} />)
     const node = tree.container.children[0]
     expect(tree.container).toMatchSnapshot()
     expect(node).toMatchSnapshot()

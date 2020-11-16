@@ -46,7 +46,7 @@ const TBody: React.FC<TBodyProps> = (props) => {
 
                 return (
                   <TableCell
-                    key={key ? key : id && typeof id === 'string' ? id : index2}
+                    key={key || index2}
                     padding={disablePadding === true ? 'none' : padding}
                     {...other}
                   >
