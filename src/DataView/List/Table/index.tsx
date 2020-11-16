@@ -9,7 +9,7 @@ import Toolbar from './Toolbar'
 import Body from './Body'
 import { TBodyProps } from './Body/interfaces'
 
-import PrismaComponent from '@prisma-cms/component'
+import PrismaCmsComponent from '@prisma-cms/component'
 import { ColumnConfig, TableViewProps, TableViewState } from './interfaces'
 import { ToolbarProps } from './Toolbar/interfaces'
 // import EnhancedTableHead from './Header'
@@ -36,9 +36,9 @@ export const styles = (theme: Theme): Record<string, any> => {
 export class TableView<
   P extends TableViewProps = TableViewProps,
   S extends TableViewState = TableViewState
-> extends PrismaComponent<P, S> {
+> extends PrismaCmsComponent<P, S> {
   // static propTypes = {
-  //   ...PrismaComponent.propTypes,
+  //   ...PrismaCmsComponent.propTypes,
   //   classes: PropTypes.object.isRequired,
   //   columnData: PropTypes.array.isRequired,
   //   data: PropTypes.object.isRequired,
@@ -51,7 +51,7 @@ export class TableView<
   // }
 
   static defaultProps = {
-    ...PrismaComponent.defaultProps,
+    ...PrismaCmsComponent.defaultProps,
     Header: TableHeader,
     Toolbar,
     Body,

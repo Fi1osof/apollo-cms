@@ -23,7 +23,7 @@ import {
 import Grid from 'material-ui/Grid'
 import PrismaCmsContext from '@prisma-cms/context'
 
-const title = 'Editable Object'
+const title = 'apollo-cms/EditableObject'
 
 interface EditableObjectStoryProps extends EditableObjectProps {
   canEdit: boolean

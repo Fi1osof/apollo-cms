@@ -24,7 +24,7 @@ import { styles, TableView as Component } from 'src/DataView/List/Table'
 import withStyles from 'material-ui/styles/withStyles'
 import { ColumnConfig, TableViewProps } from 'src/DataView/List/Table'
 
-const title = 'TableView'
+const title = 'apollo-cms/TableView'
 
 const edges = [
   {
