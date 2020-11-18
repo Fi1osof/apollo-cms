@@ -38,7 +38,7 @@ const SaveIcon: React.ComponentType = () => {
 export class EditableObject<
   P extends EditableObjectProps = EditableObjectProps,
   S extends EditableObjectState = EditableObjectState
-> extends PrismaCmsComponent<P, S> {
+  > extends PrismaCmsComponent<P, S> {
   // static propTypes = {
   //   ...View.propTypes,
 
@@ -65,6 +65,7 @@ export class EditableObject<
   constructor(props: P) {
     super(props)
 
+    this.getMutation = this.getMutation.bind(this)
     this.save = this.save.bind(this)
     this.startEdit = this.startEdit.bind(this)
 
@@ -96,9 +97,9 @@ export class EditableObject<
       _dirty:
         _dirty || cache
           ? {
-              ..._dirty,
-              ...cache,
-            }
+            ..._dirty,
+            ...cache,
+          }
           : undefined,
     })
   }
@@ -111,8 +112,8 @@ export class EditableObject<
     return cacheKey !== undefined
       ? cacheKey
       : id
-      ? `${cacheKeyPrefix}${id}`
-      : null
+        ? `${cacheKeyPrefix}${id}`
+        : null
   }
 
   setCache(data: Record<string, any> | null): boolean {
@@ -177,15 +178,19 @@ export class EditableObject<
   }
 
   onSave = (result: EditableObjectSaveResult): (() => void) => {
-    let callback = () => undefined
+    // let callback = () => undefined
 
     const { onSave } = this.props
 
-    if (onSave) {
-      callback = () => {
+    const callback = async () => {
+
+      await this.resetStore()
+
+      if (onSave) {
         onSave(result)
-        return undefined
       }
+
+      return undefined
     }
 
     return callback
@@ -312,9 +317,10 @@ export class EditableObject<
                     this.addError(message || 'Request error')
 
                     return reject(result)
-                  } else {
-                    await this.resetStore()
                   }
+                  // else {
+                  //   await this.resetStore()
+                  // }
                 }
 
                 return result
@@ -468,8 +474,8 @@ export class EditableObject<
         style={
           fullWidth
             ? {
-                width: '100%',
-              }
+              width: '100%',
+            }
             : undefined
         }
         label={label ? this.lexicon(label) : label}
@@ -512,12 +518,13 @@ export class EditableObject<
   }
 
   // TODO add generic
+  // getObjectWithMutations(): Partial<P["object"]> | null | undefined {
   getObjectWithMutations() {
     const object = this.getObject()
 
-    if (!object) {
-      return object
-    }
+    // if (!object) {
+    //   return object
+    // }
 
     const { _dirty } = this.state
 
@@ -626,7 +633,8 @@ export class EditableObject<
 
     let output = null
 
-    const object = this.getObject()
+    // const object = this.getObject()
+    const object = this.getObjectWithMutations()
 
     if (!object) {
       if (loading) {
