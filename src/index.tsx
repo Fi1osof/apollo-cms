@@ -1,2 +1,2 @@
-export * from 'src/DataView/List/Table'
-export * from 'src/DataView/Object/Editable'
+export * from './DataView/List/Table'
+export * from './DataView/Object/Editable'

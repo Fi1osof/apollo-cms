@@ -8,8 +8,6 @@ import TBody from './Body'
 import EnhancedTableHead from './Header'
 import { EnhancedTableToolbar } from './Toolbar'
 
-// import { Exact, Maybe } from 'src/modules/gql/generated'
-
 // export type Column<P extends Record<string, any> = Record<string, any>> = {
 export type Column<P> = {
   /**

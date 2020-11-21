@@ -65,9 +65,15 @@ export class EditableObject<
   constructor(props: P) {
     super(props)
 
+    this.getObjectWithMutations = this.getObjectWithMutations.bind(this)
     this.getMutation = this.getMutation.bind(this)
     this.save = this.save.bind(this)
+    this.mutate = this.mutate.bind(this)
     this.startEdit = this.startEdit.bind(this)
+    this.updateObject = this.updateObject.bind(this)
+    this.getEditor = this.getEditor.bind(this)
+    this.inEditMode = this.inEditMode.bind(this)
+    this.getButtons = this.getButtons.bind(this)
 
     this.state = {
       ...this.state,
@@ -440,7 +446,7 @@ export class EditableObject<
     })
   }
 
-  getEditor(props: EditableObjectEditorProps): JSX.Element | null {
+  getEditor(props: EditableObjectEditorProps): React.ReactNode {
     const {
       Editor = TextField,
       name,
@@ -508,7 +514,7 @@ export class EditableObject<
 
   getTextField(
     props: EditableObjectEditorProps = { name: '', Editor: TextField }
-  ): JSX.Element | null {
+  ): React.ReactNode {
     props = {
       Editor: TextField,
       autoComplete: 'off',
@@ -537,7 +543,7 @@ export class EditableObject<
     }
   }
 
-  getButtons(): Array<JSX.Element | null> | null {
+  getButtons(): Array<React.ReactNode> {
     const inEditMode = this.inEditMode()
 
     const isDirty = this.isDirty()
@@ -556,10 +562,10 @@ export class EditableObject<
       }
     }
 
-    return buttons && buttons.length ? buttons : null
+    return buttons
   }
 
-  renderResetButton(): JSX.Element | null {
+  renderResetButton(): React.ReactNode {
     const ResetIcon = this.props.ResetIcon as
       | React.ElementType
       | null
@@ -572,7 +578,7 @@ export class EditableObject<
     ) : null
   }
 
-  renderSaveButton(): JSX.Element | null {
+  renderSaveButton(): React.ReactNode {
     const SaveIcon = this.props.SaveIcon as React.ElementType | null | undefined
 
     const { loading } = this.state
@@ -584,7 +590,7 @@ export class EditableObject<
     )
   }
 
-  renderEditButton(): JSX.Element | null {
+  renderEditButton(): React.ReactNode {
     const EditIcon = this.props.EditIcon as React.ElementType | null | undefined
 
     return EditIcon ? (
@@ -608,15 +614,15 @@ export class EditableObject<
     )
   }
 
-  renderEmpty(): JSX.Element | null {
+  renderEmpty(): React.ReactNode {
     return null
   }
 
-  renderDefaultView(): JSX.Element | null {
+  renderDefaultView(): React.ReactNode {
     return null
   }
 
-  renderEditableView(): JSX.Element | null {
+  renderEditableView(): React.ReactNode {
     return null
   }
 
@@ -627,6 +633,31 @@ export class EditableObject<
 
     this.forceUpdate()
   }
+
+
+  // TODO: Move in @prisma-cms/component with checking _dirty
+  canEdit() {
+    const object = this.getObjectWithMutations() ?? null
+
+    if (object) {
+      const { id: objectId, CreatedBy } = object
+
+      const { id: currentUserId, sudo } = this.getCurrentUser() || {}
+
+      const { id: createdById } = CreatedBy || {}
+
+      if (objectId) {
+        if (sudo || (createdById && createdById === currentUserId)) {
+          return true
+        }
+      } else {
+        return true
+      }
+    }
+
+    return false
+  }
+
 
   render(): React.ReactNode {
     const { loading } = this.props
