@@ -15,11 +15,10 @@ import {
 import {
   EditableObject,
   EditableObjectProps,
-  EditableObjectMutateProps,
   EditableObjectSaveResult,
   EditableObjectProcessorResponse,
   EditableObjectPropsDataObject,
-} from 'src'
+} from '../../src'
 import Grid from 'material-ui/Grid'
 import PrismaCmsContext from '@prisma-cms/context'
 
@@ -60,7 +59,7 @@ const testObject: EditableObjectPropsDataObject = {
 export const Component: React.FC<EditableObjectStoryProps> = (props) => {
   const [object, setObject] = useState(testObject)
 
-  const mutate = useCallback(async (props: EditableObjectMutateProps): Promise<
+  const mutate = useCallback(async (props: EditableObjectProps["_dirty"]): Promise<
     EditableObjectSaveResult
   > => {
     action('mutate props')(props)
@@ -76,7 +75,7 @@ export const Component: React.FC<EditableObjectStoryProps> = (props) => {
 
     if (!object.name) {
       response.errors.push({
-        key: 'name',
+        key: 'name',  
         message: 'Cannot be empty',
       })
     } else {

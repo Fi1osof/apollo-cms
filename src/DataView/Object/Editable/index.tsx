@@ -16,7 +16,7 @@ import PrismaCmsComponent, {
 } from '@prisma-cms/component'
 import {
   EditableObjectEditorProps,
-  EditableObjectMutateProps,
+  // EditableObjectMutateProps,
   EditableObjectProps,
   EditableObjectState,
   EditableObjectSaveResult,
@@ -68,9 +68,7 @@ export class EditableObject<
     this.getObjectWithMutations = this.getObjectWithMutations.bind(this)
     this.getMutation = this.getMutation.bind(this)
     this.save = this.save.bind(this)
-    this.mutate = this.mutate.bind(this)
     this.startEdit = this.startEdit.bind(this)
-    this.updateObject = this.updateObject.bind(this)
     this.getEditor = this.getEditor.bind(this)
     this.inEditMode = this.inEditMode.bind(this)
     this.getButtons = this.getButtons.bind(this)
@@ -235,7 +233,7 @@ export class EditableObject<
   }
 
   async mutate(
-    props: EditableObjectMutateProps
+    props: P["_dirty"]
   ): Promise<EditableObjectSaveResult> {
     const { loading } = this.state
 
@@ -367,7 +365,7 @@ export class EditableObject<
     }
   }
 
-  getMutation(data: EditableObjectMutateProps): EditableObjectMutateProps {
+  getMutation(data: P["_dirty"]) {
     const variables = this.getMutationVariables(data)
 
     return {
@@ -376,8 +374,11 @@ export class EditableObject<
   }
 
   getMutationVariables(
-    data: EditableObjectMutateProps
-  ): EditableObjectMutateProps {
+    data: P["_dirty"]
+  ): {
+    where?: { id: string }
+    data: P["_dirty"]
+  } {
     const object = this.getObjectWithMutations()
 
     const id = object?.id
@@ -396,18 +397,55 @@ export class EditableObject<
     })
   }
 
-  resetEdit = (): Promise<void> => {
-    return new Promise((resolve) => {
-      this.clearCache()
+  // resetEdit = (): Promise<void> => {
+  //   return new Promise((resolve) => {
+  //     this.clearCache()
 
-      this.setState(
-        {
-          inEditMode: false,
-          _dirty: null,
-        },
-        resolve
-      )
-    })
+  //     this.setState(
+  //       {
+  //         inEditMode: false,
+  //         _dirty: null,
+  //       },
+  //       () => {
+
+  //         resolve();
+  //       }
+  //     )
+  //   })
+  // }
+
+  // resetEdit = (): Promise<void> => {
+  //   return new Promise((resolve) => {
+  //     this.clearCache()
+
+  //     this.setState(
+  //       {
+  //         inEditMode: false,
+  //         _dirty: null,
+  //       },
+  //       () => {
+
+  //         resolve();
+  //       }
+  //     )
+  //   })
+  // }
+
+  resetEdit = () => {
+    // this.clearCache()
+
+    this.updateObject(null);
+
+    // this.setState(
+    //   {
+    //     inEditMode: false,
+    //     _dirty: null,
+    //   },
+    //   () => {
+
+    //     resolve();
+    //   }
+    // )
   }
 
   inEditMode(): boolean {
@@ -420,31 +458,67 @@ export class EditableObject<
     return this.state._dirty ? true : false
   }
 
-  updateObject(data: P['_dirty']): void {
-    const { _dirty = {} } = this.state
+  // updateObject(data: P['_dirty']): void {
+  //   const { _dirty = {} } = this.state
 
-    const localStorage = this.getStorage()
+  //   const localStorage = this.getStorage()
 
-    const newData = Object.assign({ ..._dirty }, data)
+  //   const newData = Object.assign({ ..._dirty }, data)
 
-    const key = this.getCacheKey()
+  //   const key = this.getCacheKey()
 
-    if (key && newData && localStorage) {
-      localStorage.setItem(this.getCacheKey(), JSON.stringify(newData))
+  //   if (key && newData && localStorage) {
+  //     localStorage.setItem(this.getCacheKey(), JSON.stringify(newData))
+  //   }
+
+  //   /**
+  //    * Переделал, так как ТС ругался на ридонли,
+  //    * но надо будет понаблюдать. Ранее так делалось, чтобы получить изменения
+  //    * в стейте сразу же. Вероятно надо будет как-то вернуть.
+  //    */
+  //   // this.state._dirty = newData
+  //   // this.forceUpdate()
+
+  //   this.setState({
+  //     _dirty: newData,
+  //   })
+  // }
+
+  prepareDirty(data: P['_dirty']) {
+
+    const newDirty = super.prepareDirty(data);
+
+
+    return newDirty;
+  }
+
+
+  prepareNewState(state: {
+    _dirty: P["_dirty"]
+  }) {
+
+    // TODO Fix types
+    const newState = super.prepareNewState(state) as S;
+
+    if (state._dirty) {
+
+      const key = this.getCacheKey()
+      const localStorage = this.getStorage()
+
+      if (key && localStorage) {
+        localStorage.setItem(this.getCacheKey(), JSON.stringify(state._dirty))
+      }
+
+    }
+    else {
+      newState.inEditMode = false;
+      this.clearCache()
     }
 
-    /**
-     * Переделал, так как ТС ругался на ридонли,
-     * но надо будет понаблюдать. Ранее так делалось, чтобы получить изменения
-     * в стейте сразу же. Вероятно надо будет как-то вернуть.
-     */
-    // this.state._dirty = newData
-    // this.forceUpdate()
-
-    this.setState({
-      _dirty: newData,
-    })
+    return newState;
   }
+
+
 
   getEditor(props: EditableObjectEditorProps): React.ReactNode {
     const {
@@ -543,7 +617,7 @@ export class EditableObject<
     }
   }
 
-  getButtons(): Array<React.ReactNode> {
+  getButtons(): Array<React.ReactNode> | React.ReactNode {
     const inEditMode = this.inEditMode()
 
     const isDirty = this.isDirty()
@@ -562,7 +636,7 @@ export class EditableObject<
       }
     }
 
-    return buttons
+    return buttons && buttons.length ? buttons : null
   }
 
   renderResetButton(): React.ReactNode {

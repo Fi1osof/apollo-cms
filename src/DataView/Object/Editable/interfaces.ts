@@ -29,7 +29,7 @@ export type EditableObjectSaveResult =
   | undefined
   | Error
 
-export type EditableObject_Dirty = Record<string, any> | null
+// export type EditableObject_Dirty = Record<string, any> | null
 
 // export type EditableObjectPropsDataObject = Record<string, any> | null
 
@@ -67,7 +67,7 @@ export interface EditableObjectProps extends PrismaCmsComponentProps {
    */
   mutation?: Record<string, any>
 
-  _dirty?: EditableObject_Dirty
+  // _dirty?: EditableObject_Dirty
 
   cacheKey?: string
 
@@ -81,14 +81,14 @@ export interface EditableObjectProps extends PrismaCmsComponentProps {
 }
 
 export interface EditableObjectState extends PrismaCmsComponentState {
-  _dirty: EditableObject_Dirty
+  // _dirty: EditableObjectProps[""]
 
   inEditMode: boolean
 
   loading: boolean
 }
 
-export type EditableObjectMutateProps = EditableObjectProps['_dirty']
+// export type EditableObjectMutateProps = EditableObjectProps['_dirty']
 
 // export interface EditableObjectEditorProps extends Record<string, any> {
 export interface EditableObjectEditorProps extends Record<string, any> {

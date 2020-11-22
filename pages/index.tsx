@@ -1,6 +1,6 @@
 import React from 'react'
 import Head from 'next/head'
-import EditableObject from 'src/DataView/Object/Editable'
+import EditableObject from '../src/DataView/Object/Editable'
 
 const MainPage: React.FC = (props) => {
   return (

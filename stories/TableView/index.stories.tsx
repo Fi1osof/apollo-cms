@@ -19,10 +19,10 @@ import TextField from 'material-ui/TextField'
 import Checkbox from 'material-ui/Checkbox'
 import Button from 'material-ui/Button'
 
-import { styles, TableView as Component } from 'src/DataView/List/Table'
+import { styles, TableView as Component } from '../../src/DataView/List/Table'
 
 import withStyles from 'material-ui/styles/withStyles'
-import { ColumnConfig, TableViewProps } from 'src/DataView/List/Table'
+import { ColumnConfig, TableViewProps } from '../../src/DataView/List/Table'
 
 const title = 'apollo-cms/TableView'
 
