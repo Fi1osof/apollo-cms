@@ -21,6 +21,7 @@ import {
 } from '../../src'
 import Grid from 'material-ui/Grid'
 import PrismaCmsContext from '@prisma-cms/context'
+import { useApolloClient } from '@apollo/client'
 
 const title = 'apollo-cms/EditableObject'
 
@@ -59,6 +60,8 @@ const testObject: EditableObjectPropsDataObject = {
 export const Component: React.FC<EditableObjectStoryProps> = (props) => {
   const [object, setObject] = useState(testObject)
 
+  const client = useApolloClient();
+
   const mutate = useCallback(async (props: EditableObjectProps["_dirty"]): Promise<
     EditableObjectSaveResult
   > => {
@@ -75,7 +78,7 @@ export const Component: React.FC<EditableObjectStoryProps> = (props) => {
 
     if (!object.name) {
       response.errors.push({
-        key: 'name',  
+        key: 'name',
         message: 'Cannot be empty',
       })
     } else {
@@ -115,8 +118,9 @@ export const Component: React.FC<EditableObjectStoryProps> = (props) => {
       apiClientResetStore: () => {
         action('apiClientResetStore')(true)
       },
+      client,
     }
-  }, [])
+  }, [client])
 
   return (
     <PrismaCmsContext.Provider value={context}>

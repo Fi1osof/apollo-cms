@@ -359,7 +359,8 @@ export class EditableObject<
     } else {
       const { client } = this.context
 
-      if (!client.queryManager.fetchQueryRejectFns.size) {
+      // if (!client.queryManager.fetchQueryRejectFns.size) {
+      if (!client['queryManager'].fetchCancelFns.size) {
         await client.resetStore().catch(console.error)
       }
     }
