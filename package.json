@@ -37,7 +37,9 @@
     "@prisma-cms/component": "^2.0.0",
     "@prisma-cms/context": "^2.0.2",
     "material-ui": "1.0.0-beta.43",
-    "material-ui-icons": "^1.0.0-beta.17"
+    "material-ui-icons": "^1.0.0-beta.17",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
   },
   "devDependencies": {
     "@apollo/client": "^3.3.4",
@@ -75,8 +77,6 @@
     "next": "^10.0.1",
     "npm": "^6.14.8",
     "prettier": "^2.1.2",
-    "react": "^16.14.0",
-    "react-dom": "^16.14.0",
     "rimraf": "^3.0.2",
     "styled-components": "^5.2.1",
     "ts-jest": "^26.4.3",

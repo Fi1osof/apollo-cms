@@ -38,7 +38,7 @@ const SaveIcon: React.ComponentType = () => {
 export class EditableObject<
   P extends EditableObjectProps = EditableObjectProps,
   S extends EditableObjectState = EditableObjectState
-  > extends PrismaCmsComponent<P, S> {
+> extends PrismaCmsComponent<P, S> {
   // static propTypes = {
   //   ...View.propTypes,
 
@@ -101,9 +101,9 @@ export class EditableObject<
       _dirty:
         _dirty || cache
           ? {
-            ..._dirty,
-            ...cache,
-          }
+              ..._dirty,
+              ...cache,
+            }
           : undefined,
     })
   }
@@ -116,8 +116,8 @@ export class EditableObject<
     return cacheKey !== undefined
       ? cacheKey
       : id
-        ? `${cacheKeyPrefix}${id}`
-        : null
+      ? `${cacheKeyPrefix}${id}`
+      : null
   }
 
   setCache(data: Record<string, any> | null): boolean {
@@ -187,7 +187,6 @@ export class EditableObject<
     const { onSave } = this.props
 
     const callback = async () => {
-
       await this.resetStore()
 
       if (onSave) {
@@ -232,9 +231,7 @@ export class EditableObject<
     return this.mutate(options)
   }
 
-  async mutate(
-    props: P["_dirty"]
-  ): Promise<EditableObjectSaveResult> {
+  async mutate(props: Record<string, any>): Promise<EditableObjectSaveResult> {
     const { loading } = this.state
 
     // const { client } = this.context
@@ -366,7 +363,7 @@ export class EditableObject<
     }
   }
 
-  getMutation(data: P["_dirty"]) {
+  getMutation(data: P['_dirty']) {
     const variables = this.getMutationVariables(data)
 
     return {
@@ -375,10 +372,10 @@ export class EditableObject<
   }
 
   getMutationVariables(
-    data: P["_dirty"]
+    data: P['_dirty']
   ): {
     where?: { id: string }
-    data: P["_dirty"]
+    data: P['_dirty']
   } {
     const object = this.getObjectWithMutations()
 
@@ -435,7 +432,7 @@ export class EditableObject<
   resetEdit = () => {
     // this.clearCache()
 
-    this.updateObject(null);
+    this.updateObject(null)
 
     // this.setState(
     //   {
@@ -486,40 +483,40 @@ export class EditableObject<
   // }
 
   prepareDirty(data: P['_dirty']) {
+    const newDirty = super.prepareDirty(data)
 
-    const newDirty = super.prepareDirty(data);
-
-
-    return newDirty;
+    return newDirty
   }
 
+  // prepareNewState(state: {
+  //   _dirty: P["_dirty"]
+  // }) {
 
-  prepareNewState(state: {
-    _dirty: P["_dirty"]
-  }) {
-
+  prepareNewState<K extends keyof S>(
+    state: Pick<S, K> | S | null
+  ): Pick<S, K> | S | null {
     // TODO Fix types
-    const newState = super.prepareNewState(state) as S;
+    const newState = super.prepareNewState(state) as S | null
 
-    if (state._dirty) {
+    if (newState) {
+      if (newState._dirty) {
+        const key = this.getCacheKey()
+        const localStorage = this.getStorage()
 
-      const key = this.getCacheKey()
-      const localStorage = this.getStorage()
-
-      if (key && localStorage) {
-        localStorage.setItem(this.getCacheKey(), JSON.stringify(state._dirty))
+        if (key && localStorage) {
+          localStorage.setItem(
+            this.getCacheKey(),
+            JSON.stringify(newState._dirty)
+          )
+        }
+      } else {
+        newState.inEditMode = false
+        this.clearCache()
       }
-
-    }
-    else {
-      newState.inEditMode = false;
-      this.clearCache()
     }
 
-    return newState;
+    return newState
   }
-
-
 
   getEditor(props: EditableObjectEditorProps): React.ReactNode {
     const {
@@ -555,8 +552,8 @@ export class EditableObject<
         style={
           fullWidth
             ? {
-              width: '100%',
-            }
+                width: '100%',
+              }
             : undefined
         }
         label={label ? this.lexicon(label) : label}
@@ -600,7 +597,7 @@ export class EditableObject<
 
   // TODO add generic
   // getObjectWithMutations(): Partial<P["object"]> | null | undefined {
-  getObjectWithMutations() {
+  getObjectWithMutations(): P['object'] | undefined {
     const object = this.getObject()
 
     // if (!object) {
@@ -709,7 +706,6 @@ export class EditableObject<
     this.forceUpdate()
   }
 
-
   // TODO: Move in @prisma-cms/component with checking _dirty
   canEdit() {
     const object = this.getObjectWithMutations() ?? null
@@ -732,7 +728,6 @@ export class EditableObject<
 
     return false
   }
-
 
   render(): React.ReactNode {
     const { loading } = this.props

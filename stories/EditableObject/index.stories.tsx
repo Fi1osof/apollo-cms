@@ -60,40 +60,43 @@ const testObject: EditableObjectPropsDataObject = {
 export const Component: React.FC<EditableObjectStoryProps> = (props) => {
   const [object, setObject] = useState(testObject)
 
-  const client = useApolloClient();
+  const client = useApolloClient()
 
-  const mutate = useCallback(async (props: EditableObjectProps["_dirty"]): Promise<
-    EditableObjectSaveResult
-  > => {
-    action('mutate props')(props)
+  const mutate = useCallback(
+    async (
+      props: EditableObjectProps['_dirty']
+    ): Promise<EditableObjectSaveResult> => {
+      action('mutate props')(props)
 
-    const object = props?.variables.data
+      const object = props?.variables.data
 
-    const response: EditableObjectProcessorResponse['response'] = {
-      success: false,
-      message: '',
-      errors: [],
-      data: null,
-    }
+      const response: EditableObjectProcessorResponse['response'] = {
+        success: false,
+        message: '',
+        errors: [],
+        data: null,
+      }
 
-    if (!object.name) {
-      response.errors.push({
-        key: 'name',
-        message: 'Cannot be empty',
-      })
-    } else {
-      response.success = true
-      response.data = object
-    }
+      if (!object.name) {
+        response.errors.push({
+          key: 'name',
+          message: 'Cannot be empty',
+        })
+      } else {
+        response.success = true
+        response.data = object
+      }
 
-    const data: EditableObjectProcessorResponse = {
-      response,
-    }
+      const data: EditableObjectProcessorResponse = {
+        response,
+      }
 
-    return {
-      data,
-    }
-  }, [])
+      return {
+        data,
+      }
+    },
+    []
+  )
 
   const onSave = useCallback((result: EditableObjectSaveResult) => {
     action('onSave result')(result)
