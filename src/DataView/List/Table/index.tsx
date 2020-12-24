@@ -21,6 +21,7 @@ export const styles = (theme: Theme): Record<string, any> => {
     root: {
       width: '100%',
       marginTop: theme.spacing.unit * 3,
+      overflow: 'auto',
     },
     loading: {},
     table: {
@@ -36,7 +37,7 @@ export const styles = (theme: Theme): Record<string, any> => {
 export class TableView<
   P extends TableViewProps = TableViewProps,
   S extends TableViewState = TableViewState
-> extends PrismaCmsComponent<P, S> {
+  > extends PrismaCmsComponent<P, S> {
   // static propTypes = {
   //   ...PrismaCmsComponent.propTypes,
   //   classes: PropTypes.object.isRequired,
@@ -169,25 +170,25 @@ export class TableView<
             toggleColumnVisibility={this.toggleColumnVisibility}
           />
 
-          <div className={classes?.tableWrapper}>
-            <table className={classes?.table}>
-              <Header
-                // numSelected={selected.length}
-                // onSelectAllClick={this.handleSelectAllClick}
-                // onRequestSort={this.handleRequestSort}
-                // rowCount={rowCount}
-                columnData={columnData}
-              />
+          {/* <div className={classes?.tableWrapper}> */}
+          <table className={classes?.table}>
+            <Header
+              // numSelected={selected.length}
+              // onSelectAllClick={this.handleSelectAllClick}
+              // onRequestSort={this.handleRequestSort}
+              // rowCount={rowCount}
+              columnData={columnData}
+            />
 
-              <Body
-                data={objects}
-                // isSelected={this.isSelected}
-                // handleClick={this.handleClick}
-                // onRowSelect={this.onRowSelect}
-                columnData={columnData}
-              />
-            </table>
-          </div>
+            <Body
+              data={objects}
+              // isSelected={this.isSelected}
+              // handleClick={this.handleClick}
+              // onRowSelect={this.onRowSelect}
+              columnData={columnData}
+            />
+          </table>
+          {/* </div> */}
         </Paper>
       </>
     )
