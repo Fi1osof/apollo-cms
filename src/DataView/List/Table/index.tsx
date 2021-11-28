@@ -37,7 +37,7 @@ export const styles = (theme: Theme): Record<string, any> => {
 export class TableView<
   P extends TableViewProps = TableViewProps,
   S extends TableViewState = TableViewState
-  > extends PrismaCmsComponent<P, S> {
+> extends PrismaCmsComponent<P, S> {
   // static propTypes = {
   //   ...PrismaCmsComponent.propTypes,
   //   classes: PropTypes.object.isRequired,
@@ -115,8 +115,8 @@ export class TableView<
     } = this.props
 
     const Header = this.props.Header as typeof TableHeader
-    const Toolbar = (this.props.Toolbar as unknown) as React.FC<ToolbarProps>
-    const Body = (this.props.Body as unknown) as React.FC<TBodyProps>
+    const Toolbar = this.props.Toolbar as unknown as React.FC<ToolbarProps>
+    const Body = this.props.Body as unknown as React.FC<TBodyProps>
 
     const columnData = this.getColumns()
 
