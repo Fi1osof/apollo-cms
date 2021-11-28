@@ -26,7 +26,11 @@ addDecorator(
     name: 'withSomething',
     parameterName: 'something',
     wrapper: (storyFn, context) => {
-      return <ThemeProvider theme={theme}>{storyFn(context)}</ThemeProvider>
+      return (
+        <ThemeProvider theme={theme}>
+          {storyFn(context) as JSX.Element}
+        </ThemeProvider>
+      )
     },
   })
 )
