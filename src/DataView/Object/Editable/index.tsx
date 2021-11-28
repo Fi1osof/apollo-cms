@@ -371,7 +371,9 @@ export class EditableObject<
     }
   }
 
-  getMutationVariables(data: P['_dirty']): {
+  getMutationVariables(
+    data: P['_dirty']
+  ): {
     where?: { id: string }
     data: P['_dirty']
   } {

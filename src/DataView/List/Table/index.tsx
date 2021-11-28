@@ -115,8 +115,8 @@ export class TableView<
     } = this.props
 
     const Header = this.props.Header as typeof TableHeader
-    const Toolbar = this.props.Toolbar as unknown as React.FC<ToolbarProps>
-    const Body = this.props.Body as unknown as React.FC<TBodyProps>
+    const Toolbar = (this.props.Toolbar as unknown) as React.FC<ToolbarProps>
+    const Body = (this.props.Body as unknown) as React.FC<TBodyProps>
 
     const columnData = this.getColumns()
 
